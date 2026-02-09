@@ -11,8 +11,20 @@ config_version=5
 [application]
 
 config/name="project-rainbow"
+run/main_scene="uid://b8wt6aen5tgkd"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Global="*uid://d0u2tuyhq6554"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+window/stretch/scale_mode="integer"
 
 [editor]
 
@@ -21,7 +33,7 @@ version_control/autoload_on_startup=true
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_super-wakatime/plugin.cfg")
+enabled=PackedStringArray("res://addons/gdscript_formatter/plugin.cfg", "res://addons/godot-neovim/plugin.cfg", "res://addons/godot_super-wakatime/plugin.cfg")
 
 [physics]
 
@@ -30,3 +42,10 @@ enabled=PackedStringArray("res://addons/godot_super-wakatime/plugin.cfg")
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+
+[shader_globals]
+
+CARD_SIZE={
+"type": "ivec2",
+"value": Vector2i(51, 81)
+}
