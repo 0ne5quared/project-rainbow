@@ -1,0 +1,156 @@
+{
+    "name": "Sample Ruleset",
+    "description": "This is a sample ruleset in the new schema.",
+    "icon": "res://asset/ruleset_icon/1life.png",
+    "settings": {
+        "deck_size_min": 30,
+        "enable_backrow": false,
+        // candle related settings
+        "candles": {
+            "amount": 2,
+            "snuff_smoke": "Greater Smoke"
+        }
+    },
+    // allow for any amount of custom rarities.
+    // name should be in camel_case so that the game can convert them into normal name
+    "rarities": {
+        "common": {
+            // designate this as the default rarity for all card.
+            // exactly 1 rarity need to be designated as the default.
+            "default": true, 
+            "max": {
+                "main": 4, // default is 1
+                "side": 10, // default is 1
+            },
+            // optional, if no icon is provided the game will just use the texture with the same name as the rarity in the `icon` folder
+            // if there is none use the missing texture.
+            "icon": "res://asset/icon/common.png"
+            // optional name override for this rarity. This won't affect the icon
+            "name": "Shit rarity" 
+        },
+        "rare": {},
+    },
+    // other information that have gameplay different but not mechanic. Rarities are not metadata because they affect deck building.
+    // this include but not limited to
+    // - traits (unhammerable, bloodless, boneless, etc.)
+    // - temples (beast, undead, magik, etc.)
+    // - 
+    "metadatas": {
+        // traits
+        "no_hammer": {
+            // optional follows same procedure as rarities
+            "name": "Unhammerable",
+            // also optional like the rarity icon, follows same procedure. If it is empty however the trait is hidden and won't be shown.
+            // being empty ie. "icon": "" is not the same as missing
+            "icon": "res://asset/icon/no_hammer.png"
+        }
+        "no_bone": { "name": "Boneless" },
+        // etc.
+
+        "beast": {}
+        "undead": {},
+        // etc.
+        "canine": {},
+        "reptile": {}
+    }
+    // tools are items that the player can always use
+    "tools": {
+        "hammer": {
+            "script": "res://scripts/tools/hammer.gd",
+            // also optional like the rarity icon, follows same procedure.
+            "icon": "res://asset/icon/hammer.png",
+            "limit": {
+                "turn": -1, // how many time this tool can be use per turn
+                "game": -1, // how many time this tool can be use per game
+            }
+        },
+        // something else idk?
+    },
+
+    // reserves the name but do nothing
+    "items": {}
+    // reserves the name but do nothing
+    "costs": {}
+    // reserves the name but do nothing
+    "var_atk": {},
+
+    "cards": {
+        "Sample card": {
+            "health": 1,
+            // if a number then normal attack but if it is a string then var_atk
+            "attack": 0,
+            "sigils": [
+                "Sigil 1",
+                "Sigil 2",
+            ],
+            // This line is not needed cus the default rarity is already common
+            "traits": [
+                "no_hammer", // this here should match the key in trait not name
+                "conductive"
+            ],
+            "cost": {
+                "blood": 1,
+                "energy": 1,
+                // o for orange
+                // b for blue
+                // g for green
+                "mox": "obg"
+            },
+            // Related card or token that it make.
+            // This don't do anything except tell the game to render related card in the overlay/tooltips
+            "tokens":[]
+        }
+    },
+    "side_decks": {
+        "squirrels": {
+            // every side deck can define an optional name to be render instead of the dict key
+            "name": "10 Squirrel",
+            // one of draft, constructed, category
+            // draft is basically just yk draft
+            // constructed is a preset list of card in this side deck.
+            // cat is just use to organize thing into 1 heading,
+            "type": "constructed",
+            "cards": [{"card": "Squirrel", "amount": 10}]
+        },
+        "vessels": {
+            "type": "cat",
+            "decks": {
+                "empty": {
+                    "name": "10 Bloody",
+                    "type": "mono",
+                    "card": "Leaping Vessels",
+                    "amount": 10
+                },
+                "leaping": {
+                    "name": "10 Bloody",
+                    "type": "mono",
+                    "card": "Bloody Vessels",
+                    "amount": 10
+                },
+            }
+        },
+        "mox": {
+            "type": "draft",
+            // adding a filter capability to this field would be fun
+            "cards": [ "Green Mox", "Orange Mox", "Blue Mox" ],
+            "amount": 10
+        },
+        "Acid Squirrel": {
+            "type": "constructed",
+            "cards": [
+                "Acid Squirrel",
+                {"card": "Squirrel", "amount": 9}
+            ]
+        }
+    }
+    "sigils": {
+        // by default all the sigil have priority 0, this will override it so they can be sorted differenly
+        "priority": {
+            // change sigil 1 priority to be 2
+            "Sigil 1": 2
+        },
+        "description": {
+            "Sigil 1": "hello world"
+        }
+    }
+}

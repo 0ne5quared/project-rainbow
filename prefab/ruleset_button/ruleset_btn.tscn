@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://c8sxetevgdvyk"]
+
+[ext_resource type="Script" uid="uid://cjdmhhj2ts8p4" path="res://prefab/ruleset_button/ruleset_btn.gd" id="1_bjga1"]
+
+[node name="RulesetBtn" type="Button" unique_id=298796156]
+custom_minimum_size = Vector2(98, 98)
+theme_type_variation = &"TitleButton"
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("1_bjga1")
+
+[node name="Installed" type="Label" parent="." unique_id=477578755]
+visible = false
+layout_mode = 0
+offset_top = -13.0
+offset_right = 98.0
+text = "Installed"
+horizontal_alignment = 1

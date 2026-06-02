@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://bx837cdba6cuj"]
+
+[ext_resource type="Texture2D" uid="uid://cbv0n0b53bg53" path="res://asset/portraits/Dragon Egg.png" id="1_5efxb"]
+[ext_resource type="Script" uid="uid://d03e2efo8dc7f" path="res://prefab/player_listing/player_listing.gd" id="1_sj8ec"]
+[ext_resource type="Script" uid="uid://d0y06b2xbgam2" path="res://scripts/utils/name_scroller.gd" id="2_sj8ec"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fos0i"]
+bg_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+
+[node name="PlayerListing" type="MarginContainer" unique_id=125477321]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+script = ExtResource("1_sj8ec")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1666527351]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=2004412179]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer" unique_id=494144715]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fos0i")
+
+[node name="Pfp" type="TextureRect" parent="VBoxContainer/HBoxContainer/PanelContainer" unique_id=1671159390]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("1_5efxb")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer" unique_id=1874405556 node_paths=PackedStringArray("label")]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 3
+script = ExtResource("2_sj8ec")
+label = NodePath("Name")
+
+[node name="Name" type="Label" parent="VBoxContainer/HBoxContainer/ScrollContainer" unique_id=191055684]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Mouthless"
+
+[node name="Status" type="RichTextLabel" parent="VBoxContainer/HBoxContainer" unique_id=1730734722]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/default_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "H"
+fit_content = true
+autowrap_mode = 0
+autowrap_trim_flags = 0

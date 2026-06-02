@@ -1,0 +1,138 @@
+[gd_scene format=3 uid="uid://d4kntw6wxj30n"]
+
+[ext_resource type="Script" uid="uid://blhcx78lnp2kf" path="res://prefab/card/card.gd" id="1_8nimt"]
+[ext_resource type="Script" uid="uid://d0y06b2xbgam2" path="res://scripts/utils/name_scroller.gd" id="2_pe5rd"]
+[ext_resource type="Texture2D" uid="uid://bie1qwdx23na7" path="res://asset/portraits/Squirrel.png" id="3_f2uqh"]
+[ext_resource type="Texture2D" uid="uid://dtn5fp4cyrbkp" path="res://asset/sigils/Bifucated Strike.png" id="4_pskxa"]
+[ext_resource type="Texture2D" uid="uid://d4fhkxwnobdxl" path="res://asset/card_frame/tech_frame.png" id="4_rpw1c"]
+[ext_resource type="Texture2D" uid="uid://d0qiu1j4oon11" path="res://asset/card_frame/beast_icon.png" id="5_cryra"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_vp3qw"]
+grow_begin = -2.0
+grow_end = -2.0
+
+[node name="Control" type="Control" unique_id=1683414849]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8nimt")
+
+[node name="CardContainer" type="Button" parent="." unique_id=2058315583]
+custom_minimum_size = Vector2(73, 93)
+layout_mode = 0
+offset_left = -36.0
+offset_top = -46.0
+offset_right = 37.0
+offset_bottom = 47.0
+theme_type_variation = &"Card"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CardContainer" unique_id=2110881630]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CardContainer/VBoxContainer" unique_id=1033747817]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = -1
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = -2
+
+[node name="NameScroller" type="ScrollContainer" parent="CardContainer/VBoxContainer/MarginContainer" unique_id=2122419092 node_paths=PackedStringArray("label")]
+custom_minimum_size = Vector2(69, 13)
+layout_mode = 2
+horizontal_scroll_mode = 3
+script = ExtResource("2_pe5rd")
+label = NodePath("CenterContainer/Name")
+
+[node name="CenterContainer" type="CenterContainer" parent="CardContainer/VBoxContainer/MarginContainer/NameScroller" unique_id=370581376]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="CardContainer/VBoxContainer/MarginContainer/NameScroller/CenterContainer" unique_id=1192126734]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "LONG ASS NAME"
+max_lines_visible = 1
+
+[node name="HSeparator" type="HSeparator" parent="CardContainer/VBoxContainer" unique_id=1115199722]
+layout_mode = 2
+theme_override_constants/separation = 1
+theme_override_styles/separator = SubResource("StyleBoxLine_vp3qw")
+
+[node name="Container" type="Control" parent="CardContainer/VBoxContainer" unique_id=161293304]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 1
+
+[node name="Portrait" type="TextureRect" parent="CardContainer/VBoxContainer/Container" unique_id=231603658]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 16.0
+offset_right = 57.0
+offset_bottom = 32.0
+texture = ExtResource("3_f2uqh")
+stretch_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CardContainer/VBoxContainer/Container" unique_id=1369187095]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -1.0
+offset_right = 73.0
+offset_bottom = 32.0
+texture = ExtResource("4_rpw1c")
+stretch_mode = 2
+
+[node name="TextureRect2" type="TextureRect" parent="CardContainer/VBoxContainer/Container" unique_id=327389234]
+layout_mode = 0
+offset_top = 20.0
+offset_right = 15.0
+offset_bottom = 35.0
+texture = ExtResource("5_cryra")
+
+[node name="CenterContainer" type="CenterContainer" parent="CardContainer/VBoxContainer" unique_id=95632632]
+custom_minimum_size = Vector2(73, 36)
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="CardContainer/VBoxContainer/CenterContainer" unique_id=254318988]
+layout_mode = 2
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+columns = 3
+
+[node name="TextureRect" type="TextureRect" parent="CardContainer/VBoxContainer/CenterContainer/GridContainer" unique_id=1130291801]
+layout_mode = 2
+texture = ExtResource("4_pskxa")
+
+[node name="MarginContainer2" type="MarginContainer" parent="CardContainer/VBoxContainer" unique_id=471424775]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = -6
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CardContainer/VBoxContainer/MarginContainer2" unique_id=1386234924]
+layout_mode = 2
+
+[node name="Attack" type="Label" parent="CardContainer/VBoxContainer/MarginContainer2/HBoxContainer" unique_id=1509042224]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "+1"
+
+[node name="Health" type="Label" parent="CardContainer/VBoxContainer/MarginContainer2/HBoxContainer" unique_id=331869122]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "100"
+horizontal_alignment = 2

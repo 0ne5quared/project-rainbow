@@ -22,7 +22,7 @@
           packages = with pkgs; [
             godot
             python3Packages.pip
-            gdtookkit_4
+            gdtoolkit_4
           ];
           shellHook = ''
             export SHELL=/run/current-system/sw/bin/bash

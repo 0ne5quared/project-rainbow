@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dwhmym7riy2eo"]
+
+[node name="Separator" type="Label" unique_id=1989850296]
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "-----------------------------------------------------------------------------"
+horizontal_alignment = 1
+clip_text = true
+text_overrun_behavior = 1
+ellipsis_char = ""

@@ -1,0 +1,580 @@
+[gd_scene format=3 uid="uid://djps884gv560c"]
+
+[ext_resource type="PackedScene" uid="uid://b8wt6aen5tgkd" path="res://fight_scene.tscn" id="1_glv2v"]
+[ext_resource type="PackedScene" uid="uid://dwhmym7riy2eo" path="res://prefab/separator.tscn" id="2_3dxm6"]
+[ext_resource type="Script" uid="uid://btqyrkhyrycih" path="res://scripts/title.gd" id="2_uu6xs"]
+[ext_resource type="Script" uid="uid://ccuyd8bprftvj" path="res://scripts/utils/ui_control_btn.gd" id="3_3dxm6"]
+[ext_resource type="Script" uid="uid://cqunm02g4d8jj" path="res://lobby.gd" id="3_fos0i"]
+[ext_resource type="Script" uid="uid://srydxdh4voto" path="res://scripts/utils/global_popup.gd" id="3_r0du0"]
+[ext_resource type="Script" uid="uid://b1j7bkidwk511" path="res://scripts/ruleset_selector.gd" id="5_20pc6"]
+[ext_resource type="PackedScene" uid="uid://c8sxetevgdvyk" path="res://prefab/ruleset_button/ruleset_btn.tscn" id="6_wkp8b"]
+[ext_resource type="Texture2D" uid="uid://bgh3egaw8r84q" path="res://asset/ruleset_icon/link.png" id="7_03owx"]
+[ext_resource type="Texture2D" uid="uid://du2ktv20mkxyp" path="res://asset/ruleset_icon/file.png" id="8_wkp8b"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_fos0i"]
+color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+grow_end = -4.0
+thickness = 4
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_3dxm6"]
+color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+grow_begin = -4.0
+thickness = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r0du0"]
+bg_color = Color(0, 0, 0, 0.5647059)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_lgr22"]
+color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+thickness = 4
+vertical = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uu6xs"]
+bg_color = Color(0, 0, 0, 0.27450982)
+
+[node name="Main" type="Control" unique_id=1219956411]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleScreen" type="PanelContainer" parent="." unique_id=1662723476]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_uu6xs")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TitleScreen" unique_id=1075795788]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TitleScreen/VBoxContainer" unique_id=493045558]
+layout_mode = 2
+
+[node name="Separator" parent="TitleScreen/VBoxContainer/HBoxContainer2" unique_id=1989850296 instance=ExtResource("2_3dxm6")]
+layout_mode = 2
+
+[node name="OfflineIndicator" type="Label" parent="TitleScreen/VBoxContainer/HBoxContainer2" unique_id=2002101919]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3977014, 0.3292555, 1)
+theme_override_font_sizes/font_size = 32
+text = "OFFLINE"
+
+[node name="Spacer" type="Control" parent="TitleScreen/VBoxContainer" unique_id=601998188]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Title" type="Label" parent="TitleScreen/VBoxContainer" unique_id=1317554811]
+layout_mode = 2
+theme_override_font_sizes/font_size = 96
+text = "INSCRYPTION"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TitleScreen/VBoxContainer" unique_id=1349506769]
+layout_mode = 2
+
+[node name="Line" type="HSeparator" parent="TitleScreen/VBoxContainer/HBoxContainer" unique_id=340319745]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxLine_fos0i")
+
+[node name="SubTitle" type="Label" parent="TitleScreen/VBoxContainer/HBoxContainer" unique_id=693666911]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+theme_override_font_sizes/font_size = 32
+text = "Splash text"
+horizontal_alignment = 1
+
+[node name="Line2" type="HSeparator" parent="TitleScreen/VBoxContainer/HBoxContainer" unique_id=27852495]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxLine_3dxm6")
+
+[node name="Spacer2" type="Control" parent="TitleScreen/VBoxContainer" unique_id=2049362856]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="HostSettingBtn" type="Button" parent="TitleScreen/VBoxContainer" unique_id=1661783960 node_paths=PackedStringArray("ui")]
+layout_mode = 2
+theme_type_variation = &"TitleButton"
+text = "- HOST GAME -"
+script = ExtResource("3_3dxm6")
+ui = NodePath("../../../HostSetting")
+
+[node name="JoinSettingBtn" type="Button" parent="TitleScreen/VBoxContainer" unique_id=39820303 node_paths=PackedStringArray("ui")]
+layout_mode = 2
+theme_type_variation = &"TitleButton"
+text = "- JOIN GAME -"
+script = ExtResource("3_3dxm6")
+ui = NodePath("../../../JoinSetting")
+
+[node name="DeckBtn" type="Button" parent="TitleScreen/VBoxContainer" unique_id=1149911276]
+layout_mode = 2
+theme_type_variation = &"TitleButton"
+text = "- DECK EDITOR -"
+
+[node name="RulesetBtn" type="Button" parent="TitleScreen/VBoxContainer" unique_id=1361696344]
+layout_mode = 2
+theme_type_variation = &"TitleButton"
+text = "- RULESET SELECTOR -"
+
+[node name="CreditBtn" type="Button" parent="TitleScreen/VBoxContainer" unique_id=184630252]
+layout_mode = 2
+theme_type_variation = &"TitleButton"
+text = "- CREDIT -"
+
+[node name="QuitBtn" type="Button" parent="TitleScreen/VBoxContainer" unique_id=2146976879]
+layout_mode = 2
+theme_type_variation = &"TitleButton"
+text = "- QUIT GAME -"
+
+[node name="Control" type="Control" parent="TitleScreen/VBoxContainer" unique_id=125993026]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="TitleScreen/VBoxContainer" unique_id=393444281]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="RulesetLb" type="Label" parent="TitleScreen/VBoxContainer/HBoxContainer3" unique_id=1184489620]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "This game uses Pride versioning"
+mouse_filter = 1
+text = "IMF COMPETIVE"
+vertical_alignment = 1
+
+[node name="Separator" parent="TitleScreen/VBoxContainer/HBoxContainer3" unique_id=1850162250 instance=ExtResource("2_3dxm6")]
+layout_mode = 2
+
+[node name="VersionLb" type="Label" parent="TitleScreen/VBoxContainer/HBoxContainer3" unique_id=1840892593]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "This game uses Pride versioning"
+mouse_filter = 1
+text = "v1.0.0"
+vertical_alignment = 1
+
+[node name="HostSetting" type="PanelContainer" parent="." unique_id=680829730]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_r0du0")
+
+[node name="CenterContainer" type="CenterContainer" parent="HostSetting" unique_id=2002944743]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="HostSetting/CenterContainer" unique_id=1957222784]
+custom_minimum_size = Vector2(400, 200)
+layout_mode = 2
+theme_type_variation = &"BasicPopup"
+
+[node name="MarginContainer" type="MarginContainer" parent="HostSetting/CenterContainer/PanelContainer" unique_id=1714909343]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HostSetting/CenterContainer/PanelContainer/MarginContainer" unique_id=999543219]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HostSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1082095966]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "--- HOST OPTION ---"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="HostSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=290216976]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="GridContainer" parent="HostSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=670382148]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="HostSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1636249657]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Player Name: "
+
+[node name="HostPlayerName" type="LineEdit" parent="HostSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=279092635]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Host"
+
+[node name="Label2" type="Label" parent="HostSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=86069114]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Player Name: "
+
+[node name="HostPlayerName2" type="LineEdit" parent="HostSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1846720752]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Your Name"
+
+[node name="Spacer2" type="Control" parent="HostSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=643039941]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HostBtn" type="Button" parent="HostSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1624345845 node_paths=PackedStringArray("ui")]
+layout_mode = 2
+theme_type_variation = &"TitleButton"
+text = "- HOST -"
+script = ExtResource("3_3dxm6")
+ui = NodePath("../../../../..")
+make_visible = false
+
+[node name="HostCloseBtn" type="Button" parent="HostSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1239507456 node_paths=PackedStringArray("ui")]
+layout_mode = 2
+theme_type_variation = &"TitleButton"
+text = "- CLOSE -"
+script = ExtResource("3_3dxm6")
+ui = NodePath("../../../../..")
+make_visible = false
+
+[node name="JoinSetting" type="PanelContainer" parent="." unique_id=10633553]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_r0du0")
+
+[node name="CenterContainer" type="CenterContainer" parent="JoinSetting" unique_id=875565885]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="JoinSetting/CenterContainer" unique_id=938776407]
+custom_minimum_size = Vector2(400, 200)
+layout_mode = 2
+theme_type_variation = &"BasicPopup"
+
+[node name="MarginContainer" type="MarginContainer" parent="JoinSetting/CenterContainer/PanelContainer" unique_id=1915066427]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="JoinSetting/CenterContainer/PanelContainer/MarginContainer" unique_id=241140043]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=638144540]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "--- JOIN OPTION ---"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=259177736]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="GridContainer" parent="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=228323640]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=2083367689]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Player Name: "
+
+[node name="JoinPlayerName" type="LineEdit" parent="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1726776769]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Guest"
+
+[node name="Label2" type="Label" parent="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1373107359]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Room Code:"
+
+[node name="JoinRoomCode" type="LineEdit" parent="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1666764825]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+placeholder_text = "Room Code"
+
+[node name="Spacer2" type="Control" parent="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1514666925]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="JoinBtn" type="Button" parent="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1768553095 node_paths=PackedStringArray("ui")]
+layout_mode = 2
+theme_type_variation = &"TitleButton"
+theme_override_font_sizes/font_size = 32
+text = "- JOIN -"
+script = ExtResource("3_3dxm6")
+ui = NodePath("../../../../..")
+make_visible = false
+
+[node name="CloseBtn" type="Button" parent="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1437884117 node_paths=PackedStringArray("ui")]
+layout_mode = 2
+theme_type_variation = &"TitleButton"
+text = "- CLOSE -"
+script = ExtResource("3_3dxm6")
+ui = NodePath("../../../../..")
+make_visible = false
+
+[node name="Lobby" type="PanelContainer" parent="." unique_id=282932011]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_right = 768.0
+offset_bottom = 432.0
+script = ExtResource("3_fos0i")
+
+[node name="MarginContainer" type="MarginContainer" parent="Lobby" unique_id=1086191023]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Lobby/MarginContainer" unique_id=2015116046]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="CenterContainer" type="CenterContainer" parent="Lobby/MarginContainer/VBoxContainer" unique_id=281031030]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Lobby/MarginContainer/VBoxContainer/CenterContainer" unique_id=2036739656]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Lobby/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer" unique_id=899450724]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Room Code:"
+
+[node name="RoomCode" type="Button" parent="Lobby/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer" unique_id=2124227144]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(126, 30)
+layout_mode = 2
+tooltip_text = "Click Again to hide"
+theme_override_font_sizes/font_size = 32
+text = "VIEW CODE"
+
+[node name="CopyCodeBtn" type="Button" parent="Lobby/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer" unique_id=908981591]
+layout_mode = 2
+tooltip_text = "Click Again to hide"
+theme_override_font_sizes/font_size = 32
+text = "COPY"
+
+[node name="Separator" parent="Lobby/MarginContainer/VBoxContainer" unique_id=870235217 instance=ExtResource("2_3dxm6")]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Lobby/MarginContainer/VBoxContainer" unique_id=1029557100]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlayerList" type="VBoxContainer" parent="Lobby/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1992443950]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="Lobby/MarginContainer/VBoxContainer/HBoxContainer/PlayerList" unique_id=1436041638]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "----- PLAYERS -----"
+horizontal_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="Lobby/MarginContainer/VBoxContainer/HBoxContainer" unique_id=461634684]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_lgr22")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Lobby/MarginContainer/VBoxContainer/HBoxContainer" unique_id=746174034]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="Lobby/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=244107704]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "---- SETTINGS ----"
+horizontal_alignment = 1
+
+[node name="Separator2" parent="Lobby/MarginContainer/VBoxContainer" unique_id=1418192561 instance=ExtResource("2_3dxm6")]
+layout_mode = 2
+
+[node name="StartBtn" type="Button" parent="Lobby/MarginContainer/VBoxContainer" unique_id=771200911]
+layout_mode = 2
+theme_type_variation = &"TitleButton"
+theme_override_font_sizes/font_size = 32
+text = "- START MATCH -"
+
+[node name="EndBtn" type="Button" parent="Lobby/MarginContainer/VBoxContainer" unique_id=2121176346]
+layout_mode = 2
+theme_type_variation = &"TitleButton"
+theme_override_font_sizes/font_size = 32
+text = "- EXIT LOBBY -"
+
+[node name="RulesetSelector" type="PanelContainer" parent="." unique_id=651548178]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_20pc6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="RulesetSelector" unique_id=906372938]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Separator" parent="RulesetSelector/VBoxContainer" unique_id=325415448 instance=ExtResource("2_3dxm6")]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RulesetSelector/VBoxContainer" unique_id=1453551659]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "RULESET SELECTOR"
+horizontal_alignment = 1
+
+[node name="Separator2" parent="RulesetSelector/VBoxContainer" unique_id=908175907 instance=ExtResource("2_3dxm6")]
+layout_mode = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="RulesetSelector/VBoxContainer" unique_id=773156731]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RulesetList" type="HBoxContainer" parent="RulesetSelector/VBoxContainer/CenterContainer" unique_id=1179726853]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AddBtn" type="HBoxContainer" parent="RulesetSelector/VBoxContainer/CenterContainer/RulesetList" unique_id=523865785]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AddLinkBtn" parent="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn" unique_id=298796156 instance=ExtResource("6_wkp8b")]
+layout_mode = 2
+icon = ExtResource("7_03owx")
+ruleset_name = "Add URL"
+description = "Add new ruleset using url"
+
+[node name="AddFileBtn" parent="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn" unique_id=1524599786 instance=ExtResource("6_wkp8b")]
+layout_mode = 2
+icon = ExtResource("8_wkp8b")
+ruleset_name = "Add File"
+description = "Add new ruleset using file"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="RulesetSelector/VBoxContainer" unique_id=722773537]
+layout_mode = 2
+
+[node name="Separator" parent="RulesetSelector/VBoxContainer/HBoxContainer" unique_id=1790949425 instance=ExtResource("2_3dxm6")]
+layout_mode = 2
+horizontal_alignment = 0
+
+[node name="RulesetName" type="Label" parent="RulesetSelector/VBoxContainer/HBoxContainer" unique_id=74832065]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9372549, 0.9647059, 0.78039217, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+
+[node name="Separator2" parent="RulesetSelector/VBoxContainer/HBoxContainer" unique_id=819917802 instance=ExtResource("2_3dxm6")]
+layout_mode = 2
+horizontal_alignment = 2
+
+[node name="RulesetDescription" type="Label" parent="RulesetSelector/VBoxContainer" unique_id=375451257]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 113)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9372549, 0.9647059, 0.78039217, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Separator3" parent="RulesetSelector/VBoxContainer" unique_id=1012685557 instance=ExtResource("2_3dxm6")]
+layout_mode = 2
+
+[node name="HTTPRequest" type="HTTPRequest" parent="RulesetSelector" unique_id=1309540293]
+
+[node name="Fight" parent="." unique_id=1032969089 instance=ExtResource("1_glv2v")]
+layout_mode = 1
+
+[node name="PopupBlocker" type="PanelContainer" parent="." unique_id=696503634]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uu6xs")
+script = ExtResource("3_r0du0")
+
+[node name="CenterContainer" type="CenterContainer" parent="PopupBlocker" unique_id=2084454677]
+layout_mode = 2
+
+[node name="Popup" type="PanelContainer" parent="PopupBlocker/CenterContainer" unique_id=293119880]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupBlocker/CenterContainer/Popup" unique_id=1235356082]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="PopupBlocker/CenterContainer/Popup/VBoxContainer" unique_id=1087559129]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+text = "ERROR"
+horizontal_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="PopupBlocker/CenterContainer/Popup/VBoxContainer" unique_id=1679899985]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Text" type="Label" parent="PopupBlocker/CenterContainer/Popup/VBoxContainer/CenterContainer" unique_id=2088553070]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Bad shit happened :("
+
+[node name="ClosePopupBtn" type="Button" parent="PopupBlocker/CenterContainer/Popup/VBoxContainer" unique_id=1666994731]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Close"
+
+[connection signal="pressed" from="TitleScreen/VBoxContainer/QuitBtn" to="TitleScreen" method="_on_quit_btn_pressed"]
+[connection signal="pressed" from="HostSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HostBtn" to="TitleScreen" method="_on_host_btn_pressed"]
+[connection signal="pressed" from="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/JoinBtn" to="TitleScreen" method="_on_join_btn_pressed"]
+[connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/RoomCode" to="Lobby" method="_on_room_code_pressed"]
+[connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/CopyCodeBtn" to="Lobby" method="_on_copy_code_btn_pressed"]
+[connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/EndBtn" to="Lobby" method="_on_end_btn_pressed"]
+[connection signal="horvered" from="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn/AddLinkBtn" to="RulesetSelector" method="_on_button_horvered"]
+[connection signal="mouse_exited" from="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn/AddLinkBtn" to="RulesetSelector" method="_on_button_unhorvered"]
+[connection signal="horvered" from="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn/AddFileBtn" to="RulesetSelector" method="_on_button_horvered"]
+[connection signal="mouse_exited" from="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn/AddFileBtn" to="RulesetSelector" method="_on_button_unhorvered"]
+[connection signal="pressed" from="PopupBlocker/CenterContainer/Popup/VBoxContainer/ClosePopupBtn" to="PopupBlocker" method="_on_button_pressed"]

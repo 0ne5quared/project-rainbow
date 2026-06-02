@@ -1,0 +1,108 @@
+[gd_scene format=3 uid="uid://b8wt6aen5tgkd"]
+
+[ext_resource type="Script" uid="uid://u0rc2d4hj3ev" path="res://scripts/fight/fight_manager.gd" id="1_1bvp3"]
+[ext_resource type="Script" uid="uid://dsvmtad6i7ttr" path="res://scripts/fight/board_manager.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://drjrucir1mm50" path="res://scripts/fight/hand_manager.gd" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://bl3u4wm7dpjdq" path="res://scripts/fight/cards_manager.gd" id="4_tmx0f"]
+
+[node name="Fight" type="Panel" unique_id=1032969089]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_1bvp3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=319908388]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1585327444]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.5
+
+[node name="LeftUI" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2" unique_id=2036390974]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/HBoxContainer2" unique_id=1161575921]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.5
+
+[node name="BoardManager" type="GridContainer" parent="VBoxContainer/HBoxContainer2/CenterContainer" unique_id=472281524]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 4
+script = ExtResource("1_ig7tw")
+
+[node name="RightUI" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2" unique_id=1440997554]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2/RightUI" unique_id=765648802]
+layout_mode = 2
+fit_content = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=647423626]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.5
+
+[node name="DecksContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer" unique_id=1517189619]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/DecksContainer" unique_id=1960861431]
+layout_mode = 2
+
+[node name="MainDeckBtn" type="Button" parent="VBoxContainer/HBoxContainer/DecksContainer/VBoxContainer" unique_id=1064606055]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
+text = "Deck"
+
+[node name="SideDeckBtn" type="Button" parent="VBoxContainer/HBoxContainer/DecksContainer/VBoxContainer" unique_id=184264083]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
+text = "Side"
+
+[node name="CenterContainer2" type="CenterContainer" parent="VBoxContainer/HBoxContainer" unique_id=1257853857]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+
+[node name="HandManager" type="Control" parent="VBoxContainer/HBoxContainer/CenterContainer2" unique_id=366767316]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(344, 93)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("3_1bvp3")
+
+[node name="Spacer2" type="Panel" parent="VBoxContainer/HBoxContainer" unique_id=1664683970]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CardsManager" type="Control" parent="." unique_id=974347671]
+unique_name_in_owner = true
+anchors_preset = 0
+script = ExtResource("4_tmx0f")
+
+[connection signal="slot_selected" from="VBoxContainer/HBoxContainer2/CenterContainer/BoardManager" to="." method="_on_slot_selected"]
+[connection signal="card_selected" from="VBoxContainer/HBoxContainer/CenterContainer2/HandManager" to="." method="_on_card_selected"]
+[connection signal="card_unselected" from="VBoxContainer/HBoxContainer/CenterContainer2/HandManager" to="." method="_on_card_unselected"]
+[connection signal="card_change_zone" from="CardsManager" to="VBoxContainer/HBoxContainer/CenterContainer2/HandManager" method="_on_card_change_zone"]

@@ -127,7 +127,7 @@ func _input(event: InputEvent) -> void:
 				last_tick_frame = Time.get_ticks_msec()
 
 		elif tab_open == "2D" || tab_open == "3D":
-			if event is InputEventMouse: # we dont really care if people are typing in node editor
+			if event is InputEventMouseButton: # we dont really care if people are typing in node editor
 				var snapshot = get_building_data(event)
 
 				if snapshot == null:
@@ -284,6 +284,8 @@ func _handle_heartbeat(cmd_arguments) -> void:
 func update_today_time(wakatime_cli) -> void:
 	"""Update today's time in menu"""
 	var output: Array[Variant] = []
+
+	# I would use --plugin "godot/4.6.2 Godot_Super-Wakatime/2.0.1" but it doesn't seem to do anything with --today
 	# Get today's time from Wakatime CLI
 	var exit_code: int = OS.execute(wakatime_cli, ["--today"], output, true)
 	
