@@ -1,5 +1,5 @@
 class_name Card
-extends Control
+extends Button
 
 enum Zone { HAND, BOARD, GRAVEYARD, EXILE, LIMBO }
 
@@ -42,6 +42,7 @@ var traits: Array[String]
 var temples: String
 var costs: Dictionary[String, Variant]
 var tokens: Array[String]
+var card_name: String
 
 
 ## Parse and assign infomation in [param data]
@@ -60,18 +61,19 @@ func parse_data(data: Dictionary) -> Dictionary:
 				push_warning('Sigil "%s" script not found, skip loading' % sigil)
 			continue
 		set(prop, data[prop])
+	card_name = data.name
 	return data
 
 
 func redraw_card() -> void:
-	%Name.text = name
+	%Name.text = card_name
 
-	var portrait_path := "res://asset/portraits/%s.png" % card_data.name
+	var portrait_path := "res://asset/portraits/%s.png" % card_name
 	if FileAccess.file_exists(portrait_path):
 		%Portrait.texture = load(portrait_path)
 	else:
 		push_warning(
-			'Portrait can\'t be found for "%s" so using missing texture instead', card_data.name
+			'Portrait can\'t be found for "%s" so using missing texture instead', card_name
 		)
 		%Portrait.texture = load("res://asset/portraits/MISSING.png")
 	%Attack.text = str(attack)

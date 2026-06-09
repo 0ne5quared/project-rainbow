@@ -62,8 +62,8 @@ func hide_popup() -> void:
 	_hide_popup.emit()
 
 
-func gen_id() -> int:
-	return floor(randf() * 1000000)
+func gen_id() -> String:
+	return String.num_uint64(floor(randf() * 1e9) as int, 16)
 
 
 ## This modify the original data in place.
