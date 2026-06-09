@@ -13,10 +13,8 @@ grow_end = -2.0
 
 [node name="CardContainer" type="Button" unique_id=2058315583]
 custom_minimum_size = Vector2(73, 93)
-offset_left = -36.0
-offset_top = -46.0
-offset_right = 37.0
-offset_bottom = 47.0
+offset_right = 73.0
+offset_bottom = 93.0
 theme_type_variation = &"Card"
 script = ExtResource("1_8nimt")
 

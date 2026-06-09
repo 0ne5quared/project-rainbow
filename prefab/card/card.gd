@@ -2,6 +2,7 @@ class_name Card
 extends Button
 
 enum Zone { HAND, BOARD, GRAVEYARD, EXILE, LIMBO }
+const PUBLIC_ZONE = [Zone.BOARD, Zone.GRAVEYARD, Zone.EXILE]
 
 const _DATA_SCHEMA: Dictionary[StringName, Dictionary] = {
 	&"name": {types = [TYPE_STRING], default = "MISSING"},
@@ -35,7 +36,7 @@ var attack: int
 ## The health of the card
 var health: int
 ## The sigils on the card, if you want to temporarily add sigil to the card use [member sigils]
-var sigils: Array[Sigil]
+var sigils: Dictionary[String, Sigil]
 ## Trait of the card, these don't have any gameplay effect but instead they are checked by
 ## sigils and or cost.
 var traits: Array[String]
@@ -56,7 +57,7 @@ func parse_data(data: Dictionary) -> Dictionary:
 					print("File found, loading...")
 					var s: Sigil = load("res://scripts/fight/sigils/%s.gd" % sigil).new()
 					s.card = self
-					sigils.append(s)
+					sigils[sigil] = (s)
 					continue
 				push_warning('Sigil "%s" script not found, skip loading' % sigil)
 			continue
@@ -78,3 +79,7 @@ func redraw_card() -> void:
 		%Portrait.texture = load("res://asset/portraits/MISSING.png")
 	%Attack.text = str(attack)
 	%Health.text = str(health)
+
+
+func as_dict() -> Dictionary:
+	return {data = card_data, id = id, zone = zone}

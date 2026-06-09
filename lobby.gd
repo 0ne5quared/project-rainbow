@@ -13,6 +13,7 @@ func _ready() -> void:
 	ConnectionManager.player_joined.connect(_on_player_joined)
 	ConnectionManager.player_left.connect(_on_player_left)
 	ConnectionManager.room_closed.connect(_on_room_closed)
+	ConnectionManager.recieved_packet.connect(_on_packet_recieved)
 
 
 func add_player(player: ConnectionManager.Player) -> void:
@@ -81,3 +82,18 @@ func _on_end_btn_pressed() -> void:
 	else:
 		ConnectionManager.leave_room()
 		_on_room_closed()
+
+
+func _on_start_btn_pressed() -> void:
+	if Global.is_host:
+		ConnectionManager.send(ConnectionManager.GameMessage.START_GAME)
+		visible = false
+		%Fight._start_fight()
+
+
+func _on_packet_recieved(packet: Dictionary) -> void:
+	if packet.type != ConnectionManager.GameMessage.START_GAME:
+		return
+
+	visible = false
+	%Fight._start_fight()

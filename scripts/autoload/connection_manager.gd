@@ -35,6 +35,8 @@ const CLIENT_CONNECTED = "client_connected"
 
 const ERR = "error"
 
+enum GameMessage { START_GAME, NEW_CARD, ACTIONS }
+
 var last_packet: Dictionary
 var socket := WebSocketPeer.new()
 var room_code: String
@@ -64,7 +66,7 @@ class Player:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	socket.connect_to_url("ws://134.41.236.54:42069")
+	socket.connect_to_url("ws://0.0.0.0:42069")
 
 
 func _process(_delta: float) -> void:
@@ -97,29 +99,30 @@ func _process(_delta: float) -> void:
 
 
 func _handle_packet(packet: Dictionary) -> void:
-	if packet.type == CLIENT_CONNECTED:
-		Global.uuid = packet.uuid
-		client_connected.emit(packet.uuid)
-	elif packet.type == ROOM_CREATED:
-		room_code = packet.room_code
-		room_created.emit(room_code)
-	elif packet.type == ROOM_JOINED:
-		room_joined.emit(Player.from_packet(packet.players as Array), packet.host_uuid)
-	elif packet.type == ROOM_CLOSED:
-		room_closed.emit()
-	elif packet.type == PLAYER_LEFT:
-		player_left.emit(packet.player_uuid)
-	elif packet.type == PLAYER_JOIN:
-		var player: Dictionary = packet.player
-		player_joined.emit(
-			Player.new(player.name as String, player.pfp as String, player.uuid as String)
-		)
-	else:
-		recieved_packet.emit(packet)
+	if typeof(packet.type) == TYPE_STRING:
+		if packet.type == CLIENT_CONNECTED:
+			Global.uuid = packet.uuid
+			client_connected.emit(packet.uuid)
+		elif packet.type == ROOM_CREATED:
+			room_code = packet.room_code
+			room_created.emit(room_code)
+		elif packet.type == ROOM_JOINED:
+			room_joined.emit(Player.from_packet(packet.players as Array), packet.host_uuid)
+		elif packet.type == ROOM_CLOSED:
+			room_closed.emit()
+		elif packet.type == PLAYER_LEFT:
+			player_left.emit(packet.player_uuid)
+		elif packet.type == PLAYER_JOIN:
+			var player: Dictionary = packet.player
+			player_joined.emit(
+				Player.new(player.name as String, player.pfp as String, player.uuid as String)
+			)
+		return
+	recieved_packet.emit(packet)
 
 
 func create_room() -> String:
-	send({type = CREATE_ROOM, name = Global.player_name, pfp = Global.pfp})
+	send(CREATE_ROOM, {name = Global.player_name, pfp = Global.pfp})
 	is_host = true
 	await room_created
 	return room_code
@@ -130,18 +133,19 @@ func join_room(code: String) -> void:
 		return
 	is_host = false
 	room_code = code
-	send({type = JOIN_ROOM, room_code = code, name = Global.player_name, pfp = Global.pfp})
+	send(JOIN_ROOM, {room_code = code, name = Global.player_name, pfp = Global.pfp})
 
 
 func close_room() -> void:
-	send({type = CLOSE_ROOM})
+	send(CLOSE_ROOM)
 	is_host = false
 
 
 func leave_room() -> void:
-	send({"type": LEAVE_ROOM})
+	send(LEAVE_ROOM)
 	room_code = ""
 
 
-func send(data: Dictionary) -> void:
+func send(type: Variant, data := {}) -> void:
+	data.type = type
 	socket.send_text(JSON.stringify(data))

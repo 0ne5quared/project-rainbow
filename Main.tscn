@@ -41,7 +41,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="TitleScreen" type="PanelContainer" parent="." unique_id=1662723476]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -518,6 +517,8 @@ layout_mode = 2
 [node name="HTTPRequest" type="HTTPRequest" parent="RulesetSelector" unique_id=1309540293]
 
 [node name="Fight" parent="." unique_id=1032969089 instance=ExtResource("1_glv2v")]
+unique_name_in_owner = true
+visible = false
 layout_mode = 1
 
 [node name="PopupBlocker" type="PanelContainer" parent="." unique_id=696503634]
@@ -572,6 +573,7 @@ text = "Close"
 [connection signal="pressed" from="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/JoinBtn" to="TitleScreen" method="_on_join_btn_pressed"]
 [connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/RoomCode" to="Lobby" method="_on_room_code_pressed"]
 [connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/CopyCodeBtn" to="Lobby" method="_on_copy_code_btn_pressed"]
+[connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/StartBtn" to="Lobby" method="_on_start_btn_pressed"]
 [connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/EndBtn" to="Lobby" method="_on_end_btn_pressed"]
 [connection signal="horvered" from="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn/AddLinkBtn" to="RulesetSelector" method="_on_button_horvered"]
 [connection signal="mouse_exited" from="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn/AddLinkBtn" to="RulesetSelector" method="_on_button_unhorvered"]

@@ -15,7 +15,7 @@ enum Type {
 	## - [code]card_id[/code]: [String]: The card id being placed, use something like
 	## [enum CREATE_TOKEN] if this card did not exist before.[br]
 	## - [code]pos[/code]: [Vector2i]: The position to play the card in[br],
-	## - [code]placer_type[/code]: [enum Action.PlacerID],
+	## - [code]placer_type[/code]: [enum Action.PlacerType],
 	## - [code]placer_id[/code]
 	PLAY_CARD,
 	## Action representing creating a new token, this token will just float around in limbo.
@@ -30,14 +30,14 @@ enum Type {
 	END_TURN,
 	## Action representing the start of combat. This action have no additional information.
 	COMBAT,
-	## Action representing the card attacking. This will simply resolve into CARD_STRIKE that
+	## Action representing the card attacking. This will simply resolve into CARD_ST RIKE that
 	## actually take care of the damage and whatnot.
 	CARD_ATTACK,
 	CARD_STRIKE,
 	CARD_DAMAGE
 }
 
-enum PlacerID { CARD, PLAYER }
+enum PlacerType { CARD, PLAYER }
 
 var type: int
 var data: Dictionary
@@ -53,29 +53,21 @@ func _init(t: int, d: Dictionary) -> void:
 
 
 static func new_play_card(
-	card_id: String, pos: Vector2i, placer_type: PlacerID, placer_id: String
+	card_id: String, pos: Vector2i, placer_type: PlacerType, placer_id: String
 ) -> Action:
 	return Action.new(
 		Type.PLAY_CARD,
-		{
-			card_id = card_id,
-			pos = pos,
-			placer_type = placer_type,
-			placer_id = placer_id
-		}
+		{card_id = card_id, pos = pos, placer_type = placer_type, placer_id = placer_id}
 	)
 
 
-static func new_create_token(
-	card_data: Dictionary, token_id: String, source_id: String
-) -> Action:
+static func new_create_token(card_data: Dictionary, token_id: String, source_id: String) -> Action:
 	return Action.new(
-		Type.CREATE_TOKEN,
-		{card_data = card_data, token_id = token_id, source_id = source_id}
+		Type.CREATE_TOKEN, {card_data = card_data, token_id = token_id, source_id = source_id}
 	)
 
 
-func to_dict() -> Dictionary:
+func as_dict() -> Dictionary:
 	# TODO: this does not handle nested custom type just yet
 	var s_dict := {}
 	for prop: String in data:

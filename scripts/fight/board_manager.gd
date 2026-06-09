@@ -70,9 +70,7 @@ func position_card() -> void:
 	for slot in slots:
 		if slot == null or slot.card == null:
 			continue
-		create_tween().tween_property(
-			slot.card, ^"position", slot.global_position + Global.CARD_SIZE / 2, 0.2
-		)
+		create_tween().tween_property(slot.card, ^"position", slot.global_position, 0.2)
 		#slot.card.position = slot.global_position + Global.CARD_SIZE / 2
 
 

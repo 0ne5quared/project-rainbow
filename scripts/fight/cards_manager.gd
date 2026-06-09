@@ -1,37 +1,56 @@
 class_name CardsManager
 extends Control
 
-const CARD_PREFAB: PackedScene = preload("res://prefab/card/card.tscn")
-
 @onready var fight_manager: FightManager = $".."
 
-var cards: Dictionary[int, Card]
+const CARD_PREFAB: PackedScene = preload("res://prefab/card/card.tscn")
 
-signal card_change_zone(card: Card, from: Card.Zone, to: Card.Zone)
+var _cards: Dictionary[String, Card]
+
+signal card_changed_zone(card: Card, from: Card.Zone, to: Card.Zone)
 
 
-func add_card(card_data: Dictionary, zone: Card.Zone) -> Card:
+func _ready() -> void:
+	ConnectionManager.recieved_packet.connect(_on_recieved_packet)
+
+
+func _on_recieved_packet(packet: Dictionary) -> void:
+	if packet.type != ConnectionManager.GameMessage.NEW_CARD or packet.card.id in _cards:
+		return
+
+	add_card(packet.card.data as Dictionary, packet.card.zone as int, packet.card.id as String)
+
+
+func add_card(card_data: Dictionary, zone: Card.Zone, id := "") -> Card:
 	var card: Card = CARD_PREFAB.instantiate()
-	card.zone = zone
-	card.card_data = card_data
 	add_child(card)
-	cards[card.id] = card
-	for sigil in card.sigils:
+	card.card_data = card_data
+	if not id.is_empty():
+		card.id = id
+	for sigil: Sigil in card.sigils.values():
 		sigil.fight_manager = fight_manager
-	card_change_zone.emit(card, Card.Zone.LIMBO, zone)
+	_cards[card.id] = card
+	move_card(card.id, zone)
 	return card
 
 
-func get_cards_from_zone(zone: Card.Zone) -> Array[Card]:
-	return cards.values().filter(func(c: Card) -> bool: return c.zone == zone)
-
-
-func get_card_by_id(id: int) -> Card:
-	return cards[id]
-
-
-func move_card(card_id: int, zone: Card.Zone) -> void:
-	var card := cards[card_id]
+func move_card(card_id: String, zone: Card.Zone) -> void:
+	var card := get_card_by_id(card_id)
 	var from := card.zone
 	card.zone = zone
-	card_change_zone.emit(card, from, zone)
+	card_changed_zone.emit(card, from, zone)
+	if zone in Card.PUBLIC_ZONE:
+		ConnectionManager.send(ConnectionManager.GameMessage.NEW_CARD, {card = card.as_dict()})
+
+
+func get_card_by_id(id: String) -> Card:
+	var card := _cards[id]
+	return card
+
+
+func get_cards_by_zone(zone: Card.Zone) -> Array[Card]:
+	var out: Array[Card] = []
+	for child: Card in get_children():
+		if child.zone == zone:
+			out.append(child)
+	return out
