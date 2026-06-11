@@ -5,6 +5,9 @@
 [ext_resource type="Script" uid="uid://drjrucir1mm50" path="res://scripts/fight/hand_manager.gd" id="3_1bvp3"]
 [ext_resource type="Script" uid="uid://cc0v3nrwian0l" path="res://scripts/fight/cards_manager.gd" id="4_tmx0f"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tmx0f"]
+bg_color = Color(0.15487596, 0.154876, 0.15487587, 1)
+
 [node name="Fight" type="Panel" unique_id=1032969089]
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,6 +16,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_tmx0f")
 script = ExtResource("1_1bvp3")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=319908388]

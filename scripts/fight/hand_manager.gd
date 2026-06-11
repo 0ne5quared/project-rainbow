@@ -60,13 +60,13 @@ func _on_card_unhovered(card: Card) -> void:
 
 func _raise_card(card: Card) -> void:
 	create_tween().tween_property(
-		card, ^"position", Vector2(position.x, _get_y()) + Vector2.UP * 20, 0.2
+		card, ^"position", Vector2(card.position.x, _get_y()) + Vector2.UP * 20, 0.2
 	)
 	card.z_index = 1
 
 
 func _unraise_card(card: Card) -> void:
-	create_tween().tween_property(card, ^"position", Vector2(position.x, _get_y()), 0.2)
+	create_tween().tween_property(card, ^"position", Vector2(card.position.x, _get_y()), 0.2)
 	card.z_index = 0
 
 

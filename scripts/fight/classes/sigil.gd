@@ -14,7 +14,7 @@ var _stack: Array[Action]
 ## board. If you instead want to override the card placement use [method stack_added]
 ## instead
 func on_played(
-	_card: Card, _pos: Vector2i, _placer_type: Action.PlacerType, _placer_id: String
+	_card: Card, _pos: Vector2i, _placer_type: PlayCardAction.PlacerType, _placer_id: String
 ) -> void:
 	return
 
@@ -26,6 +26,6 @@ func stack_added(_action: Dictionary) -> Array[Action]:
 
 
 func play_card(
-	card_id: String, pos: Vector2i, placer_type: Action.PlacerType, placer_id: String
+	card_id: String, pos: Vector2i, placer_type: PlayCardAction.PlacerType, placer_id: String
 ) -> void:
-	_stack.append(Action.new_play_card(card_id, pos, placer_type, placer_id))
+	_stack.append(PlayCardAction.new(card_id, pos, placer_type, placer_id))

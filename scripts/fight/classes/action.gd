@@ -1,4 +1,4 @@
-class_name Action
+@abstract class_name Action
 extends Object
 
 # IMPORTANT:
@@ -30,63 +30,41 @@ enum Type {
 	END_TURN,
 	## Action representing the start of combat. This action have no additional information.
 	COMBAT,
-	## Action representing the card attacking. This will simply resolve into CARD_ST RIKE that
-	## actually take care of the damage and whatnot.
+	## Action representing the start of a card attack. This will simply resolve into CARD_STRIKE that
+	## actually take care of the damage and whatnot. Implementing [method Sigil.on_attack] will
+	## override the default of adding a center strike for this action
 	CARD_ATTACK,
+	## Action representing the card striking. This is the actual damage dealing action.
 	CARD_STRIKE,
+	## Action representing a card taking damage.
 	CARD_DAMAGE
 }
 
-enum PlacerType { CARD, PLAYER }
-
-var type: int
-var data: Dictionary
 ## A unique id for this stack action.
 ##
 ## If a previous stack action is on the stack this is use to seed the randomizer
 var id := Global.gen_id()
 
+@abstract func resolve(fight_manager: FightManager) -> void
+@abstract func as_dict() -> Dictionary
 
-func _init(t: int, d: Dictionary) -> void:
-	type = t
-	data = d
-
-
-static func new_play_card(
-	card_id: String, pos: Vector2i, placer_type: PlacerType, placer_id: String
-) -> Action:
-	return Action.new(
-		Type.PLAY_CARD,
-		{card_id = card_id, pos = pos, placer_type = placer_type, placer_id = placer_id}
-	)
-
-
-static func new_create_token(card_data: Dictionary, token_id: String, source_id: String) -> Action:
-	return Action.new(
-		Type.CREATE_TOKEN, {card_data = card_data, token_id = token_id, source_id = source_id}
-	)
-
-
-func as_dict() -> Dictionary:
-	# TODO: this does not handle nested custom type just yet
-	var s_dict := {}
-	for prop: String in data:
-		match typeof(data[prop]):
-			TYPE_VECTOR2I:
-				var v := data[prop] as Vector2i
-				s_dict[prop] = {c_type = "Vector2i", x = v.x, y = v.y}
-			_:
-				s_dict[prop] = data[prop]
-	return {a_type = type, data = s_dict}
+static var _action_registry: Dictionary = {}
 
 
 static func from_dict(dict: Dictionary) -> Action:
-	var t := dict.a_type as int
-	var d := dict.data as Dictionary
-	for k: String in d:
-		var v: Variant = d[k]
-		if typeof(v) == TYPE_DICTIONARY:
-			if "c_type" in v:
-				if v.c_type == "Vector2i":
-					d[k] = Vector2i(v.x as int, v.y as int)
-	return Action.new(t, d)
+	if _action_registry.is_empty():
+		var path := "res://scripts/fight/classes/actions"
+		var dir := DirAccess.open(path)
+		for file in dir.get_files():
+			if not file.ends_with(".gd"):
+				continue
+			@warning_ignore("confusable_local_declaration")
+			var script := load("%s/%s" % [path, file])
+			_action_registry[script.action_type()] = script
+
+	if "type" not in dict:
+		dict.type = -1
+	dict.type = dict.type as int
+
+	var script: Script = _action_registry.get(dict.type)
+	return script.from_dict(dict)

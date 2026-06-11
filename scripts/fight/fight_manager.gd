@@ -36,6 +36,9 @@ func _draw_card() -> void:
 
 func _ready() -> void:
 	ConnectionManager.recieved_packet.connect(_on_recieved_packet)
+	visible = true
+	await get_tree().process_frame
+	visible = false
 
 
 func _on_recieved_packet(packet: Dictionary) -> void:
@@ -61,12 +64,12 @@ func _on_recieved_packet(packet: Dictionary) -> void:
 
 func _on_slot_selected(slot: BoardManager.Slot) -> void:
 	if state == State.PLAYING_CARD and slot.pos.y == BoardManager.Row.MINE:
-		var a := Action.new_play_card(
-			hand_manager.selected.id, slot.pos, Action.PlacerType.PLAYER, Global.uuid
+		var a := PlayCardAction.new(
+			hand_manager.selected.id, slot.pos, PlayCardAction.PlacerType.PLAYER, Global.uuid
 		)
 		_add_then_resolve(a)
-		a.data.pos -= Vector2i(0, board_manager.columns - 1)
-		a.data.pos = abs(a.data.pos) as Vector2i
+		a.pos -= Vector2i(0, board_manager.columns - 1)
+		a.pos = abs(a.pos) as Vector2i
 		ConnectionManager.send(
 			ConnectionManager.GameMessage.ACTIONS, {actions = [a.as_dict()], private = false}
 		)
@@ -116,36 +119,15 @@ func _add_then_resolve(action: Action) -> void:
 func _resolve_stack() -> void:
 	while _stack.size() > 0:
 		var action: Action = _stack.pop_back()
-		match action.type as int:
-			Action.Type.PLAY_CARD:
-				_resolve_play_card(
-					action.data.card_id as String,
-					action.data.pos as Vector2i,
-					action.data.placer_type as Action.PlacerType,
-					action.data.placer_id as String
-				)
-			_:
-				push_error("This stack action is not implemented: %s" % action.type)
+		action.resolve(self)
 		while not _got_opp_private:
 			await ConnectionManager.recieved_packet
 		_push_actions(_opp_private)
 		_got_opp_private = false
 
 
-func _resolve_play_card(
-	card_id: String, pos: Vector2i, placer_type: Action.PlacerType, placer_id: String
-) -> void:
-	if not board_manager.is_slot_empty(pos):
-		print("Someone is trying to play into a slot with a card already. This might be a bug.")
-		return
-
-	card_manager.move_card(card_id, Card.Zone.BOARD)
-	var slot := board_manager.get_slot(pos)
-	var card := card_manager.get_card_by_id(card_id)
-	slot.card = card
-	_activate_sigils(
-		func(sigils: Sigil) -> void: sigils.on_played(card, pos, placer_type, placer_id)
-	)
+func _no_activation() -> void:
+	ConnectionManager.send(ConnectionManager.GameMessage.ACTIONS, {actions = [], private = true})
 
 
 func _activate_sigils(callback: Callable) -> void:
