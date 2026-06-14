@@ -54,3 +54,15 @@ func get_cards_by_zone(zone: Card.Zone) -> Array[Card]:
 		if child.zone == zone:
 			out.append(child)
 	return out
+
+
+func clean_card() -> void:
+	for card_id in _cards:
+		if _cards[card_id].zone == Card.Zone.LIMBO:
+			remove_child(_cards[card_id])
+			_cards[card_id].queue_free()
+			_cards.erase(card_id)
+
+
+func _on_fight_stack_resolved() -> void:
+	clean_card()

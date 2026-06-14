@@ -2,6 +2,15 @@ extends Sigil
 
 
 func on_played(
-	_card: Card, _pos: Vector2i, _placer_type: PlayCardAction.PlacerType, _placer_id: String
+	played_card: Card, pos: Vector2i, _placer_type: PlayCardAction.PlacerType, _placer_id: String
 ) -> void:
-	return
+	if played_card != attached_card:
+		return
+
+	var dam_data := {
+		name = "Dam",
+		attack = 1,
+		health = 1,
+	}
+	create_and_play_token(dam_data, pos + Vector2i.LEFT, attached_card.id)
+	create_and_play_token(dam_data, pos + Vector2i.RIGHT, attached_card.id)

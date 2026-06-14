@@ -1,22 +1,28 @@
 @abstract class_name Action
 extends Object
 
-# IMPORTANT:
-# When adding a new action, you should also implement these 3 things
-# - A stack action constructor, like `PLAY_CARD` have `new_play_card_action`
-# - A stack action resolver, like `PLAY_CARD` have `_resolve_play_card`.
-# - A sigil event hook, like `PLAY_CARD` have `on_played` (This can be found in the sigil
-# class), also call said event hook.
-# Should also document what the spec of the action look like/how to use them.
+## Base class for an action on the stack. These can be resolve using [method resolve]
+##
+## When adding a new action, you should also follows this checklist:[br]
+## - Add a new type to [enum Type]. [br]
+## - implement [method action_type] that return your new enum value[br]
+## - [method as_dict] and [method from_dict] that serialize to and from a Dictionary.[br]
+## - implement [method resolve] that perform the resolution of this action as well as activating
+## sigil[br]
+## - A sigil event hooks [br]
+## - For debug purposes you may also implement [method fmt] to format your action into a string
+## A default implementation is provided for you if you don't want to implement anything.[br]
+## [br]
+## If you want an example look at [PlayCardAction] file.[br]
+## - The enum type is [enum Type.PLAY_CARD][br]
+## - The sigil event hook is [method Sigil.on_card_played][br]
+## - It is intented to be broadcast and so it implement [method PlayCardAction.as_dict]
+## and [method PlayCardAction.from_dict][br]
+## - It implement [method PlayCardAction.resolve] that perform the actual playing of the card using
+## helper and utility provided by [FightManager] as well as trigger sigil event hook.
 
 enum Type {
-	## Action representing playing a card.[br]
-	## The spec for this action include:[br]
-	## - [code]card_id[/code]: [String]: The card id being placed, use something like
-	## [enum CREATE_TOKEN] if this card did not exist before.[br]
-	## - [code]pos[/code]: [Vector2i]: The position to play the card in[br],
-	## - [code]placer_type[/code]: [enum Action.PlacerType],
-	## - [code]placer_id[/code]
+	## Action representing playing a card.
 	PLAY_CARD,
 	## Action representing creating a new token, this token will just float around in limbo.
 	## You need another action to do something with this token.[br]
@@ -37,7 +43,8 @@ enum Type {
 	## Action representing the card striking. This is the actual damage dealing action.
 	CARD_STRIKE,
 	## Action representing a card taking damage.
-	CARD_DAMAGE
+	CARD_DAMAGE,
+	TIP_SCALE
 }
 
 ## A unique id for this stack action.
@@ -46,6 +53,14 @@ enum Type {
 var id := Global.gen_id()
 
 @abstract func resolve(fight_manager: FightManager) -> void
+
+
+static func action_type() -> Type:
+	push_error("Action type did not implement the `action_type` static func")
+	@warning_ignore("int_as_enum_without_cast", "int_as_enum_without_match")
+	return -1
+
+
 @abstract func as_dict() -> Dictionary
 
 static var _action_registry: Dictionary = {}
@@ -65,6 +80,14 @@ static func from_dict(dict: Dictionary) -> Action:
 	if "type" not in dict:
 		dict.type = -1
 	dict.type = dict.type as int
+	if dict.type == -1:
+		push_error("This action did not implement dictfication")
+		return null
 
 	var script: Script = _action_registry.get(dict.type)
 	return script.from_dict(dict)
+
+
+## Return the action as a nicely formatted string for debug purposes
+func fmt() -> String:
+	return Action.Type.keys()[action_type()]

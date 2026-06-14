@@ -8,6 +8,9 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tmx0f"]
 bg_color = Color(0.15487596, 0.154876, 0.15487587, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oupg2"]
+bg_color = Color(0, 0, 0, 0.6)
+
 [node name="Fight" type="Panel" unique_id=1032969089]
 anchors_preset = 15
 anchor_right = 1.0
@@ -37,6 +40,10 @@ size_flags_stretch_ratio = 2.5
 [node name="LeftUI" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2" unique_id=2036390974]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="RichTextLabel" type="Label" parent="VBoxContainer/HBoxContainer2/LeftUI" unique_id=539702474]
+layout_mode = 2
+text = "Scale:"
 
 [node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/HBoxContainer2" unique_id=1161575921]
 layout_mode = 2
@@ -92,7 +99,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("3_1bvp3")
 
-[node name="Spacer2" type="Panel" parent="VBoxContainer/HBoxContainer" unique_id=1664683970]
+[node name="End" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1826553701]
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -101,7 +108,28 @@ unique_name_in_owner = true
 anchors_preset = 0
 script = ExtResource("4_tmx0f")
 
+[node name="Blocker" type="PanelContainer" parent="." unique_id=1328792040]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_oupg2")
+
+[node name="CenterContainer" type="CenterContainer" parent="Blocker" unique_id=755260296]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Blocker/CenterContainer" unique_id=389057757]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Waiting for opponent"
+
+[connection signal="stack_resolved" from="." to="CardsManager" method="_on_fight_stack_resolved"]
 [connection signal="slot_selected" from="VBoxContainer/HBoxContainer2/CenterContainer/BoardManager" to="." method="_on_slot_selected"]
 [connection signal="card_selected" from="VBoxContainer/HBoxContainer/HandManager" to="." method="_on_card_selected"]
 [connection signal="card_unselected" from="VBoxContainer/HBoxContainer/HandManager" to="." method="_on_card_unselected"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/End" to="." method="_on_end_pressed"]
 [connection signal="card_changed_zone" from="CardsManager" to="VBoxContainer/HBoxContainer/HandManager" method="_on_card_changed_zone"]

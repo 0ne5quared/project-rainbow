@@ -23,14 +23,17 @@ var card_data: Dictionary:
 	get:
 		return card_data
 
-var zone := Zone.LIMBO
+var zone := Zone.LIMBO:
+	set(new):
+		zone = new
+		visible = zone != Zone.LIMBO
 var is_friendly := true
 var id := Global.gen_id()
 
 var attack_mod: int
 var sigil_mod: int
 
-# these are just extracted out of the card_data for type safety
+# These are just extracted out of the card_data for type safety
 ## The attack of the card, if you want to temporarily buff the card use [member attack_mod]
 var attack: int
 ## The health of the card
@@ -52,11 +55,9 @@ func parse_data(data: Dictionary) -> Dictionary:
 	for prop in _DATA_SCHEMA:
 		if prop == &"sigils":
 			for sigil: String in data[prop]:
-				print('attempting to load "%s" sigil' % sigil)
 				if FileAccess.file_exists("res://scripts/fight/sigils/%s.gd" % sigil):
-					print("File found, loading...")
 					var s: Sigil = load("res://scripts/fight/sigils/%s.gd" % sigil).new()
-					s.card = self
+					s.attached_card = self
 					sigils[sigil] = (s)
 					continue
 				push_warning('Sigil "%s" script not found, skip loading' % sigil)
@@ -74,9 +75,19 @@ func redraw_card() -> void:
 		%Portrait.texture = load(portrait_path)
 	else:
 		push_warning(
-			'Portrait can\'t be found for "%s" so using missing texture instead', card_name
+			'Portrait can\'t be found for "%s" so using missing texture instead' % card_name
 		)
 		%Portrait.texture = load("res://asset/portraits/MISSING.png")
+	for sigil in sigils:
+		var sigil_path := "res://asset/sigils/%s.png" % sigil
+		if not FileAccess.file_exists(sigil_path):
+			push_warning(
+				'Sigil icon can\'t be found for "%s" so using missing texture instead' % sigil
+			)
+			sigil_path = "res://asset/sigils/MISSING.png"
+		var text_rect := TextureRect.new()
+		text_rect.texture = load(sigil_path)
+		%SigilsContainer.add_child(text_rect)
 	%Attack.text = str(attack)
 	%Health.text = str(health)
 

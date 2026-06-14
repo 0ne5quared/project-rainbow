@@ -17,8 +17,7 @@ func _ready() -> void:
 
 
 func add_player(player: ConnectionManager.Player) -> void:
-	if Global.is_host:
-		players[player.uuid] = player
+	players[player.uuid] = player
 	var listing: PlayerListing = player_listing.instantiate()
 	listing.player_name = player.name
 	listing.pfp = player.pfp
@@ -55,8 +54,7 @@ func _on_player_joined(player: ConnectionManager.Player) -> void:
 
 
 func _on_player_left(uuid: String) -> void:
-	if Global.is_host:
-		players.erase(uuid)
+	players.erase(uuid)
 	for listing in %PlayerList.get_children():
 		if listing.name == uuid:
 			%PlayerList.remove_child(listing)
@@ -86,8 +84,10 @@ func _on_end_btn_pressed() -> void:
 
 func _on_start_btn_pressed() -> void:
 	if Global.is_host:
-		ConnectionManager.send(ConnectionManager.GameMessage.START_GAME)
+		var starting_player := 0
+		ConnectionManager.send(ConnectionManager.GameMessage.START_GAME, {start = starting_player})
 		visible = false
+		%Fight.is_active = starting_player == 0
 		%Fight._start_fight()
 
 
@@ -96,4 +96,5 @@ func _on_packet_recieved(packet: Dictionary) -> void:
 		return
 
 	visible = false
+	%Fight.is_active = 1 - packet.start == 0
 	%Fight._start_fight()

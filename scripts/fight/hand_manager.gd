@@ -85,7 +85,7 @@ func _select_card(card: Card) -> void:
 
 func _on_card_changed_zone(card: Card, from: Card.Zone, to: Card.Zone) -> void:
 	if card == selected and card.zone != Card.Zone.HAND:
-		# oh the card i was holding is gone :(
+		# Oh the card I was holding is gone :(
 		selected = null
 
 	if from == Card.Zone.HAND or to == Card.Zone.HAND:

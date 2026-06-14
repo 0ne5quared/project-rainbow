@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://blhcx78lnp2kf" path="res://prefab/card/card.gd" id="1_8nimt"]
 [ext_resource type="Script" uid="uid://d0y06b2xbgam2" path="res://scripts/utils/name_scroller.gd" id="2_pe5rd"]
 [ext_resource type="Texture2D" uid="uid://bie1qwdx23na7" path="res://asset/portraits/Squirrel.png" id="3_f2uqh"]
-[ext_resource type="Texture2D" uid="uid://dtn5fp4cyrbkp" path="res://asset/sigils/Bifucated Strike.png" id="4_pskxa"]
 [ext_resource type="Texture2D" uid="uid://d4fhkxwnobdxl" path="res://asset/card_frame/tech_frame.png" id="4_rpw1c"]
 [ext_resource type="Texture2D" uid="uid://d0qiu1j4oon11" path="res://asset/card_frame/beast_icon.png" id="5_cryra"]
 
@@ -91,15 +90,12 @@ texture = ExtResource("5_cryra")
 custom_minimum_size = Vector2(73, 36)
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer/CenterContainer" unique_id=254318988]
+[node name="SigilsContainer" type="GridContainer" parent="VBoxContainer/CenterContainer" unique_id=254318988]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 2
 columns = 3
-
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/CenterContainer/GridContainer" unique_id=1130291801]
-layout_mode = 2
-texture = ExtResource("4_pskxa")
 
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer" unique_id=471424775]
 layout_mode = 2

@@ -1,31 +1,88 @@
 @abstract class_name Sigil
 
+## Most method in this class create a token that is appended to the internal stack of this sigil.
+## They are promises that this will happens
+
 ## The fight manager that is current "active".
 ## Just a reference to the fightmanager so you can access like the board, hand,
 ## play card and general utils offer by the fight manager.
 var fight_manager: FightManager
 ## The card this sigil is attached to.
-var card: Card
+var attached_card: Card
 
 var _stack: Array[Action]
 
+# --- All the sigil event hook ---
 
-## Called after a PLAY_CARD action is resolved. This mean that the card is already on
-## board. If you instead want to override the card placement use [method stack_added]
-## instead
+@warning_ignore_start("unused_parameter")  # keep the signature clean while avoiding warning
+
+
+## Called after [PlayCardAction] is resolved. This mean that the card is already on board.
 func on_played(
-	_card: Card, _pos: Vector2i, _placer_type: PlayCardAction.PlacerType, _placer_id: String
+	card: Card, pos: Vector2i, placer_type: PlayCardAction.PlacerType, placer_id: String
 ) -> void:
 	return
 
 
-## Called whenever an action is added to the stack. If this return a non empty array
-## the top action of the stack is replace with the returned value
-func stack_added(_action: Dictionary) -> Array[Action]:
+## Called after [EndTurnAction] is resolved. This however
+func on_turn_end() -> void:
+	return
+
+
+## Called when [CombatAction] resolved before all the strike and attack are put onto the stack. For
+## those that change how the card attack use [method on_attack].
+func on_combat_start() -> void:
+	return
+
+
+## Called after [CardAttackAction] resolved. This will dictate what [CardStrikeAction] the card will
+## do whatever strike group this function spit out. If by the end of all the strike sigils activation
+## the card still have no [StrikeGroup] the default center strike is issued.
+func on_attack(card: Card) -> Array[CardAttackAction.StrikeGroup]:
 	return []
 
 
+## Called after [TipScaleAction] resolved. This mean that the scale is already tipped.
+func on_scale_tipped(amount: int) -> void:
+	pass
+
+
+## Called whenever an action is added to the stack. If this return a non empty array the top action
+## of the stack is replace with the returned value
+func replace_action(action: Dictionary) -> Array[Action]:
+	return []
+
+
+@warning_ignore_restore("unused_parameter")
+
+# --- Helper function and utils ---
+
+
+func add_action(action: Action) -> void:
+	_stack.push_front(action)
+
+
+## Play [param card_id] at [param pos] by [param placer_id] which is a [param placer_type]
 func play_card(
 	card_id: String, pos: Vector2i, placer_type: PlayCardAction.PlacerType, placer_id: String
 ) -> void:
-	_stack.append(PlayCardAction.new(card_id, pos, placer_type, placer_id))
+	add_action(PlayCardAction.new(card_id, pos, placer_type, placer_id))
+
+
+## Create a new token with [param card_data] by [param source_id]. Return the new token's id[br]
+func create_token(card_data: Dictionary, source_id: String) -> String:
+	var token_id := Global.gen_id()
+	add_action(CreateTokenAction.new(card_data, token_id, source_id))
+	return token_id
+
+
+## Create a new token with [param card_data] by [param source_id] amd play it at [param pos].
+## Return the new token's id.[br]
+func create_and_play_token(card_data: Dictionary, pos: Vector2i, source_id: String) -> String:
+	var id := create_token(card_data, source_id)
+	play_card(id, pos, PlayCardAction.PlacerType.CARD, source_id)
+	return id
+
+
+func oppose_pos(pos: Vector2i) -> Vector2i:
+	return BoardManager.oppose_pos(pos)

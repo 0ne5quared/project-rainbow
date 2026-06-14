@@ -27,13 +27,15 @@ class Slot:
 	func _init(p: Vector2i) -> void:
 		pos = p
 
+	func is_empty() -> bool:
+		return card == null
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
 	for i in range(columns * 4):
-		@warning_ignore("integer_division")  # actually good to normalize the column number
+		@warning_ignore("integer_division")  # Actually good to normalize the column number
 		var row := i / 4
-		# TODO change this when we implement backrow
+		# TODO: Change this when we implement backrow
 		# Mainly that hard coded false
 		var is_back := row in [Row.OPP_BACK, Row.MINE_BACK]
 		if true and is_back:
@@ -68,19 +70,41 @@ func _on_slot_pressed(slot: Slot) -> void:
 
 func position_card() -> void:
 	for slot in slots:
-		if slot == null or slot.card == null:
+		if slot == null or slot.is_empty():
 			continue
 		create_tween().tween_property(slot.card, ^"position", slot.global_position, 0.2)
 		#slot.card.position = slot.global_position + Global.CARD_SIZE / 2
 
 
 func is_slot_empty(pos: Vector2i) -> bool:
-	return get_slot(pos).card == null
+	var slot := get_slot(pos)
+	return slot != null and slot.is_empty()
 
 
 func get_slot(pos: Vector2i) -> Slot:
+	if pos.x not in range(0, columns) or pos.y not in range(0, 4):
+		return null
 	return slots[pos.x + pos.y * columns]
 
 
 func get_row(row: Row) -> Array[Slot]:
 	return slots.slice(row * columns, (row + 1) * columns)
+
+
+## Get the "active" row from the current client perspective. If [param is_active] is true, return
+## [enum Row.MIME] else [enum Row.OPP].
+func get_active_row(is_active: bool) -> Array[Slot]:
+	return get_row(BoardManager.Row.MINE if is_active else BoardManager.Row.OPP)
+
+
+static func oppose_pos(pos: Vector2i) -> Vector2i:
+	return abs(pos - Vector2i(0, 3))
+
+
+## Return the position of card with [param card_id]. If the card doesn't exist on the board return
+## [code]Vector2i(-1, -1)[/code]
+func get_card_pos(card_id: String) -> Vector2i:
+	for slot in slots:
+		if slot != null and not slot.is_empty() and slot.card.id == card_id:
+			return slot.pos
+	return Vector2i.ONE * -1

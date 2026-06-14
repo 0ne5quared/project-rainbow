@@ -1,5 +1,4 @@
 class_name FightManager
-
 extends Control
 
 enum State {
@@ -17,9 +16,20 @@ enum State {
 @onready var board_manager: BoardManager = %BoardManager
 @onready var card_manager: CardsManager = %CardsManager
 
+signal stack_resolved
+
 var state := State.IDLE
 var turn := 1
-var active_player := randi_range(0, 1)
+## Am I the active player
+var is_active: bool:
+	set(new):
+		is_active = new
+		%Blocker.visible = not is_active
+## The current scale position. Positive is me winnig and negative is me losing.
+var scale_position := 0:
+	set(new):
+		scale_position = new
+		$VBoxContainer/HBoxContainer2/LeftUI/RichTextLabel.text = "Scales: " + str(scale_position)
 
 var _got_opp_private := false
 var _opp_private: Array[Action] = []
@@ -31,7 +41,11 @@ func _start_fight() -> void:
 
 
 func _draw_card() -> void:
-	hand_manager.draw_card({name = "Squirrel", attack = 0, health = 1})
+	hand_manager.draw_card({name = "Squirrel", attack = 1, health = 1, sigils = ["Dam Builder"]})
+	hand_manager.draw_card({name = "Squirrel", attack = 1, health = 1, sigils = ["Dam Builder"]})
+	hand_manager.draw_card({name = "Squirrel", attack = 1, health = 1, sigils = ["Dam Builder"]})
+	hand_manager.draw_card({name = "Squirrel", attack = 1, health = 1, sigils = ["Dam Builder"]})
+	hand_manager.draw_card({name = "Squirrel", attack = 1, health = 1, sigils = ["Dam Builder"]})
 
 
 func _ready() -> void:
@@ -68,8 +82,7 @@ func _on_slot_selected(slot: BoardManager.Slot) -> void:
 			hand_manager.selected.id, slot.pos, PlayCardAction.PlacerType.PLAYER, Global.uuid
 		)
 		_add_then_resolve(a)
-		a.pos -= Vector2i(0, board_manager.columns - 1)
-		a.pos = abs(a.pos) as Vector2i
+		a.pos = BoardManager.oppose_pos(a.pos)
 		ConnectionManager.send(
 			ConnectionManager.GameMessage.ACTIONS, {actions = [a.as_dict()], private = false}
 		)
@@ -82,6 +95,16 @@ func _on_card_selected(_card: Card) -> void:
 func _on_card_unselected(_card: Card) -> void:
 	if state == State.PLAYING_CARD:
 		state = State.IDLE
+
+
+func _on_end_pressed() -> void:
+	_add_then_resolve(EndTurnAction.new())
+	ConnectionManager.send(
+		ConnectionManager.GameMessage.ACTIONS,
+		{actions = [EndTurnAction.new().as_dict()], private = false}
+	)
+	await stack_resolved
+	is_active = not is_active
 
 
 # --- STACK SHIT ---
@@ -119,11 +142,21 @@ func _add_then_resolve(action: Action) -> void:
 func _resolve_stack() -> void:
 	while _stack.size() > 0:
 		var action: Action = _stack.pop_back()
+		$VBoxContainer/HBoxContainer2/RightUI/RichTextLabel.text = (
+			"TOP: "
+			+ action.fmt()
+			+ "\n"
+			+ "\n".join(_stack.map(func(x: Action) -> String: return x.fmt()))
+		)
 		action.resolve(self)
 		while not _got_opp_private:
 			await ConnectionManager.recieved_packet
 		_push_actions(_opp_private)
 		_got_opp_private = false
+		await get_tree().create_timer(0.2).timeout
+	print("Finish stack resolution")
+	stack_resolved.emit()
+	$VBoxContainer/HBoxContainer2/RightUI/RichTextLabel.text = ""
 
 
 func _no_activation() -> void:
@@ -143,6 +176,7 @@ func _activate_sigil_on_cards(cards: Array[Card], callback: Callable) -> Array[A
 	var out: Array[Action] = []
 	for card in cards:
 		for sigil: Sigil in card.sigils.values():
+			seed(card.id.hash() + (0 if _stack.is_empty() else _stack[-1].id.hash()))
 			sigil._stack.clear()
 			callback.call(sigil)
 			_push_actions(sigil._stack)
@@ -151,12 +185,8 @@ func _activate_sigil_on_cards(cards: Array[Card], callback: Callable) -> Array[A
 
 
 func _public_activation_order() -> Array[Card]:
-	var out: Array[BoardManager.Slot] = board_manager.get_row(
-		BoardManager.Row.MINE if active_player == 0 else BoardManager.Row.OPP
-	)
-	out.append_array(
-		board_manager.get_row(BoardManager.Row.MINE if active_player != 0 else BoardManager.Row.OPP)
-	)
+	var out: Array[BoardManager.Slot] = board_manager.get_active_row(is_active)
+	out.append_array(board_manager.get_active_row(not is_active))
 	var res: Array[Card]
 	res.assign(
 		(
