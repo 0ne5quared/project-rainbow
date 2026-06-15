@@ -18,15 +18,22 @@ func _init(p: Vector2i, sid: String, tf := false) -> void:
 
 
 func resolve(fight_manager: FightManager) -> void:
-	var card := fight_manager.card_manager.get_card_by_id(striker_id)
-	var slot := fight_manager.board_manager.get_slot(pos)
-	print(card.attack)
-	if slot.is_empty() or to_face:
+	var striker := fight_manager.card_manager.get_card_by_id(striker_id)
+	var victim_slot := fight_manager.board_manager.get_slot(pos)
+	if victim_slot == null:
+		push_warning("Nuh uh no striking into non-existence slot >:(")
+		fight_manager._no_activation()
+		return
+	if victim_slot.is_empty() or to_face:
 		fight_manager._push_action(
-			TipScaleAction.new(card.attack * (-1 if slot.pos.y == BoardManager.Row.MINE else 1))
+			TipScaleAction.new(
+				striker.attack * (-1 if victim_slot.pos.y == BoardManager.Row.MINE else 1)
+			)
 		)
 	else:
-		slot.card.health -= card.attack
+		fight_manager._push_action(
+			DamageCard.new(striker.attack, victim_slot.card.id, IDType.CARD, striker.id)
+		)
 	fight_manager._no_activation()
 
 

@@ -35,11 +35,20 @@ var sigil_mod: int
 
 # These are just extracted out of the card_data for type safety
 ## The attack of the card, if you want to temporarily buff the card use [member attack_mod]
-var attack: int
+var attack: int:
+	set(new):
+		attack = new
+		redraw_card()
 ## The health of the card
-var health: int
+var health: int:
+	set(new):
+		health = new
+		redraw_card()
 ## The sigils on the card, if you want to temporarily add sigil to the card use [member sigils]
-var sigils: Dictionary[String, Sigil]
+var sigils: Dictionary[String, Sigil]:
+	set(new):
+		sigils = new
+		redraw_card()
 ## Trait of the card, these don't have any gameplay effect but instead they are checked by
 ## sigils and or cost.
 var traits: Array[String]
@@ -48,9 +57,12 @@ var costs: Dictionary[String, Variant]
 var tokens: Array[String]
 var card_name: String
 
+var parsing_data := false
+
 
 ## Parse and assign infomation in [param data]
 func parse_data(data: Dictionary) -> Dictionary:
+	parsing_data = true
 	Global.validate_schema(data, _DATA_SCHEMA)
 	for prop in _DATA_SCHEMA:
 		if prop == &"sigils":
@@ -64,10 +76,14 @@ func parse_data(data: Dictionary) -> Dictionary:
 			continue
 		set(prop, data[prop])
 	card_name = data.name
+	parsing_data = false
 	return data
 
 
 func redraw_card() -> void:
+	# don't redraw while parsing card so that we don;t spam the log
+	if parsing_data:
+		return
 	%Name.text = card_name
 
 	var portrait_path := "res://asset/portraits/%s.png" % card_name
@@ -78,6 +94,9 @@ func redraw_card() -> void:
 			'Portrait can\'t be found for "%s" so using missing texture instead' % card_name
 		)
 		%Portrait.texture = load("res://asset/portraits/MISSING.png")
+	for n in %SigilsContainer.get_children():
+		%SigilsContainer.remove_child(n)
+		n.queue_free()
 	for sigil in sigils:
 		var sigil_path := "res://asset/sigils/%s.png" % sigil
 		if not FileAccess.file_exists(sigil_path):

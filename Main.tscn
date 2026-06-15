@@ -84,12 +84,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/separator = SubResource("StyleBoxLine_fos0i")
 
-[node name="SubTitle" type="Label" parent="TitleScreen/VBoxContainer/HBoxContainer" unique_id=693666911]
+[node name="SubTitle" type="RichTextLabel" parent="TitleScreen/VBoxContainer/HBoxContainer" unique_id=1255779567]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
-theme_override_font_sizes/font_size = 32
-text = "Splash text"
-horizontal_alignment = 1
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "[wave][rainbow freq=0.1 speed=6]Happy Pride Month"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [node name="Line2" type="HSeparator" parent="TitleScreen/VBoxContainer/HBoxContainer" unique_id=27852495]
 layout_mode = 2

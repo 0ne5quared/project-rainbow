@@ -16,8 +16,7 @@ extends Object
 ## If you want an example look at [PlayCardAction] file.[br]
 ## - The enum type is [enum Type.PLAY_CARD][br]
 ## - The sigil event hook is [method Sigil.on_card_played][br]
-## - It is intented to be broadcast and so it implement [method PlayCardAction.as_dict]
-## and [method PlayCardAction.from_dict][br]
+## - It implement [method PlayCardAction.as_dict] and [method PlayCardAction.from_dict][br]
 ## - It implement [method PlayCardAction.resolve] that perform the actual playing of the card using
 ## helper and utility provided by [FightManager] as well as trigger sigil event hook.
 
@@ -44,8 +43,11 @@ enum Type {
 	CARD_STRIKE,
 	## Action representing a card taking damage.
 	CARD_DAMAGE,
-	TIP_SCALE
+	## Action representing the tipping of the scale.
+	TIP_SCALE,
 }
+
+enum IDType { CARD, PLAYER }
 
 ## A unique id for this stack action.
 ##

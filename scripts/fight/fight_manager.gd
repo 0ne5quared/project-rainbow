@@ -31,8 +31,14 @@ var scale_position := 0:
 		scale_position = new
 		$VBoxContainer/HBoxContainer2/LeftUI/RichTextLabel.text = "Scales: " + str(scale_position)
 
-var _got_opp_private := false
-var _opp_private: Array[Action] = []
+var _opp_private: Array[Array] = []
+
+
+class Player:
+	var lives: int
+	var bone: int
+	var max_energy: int
+	var energy: int
 
 
 func _start_fight() -> void:
@@ -40,12 +46,20 @@ func _start_fight() -> void:
 	_draw_card()
 
 
+func lose_game() -> void:
+	%Blocker.visible = true
+	%ResultPopup.visible = true
+	$Blocker/CenterContainer/Label.visible = false
+
+
 func _draw_card() -> void:
-	hand_manager.draw_card({name = "Squirrel", attack = 1, health = 1, sigils = ["Dam Builder"]})
-	hand_manager.draw_card({name = "Squirrel", attack = 1, health = 1, sigils = ["Dam Builder"]})
-	hand_manager.draw_card({name = "Squirrel", attack = 1, health = 1, sigils = ["Dam Builder"]})
-	hand_manager.draw_card({name = "Squirrel", attack = 1, health = 1, sigils = ["Dam Builder"]})
-	hand_manager.draw_card({name = "Squirrel", attack = 1, health = 1, sigils = ["Dam Builder"]})
+	#hand_manager.draw_card({name = "Squirrel", attack = 1, health = 2, sigils = ["Airborne"]})
+	#hand_manager.draw_card({name = "Squirrel", attack = 1, health = 2, sigils = ["Airborne"]})
+	hand_manager.draw_card(
+		{name = "Squirrel", attack = 1, health = 2, sigils = ["Trifurcated Strike", "Airborne"]}
+	)
+	hand_manager.draw_card({name = "Squirrel", attack = 0, health = 2, sigils = []})
+	hand_manager.draw_card({name = "Squirrel", attack = 0, health = 2, sigils = []})
 
 
 func _ready() -> void:
@@ -67,9 +81,7 @@ func _on_recieved_packet(packet: Dictionary) -> void:
 	)
 
 	if packet.private as bool:
-		assert(_got_opp_private == false, "Somehow got another private before processing the first")
-		_got_opp_private = true
-		_opp_private = actions
+		_opp_private.push_front(actions)
 	else:
 		_push_actions(actions)
 		@warning_ignore("missing_await")
@@ -78,14 +90,17 @@ func _on_recieved_packet(packet: Dictionary) -> void:
 
 func _on_slot_selected(slot: BoardManager.Slot) -> void:
 	if state == State.PLAYING_CARD and slot.pos.y == BoardManager.Row.MINE:
+		hand_manager.selected.z_index = 0
 		var a := PlayCardAction.new(
-			hand_manager.selected.id, slot.pos, PlayCardAction.PlacerType.PLAYER, Global.uuid
+			hand_manager.selected.id, slot.pos, Action.IDType.PLAYER, Global.uuid
 		)
 		_add_then_resolve(a)
 		a.pos = BoardManager.oppose_pos(a.pos)
 		ConnectionManager.send(
 			ConnectionManager.GameMessage.ACTIONS, {actions = [a.as_dict()], private = false}
 		)
+		await stack_resolved
+		state = State.IDLE
 
 
 func _on_card_selected(_card: Card) -> void:
@@ -98,13 +113,14 @@ func _on_card_unselected(_card: Card) -> void:
 
 
 func _on_end_pressed() -> void:
+	if state != State.IDLE:
+		return
 	_add_then_resolve(EndTurnAction.new())
 	ConnectionManager.send(
 		ConnectionManager.GameMessage.ACTIONS,
 		{actions = [EndTurnAction.new().as_dict()], private = false}
 	)
 	await stack_resolved
-	is_active = not is_active
 
 
 # --- STACK SHIT ---
@@ -120,7 +136,19 @@ func _push_action(action: Action) -> void:
 	if not _stack.is_empty():
 		seed(_stack[-1].id.hash())
 		action.id = Global.gen_id()
-	_stack.push_back(action)
+	var replace: Array[Action] = []
+	for card in _public_activation_order():
+		for sigil: Sigil in card.sigils.values():
+			@warning_ignore("static_called_on_instance")
+			replace.append_array(sigil.replace_action(action.action_type(), action))
+	for act in replace:
+		if not _stack.is_empty():
+			seed(_stack[-1].id.hash())
+			act.id = Global.gen_id()
+	if replace.is_empty():
+		_stack.push_back(action)
+	else:
+		_stack.append_array(replace)
 
 
 func _push_actions(actions: Array[Action]) -> void:
@@ -140,8 +168,12 @@ func _add_then_resolve(action: Action) -> void:
 
 ## resolve the first item on top of the stack
 func _resolve_stack() -> void:
+	var gotta_end_turn := false
 	while _stack.size() > 0:
 		var action: Action = _stack.pop_back()
+		@warning_ignore("static_called_on_instance")
+		if action.action_type() == Action.Type.END_TURN:
+			gotta_end_turn = true
 		$VBoxContainer/HBoxContainer2/RightUI/RichTextLabel.text = (
 			"TOP: "
 			+ action.fmt()
@@ -149,13 +181,15 @@ func _resolve_stack() -> void:
 			+ "\n".join(_stack.map(func(x: Action) -> String: return x.fmt()))
 		)
 		action.resolve(self)
-		while not _got_opp_private:
+		while _opp_private.is_empty():
 			await ConnectionManager.recieved_packet
-		_push_actions(_opp_private)
-		_got_opp_private = false
-		await get_tree().create_timer(0.2).timeout
-	print("Finish stack resolution")
+		var private_trigger: Array[Action]
+		private_trigger.assign(_opp_private.pop_back() as Array)
+		_push_actions(private_trigger)
+		#await get_tree().create_timer(0.5).timeout
 	stack_resolved.emit()
+	if gotta_end_turn:
+		is_active = not is_active
 	$VBoxContainer/HBoxContainer2/RightUI/RichTextLabel.text = ""
 
 

@@ -28,8 +28,8 @@ class StrikeGroup:
 		actions.push_front(action)
 		return self
 
-	func add_actions(actions: Array[Action]) -> StrikeGroup:
-		actions.append_array(actions)
+	func add_actions(acts: Array[Action]) -> StrikeGroup:
+		actions.append_array(acts)
 		return self
 
 	func add_strike(striker_id: String, to_face := false) -> StrikeGroup:
@@ -42,18 +42,19 @@ class StrikeGroup:
 		}
 
 	static func from_dict(dict: Dictionary) -> StrikeGroup:
-		var actions: Array[Action]
-		actions.assign(
+		var acts: Array[Action]
+		acts.assign(
 			(dict.actions as Array).map(func(a: Dictionary) -> Action: return Action.from_dict(a))
 		)
-		return StrikeGroup.new(Vector2i(dict.pos.x as int, dict.pos.y as int)).add_actions(actions)
+		return StrikeGroup.new(Vector2i(dict.pos.x as int, dict.pos.y as int)).add_actions(acts)
 
 
 func resolve(fight_manager: FightManager) -> void:
 	var strike_groups: Array[StrikeGroup] = []
+	var attacker := fight_manager.card_manager.get_card_by_id(attacker_id)
 	for card in fight_manager._public_activation_order():
 		for sigil: Sigil in card.sigils.values():
-			strike_groups.append_array(sigil.on_attack(card))
+			strike_groups.append_array(sigil.on_card_attacked(attacker))
 	# TODO: Actually never implemented this for private trigger.
 	strike_groups.sort_custom(
 		func(a: StrikeGroup, b: StrikeGroup) -> bool: return a.pos.x < b.pos.x
@@ -69,7 +70,7 @@ func resolve(fight_manager: FightManager) -> void:
 			)
 		)
 	for group in strike_groups:
-		fight_manager._stack.append_array(group.actions)
+		fight_manager._push_actions(group.actions)
 	fight_manager._no_activation()
 
 

@@ -98,7 +98,8 @@ func get_active_row(is_active: bool) -> Array[Slot]:
 
 
 static func oppose_pos(pos: Vector2i) -> Vector2i:
-	return abs(pos - Vector2i(0, 3))
+	pos.y = 3 - pos.y
+	return pos
 
 
 ## Return the position of card with [param card_id]. If the card doesn't exist on the board return

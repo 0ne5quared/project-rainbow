@@ -43,6 +43,7 @@ size_flags_horizontal = 3
 
 [node name="RichTextLabel" type="Label" parent="VBoxContainer/HBoxContainer2/LeftUI" unique_id=539702474]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Scale:"
 
 [node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/HBoxContainer2" unique_id=1161575921]
@@ -65,6 +66,7 @@ size_flags_horizontal = 3
 
 [node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2/RightUI" unique_id=765648802]
 layout_mode = 2
+theme_override_font_sizes/normal_font_size = 32
 fit_content = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=647423626]
@@ -110,7 +112,7 @@ script = ExtResource("4_tmx0f")
 
 [node name="Blocker" type="PanelContainer" parent="." unique_id=1328792040]
 unique_name_in_owner = true
-visible = false
+z_index = 100
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -126,6 +128,19 @@ layout_mode = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Waiting for opponent"
+
+[node name="ResultPopup" type="PanelContainer" parent="Blocker/CenterContainer" unique_id=1261524886]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_type_variation = &"BasicPopup"
+
+[node name="Label" type="Label" parent="Blocker/CenterContainer/ResultPopup" unique_id=1449153627]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "You Lose"
+horizontal_alignment = 1
 
 [connection signal="stack_resolved" from="." to="CardsManager" method="_on_fight_stack_resolved"]
 [connection signal="slot_selected" from="VBoxContainer/HBoxContainer2/CenterContainer/BoardManager" to="." method="_on_slot_selected"]

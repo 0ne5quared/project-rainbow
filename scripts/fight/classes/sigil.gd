@@ -18,8 +18,8 @@ var _stack: Array[Action]
 
 
 ## Called after [PlayCardAction] is resolved. This mean that the card is already on board.
-func on_played(
-	card: Card, pos: Vector2i, placer_type: PlayCardAction.PlacerType, placer_id: String
+func on_card_played(
+	card: Card, pos: Vector2i, placer_type: Action.IDType, placer_id: String
 ) -> void:
 	return
 
@@ -29,7 +29,7 @@ func on_turn_end() -> void:
 	return
 
 
-## Called when [CombatAction] resolved before all the strike and attack are put onto the stack. For
+## Called when [CombatAction] resolved bef fore all the strike and attack are put onto the stack. For
 ## those that change how the card attack use [method on_attack].
 func on_combat_start() -> void:
 	return
@@ -38,8 +38,14 @@ func on_combat_start() -> void:
 ## Called after [CardAttackAction] resolved. This will dictate what [CardStrikeAction] the card will
 ## do whatever strike group this function spit out. If by the end of all the strike sigils activation
 ## the card still have no [StrikeGroup] the default center strike is issued.
-func on_attack(card: Card) -> Array[CardAttackAction.StrikeGroup]:
+func on_card_attacked(card: Card) -> Array[CardAttackAction.StrikeGroup]:
 	return []
+
+
+func on_card_damaged(
+	victim: Card, amount: int, attacker_type: Action.IDType, attacker_id: String
+) -> void:
+	return
 
 
 ## Called after [TipScaleAction] resolved. This mean that the scale is already tipped.
@@ -48,8 +54,9 @@ func on_scale_tipped(amount: int) -> void:
 
 
 ## Called whenever an action is added to the stack. If this return a non empty array the top action
-## of the stack is replace with the returned value
-func replace_action(action: Dictionary) -> Array[Action]:
+## of the stack is replace with the returned value.
+## Unless it is absolutely necessary don't use this hook.
+func replace_action(type: Action.Type, action: Action) -> Array[Action]:
 	return []
 
 
@@ -64,7 +71,7 @@ func add_action(action: Action) -> void:
 
 ## Play [param card_id] at [param pos] by [param placer_id] which is a [param placer_type]
 func play_card(
-	card_id: String, pos: Vector2i, placer_type: PlayCardAction.PlacerType, placer_id: String
+	card_id: String, pos: Vector2i, placer_type: Action.IDType, placer_id: String
 ) -> void:
 	add_action(PlayCardAction.new(card_id, pos, placer_type, placer_id))
 
@@ -80,9 +87,13 @@ func create_token(card_data: Dictionary, source_id: String) -> String:
 ## Return the new token's id.[br]
 func create_and_play_token(card_data: Dictionary, pos: Vector2i, source_id: String) -> String:
 	var id := create_token(card_data, source_id)
-	play_card(id, pos, PlayCardAction.PlacerType.CARD, source_id)
+	play_card(id, pos, Action.IDType.CARD, source_id)
 	return id
 
 
 func oppose_pos(pos: Vector2i) -> Vector2i:
 	return BoardManager.oppose_pos(pos)
+
+
+func get_pos(card_id: String) -> Vector2i:
+	return fight_manager.board_manager.get_card_pos(card_id)

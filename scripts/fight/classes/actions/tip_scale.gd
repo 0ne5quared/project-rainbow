@@ -15,7 +15,9 @@ func _init(a: int) -> void:
 
 func resolve(fight_manager: FightManager) -> void:
 	fight_manager.scale_position += amount
-	fight_manager._no_activation()
+	if fight_manager.scale_position >= 5:
+		fight_manager.lose_game()
+	fight_manager._activate_sigils(func(sigil: Sigil) -> void: sigil.on_scale_tipped(amount))
 
 
 func as_dict() -> Dictionary:

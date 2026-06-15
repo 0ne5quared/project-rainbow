@@ -8,12 +8,10 @@ extends Action
 ## This action represent the playing of a card with [member card_id] at [member pos] by
 ## [method placer_id] which is a [member placer_type]
 
-enum PlacerType { CARD, PLAYER }
-
 # Define here any data your action might hold
 var card_id: String
 var pos: Vector2i
-var placer_type: PlacerType
+var placer_type: IDType
 var placer_id: String
 
 
@@ -23,7 +21,7 @@ static func action_type() -> Type:
 
 
 # A constructor for this action so we can make them
-func _init(c: String, p: Vector2i, pt: PlacerType, pi: String) -> void:
+func _init(c: String, p: Vector2i, pt: IDType, pi: String) -> void:
 	card_id = c
 	pos = p
 	placer_type = pt
@@ -34,6 +32,8 @@ func _init(c: String, p: Vector2i, pt: PlacerType, pi: String) -> void:
 func resolve(fight_manager: FightManager) -> void:
 	if not fight_manager.board_manager.is_slot_empty(pos):
 		print("Nuh uh no playing into non empty slot >:(")
+		# Always call some sort of sigil activation function event if there are no sigil hook.
+		# If you don't include this your stack will stall indefinitely.
 		fight_manager._no_activation()
 		return
 
@@ -45,7 +45,7 @@ func resolve(fight_manager: FightManager) -> void:
 	# in that case you can use fight_manager._no_activation() as the activation. If you don't
 	# include this your stack will stall indefinitely.
 	fight_manager._activate_sigils(
-		func(sigils: Sigil) -> void: sigils.on_played(card, pos, placer_type, placer_id)
+		func(sigils: Sigil) -> void: sigils.on_card_played(card, pos, placer_type, placer_id)
 	)
 
 
@@ -67,6 +67,6 @@ static func from_dict(dict: Dictionary) -> PlayCardAction:
 	return PlayCardAction.new(
 		dict.card_id as String,
 		Vector2i(dict.pos.x as int, dict.pos.y as int),
-		dict.placer_type as PlacerType,
+		dict.placer_type as IDType,
 		dict.placer_id as String
 	)
