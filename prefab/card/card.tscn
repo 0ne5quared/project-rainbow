@@ -70,7 +70,8 @@ offset_bottom = 32.0
 texture = ExtResource("3_f2uqh")
 stretch_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Container" unique_id=1369187095]
+[node name="RareFrame" type="TextureRect" parent="VBoxContainer/Container" unique_id=1369187095]
+visible = false
 layout_mode = 0
 offset_left = 2.0
 offset_top = -1.0
@@ -79,7 +80,7 @@ offset_bottom = 32.0
 texture = ExtResource("4_rpw1c")
 stretch_mode = 2
 
-[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/Container" unique_id=327389234]
+[node name="Temple" type="TextureRect" parent="VBoxContainer/Container" unique_id=327389234]
 layout_mode = 0
 offset_top = 20.0
 offset_right = 15.0
