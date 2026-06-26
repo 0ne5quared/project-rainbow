@@ -43,6 +43,7 @@ func move_card(card_id: String, zone: Card.Zone) -> void:
 		ConnectionManager.send(ConnectionManager.GameMessage.NEW_CARD, {card = card.as_dict()})
 
 
+## May return [code]null[/code] is the card does not exist
 func get_card_by_id(id: String) -> Card:
 	var card := _cards[id]
 	return card
