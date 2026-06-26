@@ -26,6 +26,7 @@
           ];
           shellHook = ''
             export SHELL=/run/current-system/sw/bin/bash
+            godot project.godot
           '';
         };
       }
