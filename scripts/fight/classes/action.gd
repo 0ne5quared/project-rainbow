@@ -65,6 +65,11 @@ static func action_type() -> Type:
 
 @abstract func as_dict() -> Dictionary
 
+
+func duplicate() -> Action:
+	return Action.from_dict(as_dict())
+
+
 static var _action_registry: Dictionary = {}
 
 
