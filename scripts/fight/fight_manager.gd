@@ -17,6 +17,7 @@ enum State {
 @onready var card_manager: CardsManager = %CardsManager
 
 signal stack_resolved
+signal just_resolved
 
 var state := State.IDLE
 var turn := 1
@@ -32,6 +33,7 @@ var scale_position := 0:
 		$VBoxContainer/HBoxContainer2/LeftUI/RichTextLabel.text = "Scales: " + str(scale_position)
 
 var _opp_private: Array[Array] = []
+var _opp_replacement: Array[Array] = []
 
 
 class Player:
@@ -55,11 +57,10 @@ func lose_game() -> void:
 func _draw_card() -> void:
 	#hand_manager.draw_card({name = "Squirrel", attack = 1, health = 2, sigils = ["Airborne"]})
 	#hand_manager.draw_card({name = "Squirrel", attack = 1, health = 2, sigils = ["Airborne"]})
-	hand_manager.draw_card(
-		{name = "Squirrel", attack = 1, health = 2, sigils = ["Trifurcated Strike", "Airborne"]}
-	)
+	hand_manager.draw_card({name = "Squirrel", attack = 1, health = 2, sigils = ["Airborne"]})
 	hand_manager.draw_card({name = "Squirrel", attack = 0, health = 2, sigils = []})
 	hand_manager.draw_card({name = "Squirrel", attack = 0, health = 2, sigils = []})
+	hand_manager.draw_card({name = "Squirrel", attack = 0, health = 2, sigils = ["Mighty Leap"]})
 
 
 func _ready() -> void:
@@ -70,7 +71,10 @@ func _ready() -> void:
 
 
 func _on_recieved_packet(packet: Dictionary) -> void:
-	if packet.type != ConnectionManager.GameMessage.ACTIONS:
+	if (
+		packet.type != ConnectionManager.GameMessage.ACTIONS
+		and packet.type != ConnectionManager.GameMessage.REPLACEMENTS
+	):
 		return
 
 	var actions: Array[Action]
@@ -80,12 +84,15 @@ func _on_recieved_packet(packet: Dictionary) -> void:
 		)
 	)
 
-	if packet.private as bool:
-		_opp_private.push_front(actions)
+	if packet.type == ConnectionManager.GameMessage.ACTIONS:
+		if packet.private as bool:
+			_opp_private.push_front(actions)
+		else:
+			_push_actions(actions)
+			@warning_ignore("missing_await")
+			_resolve_stack()
 	else:
-		_push_actions(actions)
-		@warning_ignore("missing_await")
-		_resolve_stack()
+		_opp_replacement.append(actions)
 
 
 func _on_slot_selected(slot: BoardManager.Slot) -> void:
@@ -95,6 +102,7 @@ func _on_slot_selected(slot: BoardManager.Slot) -> void:
 			hand_manager.selected.id, slot.pos, Action.IDType.PLAYER, Global.uuid
 		)
 		_add_then_resolve(a)
+		a = a.duplicate()
 		a.pos = BoardManager.oppose_pos(a.pos)
 		ConnectionManager.send(
 			ConnectionManager.GameMessage.ACTIONS, {actions = [a.as_dict()], private = false}
@@ -133,22 +141,14 @@ var _stack: Array[Action] = []
 ## Add an action to the stack. This should be use instead of changing [member _stack]
 ## manually.
 func _push_action(action: Action) -> void:
-	if not _stack.is_empty():
+	action.id = get_next_stack_id()
+	_stack.push_back(action)
+
+
+func get_next_stack_id(base: Action = null) -> String:
+	if base == null and not _stack.is_empty():
 		seed(_stack[-1].id.hash())
-		action.id = Global.gen_id()
-	var replace: Array[Action] = []
-	for card in _public_activation_order():
-		for sigil: Sigil in card.sigils.values():
-			@warning_ignore("static_called_on_instance")
-			replace.append_array(sigil.replace_action(action.action_type(), action))
-	for act in replace:
-		if not _stack.is_empty():
-			seed(_stack[-1].id.hash())
-			act.id = Global.gen_id()
-	if replace.is_empty():
-		_stack.push_back(action)
-	else:
-		_stack.append_array(replace)
+	return Global.gen_id()
 
 
 func _push_actions(actions: Array[Action]) -> void:
@@ -171,6 +171,12 @@ func _resolve_stack() -> void:
 	var gotta_end_turn := false
 	while _stack.size() > 0:
 		var action: Action = _stack.pop_back()
+		just_resolved.emit()
+		var replacement := await get_replacement(action)
+		if not replacement.is_empty():
+			_stack.append_array(replacement)
+			continue
+
 		@warning_ignore("static_called_on_instance")
 		if action.action_type() == Action.Type.END_TURN:
 			gotta_end_turn = true
@@ -180,17 +186,92 @@ func _resolve_stack() -> void:
 			+ "\n"
 			+ "\n".join(_stack.map(func(x: Action) -> String: return x.fmt()))
 		)
+		# HACK: Super janky fix that slightly delay play card on card that don't exist on the
+		# current client and so the other client can resolve it first and transfer the information
+		# over
+		@warning_ignore("static_called_on_instance")
+		if (
+			not is_active
+			and action.action_type() == Action.Type.PLAY_CARD
+			and action.card_id not in card_manager._cards
+		):
+			await ConnectionManager.recieved_packet
 		action.resolve(self)
 		while _opp_private.is_empty():
 			await ConnectionManager.recieved_packet
 		var private_trigger: Array[Action]
 		private_trigger.assign(_opp_private.pop_back() as Array)
 		_push_actions(private_trigger)
-		#await get_tree().create_timer(0.5).timeout
 	stack_resolved.emit()
 	if gotta_end_turn:
 		is_active = not is_active
 	$VBoxContainer/HBoxContainer2/RightUI/RichTextLabel.text = ""
+
+
+var replacement_history: Dictionary[Sigil, Array]
+
+
+# HACK: This code below is like super stinky :(
+func get_replacement(action: Action) -> Array[Action]:
+	var replacement: Array[Action] = []
+	var got_replacement := false
+	var replacement_source: Sigil = null
+	for card in _public_activation_order():
+		if got_replacement:
+			break
+		for sigil: Sigil in card.sigils.values():
+			if sigil in replacement_history and replacement_history[sigil].has(action.id):
+				continue
+			@warning_ignore("static_called_on_instance")
+			replacement = sigil.replace_action(action.action_type(), action)
+			if not replacement.is_empty():
+				got_replacement = true
+				replacement_source = sigil
+				break
+	# If we don't have a replacement after all the public information check private info too
+	if not got_replacement:
+		for card in _private_activation_order():
+			if got_replacement:
+				break
+			for sigil: Sigil in card.sigils.values():
+				if sigil in replacement_history and replacement_history[sigil].has(action.id):
+					continue
+				@warning_ignore("static_called_on_instance")
+				replacement = sigil.replace_action(action.action_type(), action)
+				if not replacement.is_empty():
+					got_replacement = true
+					replacement_source = sigil
+					break
+	# After we determine what our replacement is we send it to the other client
+	ConnectionManager.send(
+		ConnectionManager.GameMessage.REPLACEMENTS,
+		{actions = replacement.map(func(a: Action) -> Dictionary: return a.as_dict())}
+	)
+
+	# Wait for the other client response
+	while _opp_replacement.is_empty():
+		await ConnectionManager.recieved_packet
+	var opp_replacement: Array[Action]
+	opp_replacement.assign(_opp_replacement.pop_back() as Array)
+
+	# Determine what replacement shoudl be used
+	var active := replacement if is_active else opp_replacement
+	var in_active := replacement if not is_active else opp_replacement
+	replacement = active if not active.is_empty() else in_active
+
+	# ID fixing
+	# The _push_action function also do this ID fixing stuff but I don't like side effect
+	if not replacement.is_empty():
+		replacement[0].id = action.id
+		for i in range(1, replacement.size()):
+			replacement[i].id = get_next_stack_id(replacement[i - 1])
+			# Now we add to the replacement history this sigil and actions
+		if replacement_source != null:
+			for a in replacement:
+				if replacement_source not in replacement_history:
+					replacement_history[replacement_source] = []
+				replacement_history[replacement_source].append(a.id)
+	return replacement
 
 
 func _no_activation() -> void:
