@@ -67,12 +67,15 @@ func parse_data(data: Dictionary) -> Dictionary:
 	for prop in _DATA_SCHEMA:
 		if prop == &"sigils":
 			for sigil: String in data[prop]:
-				if FileAccess.file_exists("res://scripts/fight/sigils/%s.gd" % sigil):
-					var s: Sigil = load("res://scripts/fight/sigils/%s.gd" % sigil).new()
-					s.attached_card = self
-					sigils[sigil] = (s)
-					continue
-				push_warning('Sigil "%s" script not found, skip loading' % sigil)
+				var sigil_path := "res://scripts/fight/sigils/%s.gd" % sigil
+				if not FileAccess.file_exists(sigil_path):
+					push_warning(
+						'Sigil "%s" can\'t be found so using missing script instead' % sigil
+					)
+					sigil_path = "res://scripts/fight/sigils/MISSING.gd"
+				var s: Sigil = load(sigil_path).new()
+				s.attached_card = self
+				sigils[sigil] = s
 			continue
 		set(prop, data[prop])
 	card_name = data.name
