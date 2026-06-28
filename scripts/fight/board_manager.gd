@@ -105,7 +105,14 @@ static func oppose_pos(pos: Vector2i) -> Vector2i:
 ## Return the position of card with [param card_id]. If the card doesn't exist on the board return
 ## [code]Vector2i(-1, -1)[/code]
 func get_card_pos(card_id: String) -> Vector2i:
+	var slot := get_slot_with_card(card_id)
+	return slot.pos if slot != null else (Vector2i.ONE * -1)
+
+
+## Return the slot containing the card with [param card_id]. If the card doesn't exist on the board
+## return [code]null[/code]
+func get_slot_with_card(card_id: String) -> Slot:
 	for slot in slots:
 		if slot != null and not slot.is_empty() and slot.card.id == card_id:
-			return slot.pos
-	return Vector2i.ONE * -1
+			return slot
+	return null

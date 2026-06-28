@@ -168,12 +168,14 @@ func _add_then_resolve(action: Action) -> void:
 
 ## resolve the first item on top of the stack
 func _resolve_stack() -> void:
+	push_warning("TOP")
 	var gotta_end_turn := false
 	while _stack.size() > 0:
 		var action: Action = _stack.pop_back()
 		just_resolved.emit()
-		var replacement := await get_replacement(action)
+		var replacement := await _get_replacement(action)
 		if not replacement.is_empty():
+			push_warning(replacement.map(func(a: Action) -> String: return a.fmt()))
 			_stack.append_array(replacement)
 			continue
 
@@ -202,7 +204,9 @@ func _resolve_stack() -> void:
 		var private_trigger: Array[Action]
 		private_trigger.assign(_opp_private.pop_back() as Array)
 		_push_actions(private_trigger)
+		#await get_tree().create_timer(0.5).timeout
 	stack_resolved.emit()
+	replacement_history.clear()
 	if gotta_end_turn:
 		is_active = not is_active
 	$VBoxContainer/HBoxContainer2/RightUI/RichTextLabel.text = ""
@@ -211,53 +215,67 @@ func _resolve_stack() -> void:
 var replacement_history: Dictionary[Sigil, Array]
 
 
-# HACK: This code below is like super stinky :(
-func get_replacement(action: Action) -> Array[Action]:
-	var replacement: Array[Action] = []
-	var got_replacement := false
-	var replacement_source: Sigil = null
-	for card in _public_activation_order():
-		if got_replacement:
-			break
+func _find_replacement(cards: Array[Card], action: Action) -> Dictionary:
+	for card in cards:
 		for sigil: Sigil in card.sigils.values():
 			if sigil in replacement_history and replacement_history[sigil].has(action.id):
 				continue
+
 			@warning_ignore("static_called_on_instance")
-			replacement = sigil.replace_action(action.action_type(), action)
+			var replacement := sigil.replace_action(action.action_type(), action)
+
 			if not replacement.is_empty():
-				got_replacement = true
-				replacement_source = sigil
-				break
-	# If we don't have a replacement after all the public information check private info too
-	if not got_replacement:
-		for card in _private_activation_order():
-			if got_replacement:
-				break
-			for sigil: Sigil in card.sigils.values():
-				if sigil in replacement_history and replacement_history[sigil].has(action.id):
-					continue
-				@warning_ignore("static_called_on_instance")
-				replacement = sigil.replace_action(action.action_type(), action)
-				if not replacement.is_empty():
-					got_replacement = true
-					replacement_source = sigil
-					break
-	# After we determine what our replacement is we send it to the other client
+				return {
+					replacement = replacement,
+					source = sigil,
+				}
+
+	return {
+		replacement = [],
+		source = null,
+	}
+
+
+# HACK: This code is kinda stinky :(
+func _get_replacement(action: Action) -> Array[Action]:
+	# Public information has priority.
+	var result := _find_replacement(_public_activation_order(), action)
+	var replacement: Array[Action] = []
+	replacement.assign(result.replacement as Array)
+	var replacement_source: Sigil = result.source
+
+	# If no public replacement exists, determine our own private replacement.
+	var private_replacement: Array[Action] = []
+	if replacement.is_empty():
+		result = _find_replacement(_private_activation_order(), action)
+		private_replacement.assign(result.replacement as Array)
+		replacement_source = result.source
+
+	# Tell the opponent our private replacement.
 	ConnectionManager.send(
 		ConnectionManager.GameMessage.REPLACEMENTS,
-		{actions = replacement.map(func(a: Action) -> Dictionary: return a.as_dict())}
+		{actions = private_replacement.map(func(a: Action) -> Dictionary: return a.as_dict())}
 	)
 
-	# Wait for the other client response
+	push_warning("Waiting for Replacment")
+	# Wait for the opponent's replacement.
 	while _opp_replacement.is_empty():
 		await ConnectionManager.recieved_packet
+	push_warning("Got it")
+
 	var opp_replacement: Array[Action]
 	opp_replacement.assign(_opp_replacement.pop_back() as Array)
 
-	# Determine what replacement shoudl be used
-	var active := replacement if is_active else opp_replacement
-	var in_active := replacement if not is_active else opp_replacement
-	replacement = active if not active.is_empty() else in_active
+	if replacement.is_empty():
+		var primary := private_replacement if is_active else opp_replacement
+		var secondary := opp_replacement if is_active else private_replacement
+
+		if not primary.is_empty():
+			replacement = primary
+		elif not secondary.is_empty():
+			replacement = secondary
+		else:
+			replacement = []
 
 	# ID fixing
 	# The _push_action function also do this ID fixing stuff but I don't like side effect
@@ -265,7 +283,7 @@ func get_replacement(action: Action) -> Array[Action]:
 		replacement[0].id = action.id
 		for i in range(1, replacement.size()):
 			replacement[i].id = get_next_stack_id(replacement[i - 1])
-			# Now we add to the replacement history this sigil and actions
+		# Now we add to the replacement history this sigil and actions
 		if replacement_source != null:
 			for a in replacement:
 				if replacement_source not in replacement_history:
