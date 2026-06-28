@@ -1,8 +1,8 @@
 class_name DamageCard
 extends Action
 
-var amount: int
 var victim_id: String
+var amount: int
 var attacker_type: IDType
 var attacker_id: String
 
@@ -11,7 +11,7 @@ static func action_type() -> Type:
 	return Type.DAMAGE_CARD
 
 
-func _init(a: int, vid: String, at: IDType, aid: String) -> void:
+func _init(vid: String, a: int, at: IDType, aid: String) -> void:
 	amount = a
 	victim_id = vid
 	attacker_type = at
@@ -32,8 +32,8 @@ func resolve(fight_manager: FightManager) -> void:
 func as_dict() -> Dictionary:
 	return {
 		type = action_type(),
-		amount = amount,
 		victim_id = victim_id,
+		amount = amount,
 		attacker_type = attacker_type,
 		attacker_id = attacker_id
 	}
@@ -41,8 +41,8 @@ func as_dict() -> Dictionary:
 
 static func from_dict(dict: Dictionary) -> DamageCard:
 	return DamageCard.new(
-		dict.amount as int,
 		dict.victim_id as String,
+		dict.amount as int,
 		dict.attack_type as IDType,
 		dict.attacker_id as String
 	)

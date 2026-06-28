@@ -32,7 +32,7 @@ func resolve(fight_manager: FightManager) -> void:
 		)
 	else:
 		fight_manager._push_action(
-			DamageCard.new(striker.attack, victim_slot.card.id, IDType.CARD, striker.id)
+			DamageCard.new(victim_slot.card.id, striker.attack, IDType.CARD, striker.id)
 		)
 	fight_manager._no_activation()
 
