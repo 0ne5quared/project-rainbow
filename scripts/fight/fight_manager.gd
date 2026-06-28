@@ -97,13 +97,13 @@ func _on_recieved_packet(packet: Dictionary) -> void:
 
 func _on_slot_selected(slot: BoardManager.Slot) -> void:
 	if state == State.PLAYING_CARD and slot.pos.y == BoardManager.Row.MINE:
+		if slot.card != null:
+			return
 		hand_manager.selected.z_index = 0
 		var a := PlayCardAction.new(
 			hand_manager.selected.id, slot.pos, Action.IDType.PLAYER, Global.uuid
 		)
 		_add_then_resolve(a)
-		a = a.duplicate()
-		a.pos = BoardManager.oppose_pos(a.pos)
 		ConnectionManager.send(
 			ConnectionManager.GameMessage.ACTIONS, {actions = [a.as_dict()], private = false}
 		)

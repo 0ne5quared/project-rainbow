@@ -54,13 +54,18 @@ func resolve(fight_manager: FightManager) -> void:
 
 
 func as_dict() -> Dictionary:
+	var opos := BoardManager.oppose_pos(pos)
 	return {
 		type = action_type(),
 		card_id = card_id,
-		pos = {x = pos.x, y = pos.y},
+		pos = {x = opos.x, y = opos.y},
 		placer_type = placer_type,
 		placer_id = placer_id
 	}
+
+
+func duplicate() -> Action:
+	return PlayCardAction.new(card_id, pos, placer_type, placer_id)
 
 
 static func from_dict(dict: Dictionary) -> PlayCardAction:
