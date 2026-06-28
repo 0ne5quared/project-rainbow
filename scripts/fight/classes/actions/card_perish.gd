@@ -23,7 +23,7 @@ func resolve(fight_manager: FightManager) -> void:
 
 
 func as_dict() -> Dictionary:
-	return {card_id = card_id}
+	return {type = action_type(), card_id = card_id}
 
 
 static func from_dict(dict: Dictionary) -> Action:
