@@ -15,13 +15,14 @@ enum Row { OPP_BACK, OPP, MINE, MINE_BACK }
 class Slot:
 	extends TextureButton
 
-	signal card_changed
+	signal card_changed(from: Card, to: Card)
 
 	## This value can actually be null if the spot is empty.
 	var card: Card:
 		set(new):
+			var old_card := card
 			card = new
-			card_changed.emit()
+			card_changed.emit(old_card as Card, new as Card)
 	var pos: Vector2i
 
 	func _init(p: Vector2i) -> void:
@@ -59,16 +60,28 @@ func _ready() -> void:
 		if row >= Row.MINE:
 			btn.flip_v = true
 		btn.pressed.connect(_on_slot_pressed.bind(btn))
+		btn.card_changed.connect(_forward_select.bind(btn))
 		btn.card_changed.connect(position_card)
 		slots.push_back(btn)
 		self.add_child(btn)
+
+
+func _forward_select(
+	from: Card,
+	to: Card,
+	slot: Slot,
+) -> void:
+	if from != null:
+		from.pressed.disconnect(_on_slot_pressed)
+	if to != null:
+		to.pressed.connect(_on_slot_pressed.bind(slot))
 
 
 func _on_slot_pressed(slot: Slot) -> void:
 	slot_selected.emit(slot)
 
 
-func position_card() -> void:
+func position_card(_from: Card, _to: Card) -> void:
 	for slot in slots:
 		if slot == null or slot.is_empty():
 			continue
