@@ -95,6 +95,17 @@ func create_and_play_token(card_data: Dictionary, pos: Vector2i, source_id: Stri
 	return id
 
 
+func kill_card(card_id: String) -> void:
+	add_action(KillCardAction.new(card_id))
+
+
+func damage_card(
+	victim_id: String, amount: int, attacker_type: Action.IDType, attacker_id: String
+) -> void:
+	add_action(DamageCard.new(victim_id, amount, attacker_type, attacker_id))
+	pass
+
+
 func oppose_pos(pos: Vector2i) -> Vector2i:
 	return BoardManager.oppose_pos(pos)
 
