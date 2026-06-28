@@ -99,4 +99,4 @@ static func from_dict(dict: Dictionary) -> Action:
 
 ## Return the action as a nicely formatted string for debug purposes
 func fmt() -> String:
-	return Action.Type.keys()[action_type()] + str(as_dict())
+	return Action.Type.keys()[action_type()]
