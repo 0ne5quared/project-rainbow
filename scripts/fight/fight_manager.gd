@@ -168,14 +168,12 @@ func _add_then_resolve(action: Action) -> void:
 
 ## resolve the first item on top of the stack
 func _resolve_stack() -> void:
-	push_warning("TOP")
 	var gotta_end_turn := false
 	while _stack.size() > 0:
 		var action: Action = _stack.pop_back()
 		just_resolved.emit()
 		var replacement := await _get_replacement(action)
 		if not replacement.is_empty():
-			push_warning(replacement.map(func(a: Action) -> String: return a.fmt()))
 			_stack.append_array(replacement)
 			continue
 
@@ -204,7 +202,7 @@ func _resolve_stack() -> void:
 		var private_trigger: Array[Action]
 		private_trigger.assign(_opp_private.pop_back() as Array)
 		_push_actions(private_trigger)
-		#await get_tree().create_timer(0.5).timeout
+		#await get_tree().create_timer(0.2).timeout
 	stack_resolved.emit()
 	replacement_history.clear()
 	if gotta_end_turn:
@@ -257,11 +255,9 @@ func _get_replacement(action: Action) -> Array[Action]:
 		{actions = private_replacement.map(func(a: Action) -> Dictionary: return a.as_dict())}
 	)
 
-	push_warning("Waiting for Replacment")
 	# Wait for the opponent's replacement.
 	while _opp_replacement.is_empty():
 		await ConnectionManager.recieved_packet
-	push_warning("Got it")
 
 	var opp_replacement: Array[Action]
 	opp_replacement.assign(_opp_replacement.pop_back() as Array)
