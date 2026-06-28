@@ -48,6 +48,10 @@ func on_card_damaged(
 	return
 
 
+func on_card_perished(card: Card) -> void:
+	return
+
+
 ## Called after [TipScaleAction] resolved. This mean that the scale is already tipped.
 func on_scale_tipped(amount: int) -> void:
 	pass

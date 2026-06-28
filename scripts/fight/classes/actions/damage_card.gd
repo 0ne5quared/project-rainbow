@@ -8,7 +8,7 @@ var attacker_id: String
 
 
 static func action_type() -> Type:
-	return Type.CARD_DAMAGE
+	return Type.DAMAGE_CARD
 
 
 func _init(a: int, vid: String, at: IDType, aid: String) -> void:
@@ -25,6 +25,8 @@ func resolve(fight_manager: FightManager) -> void:
 		func(sigil: Sigil) -> void:
 			sigil.on_card_damaged(victim, amount, attacker_type, attacker_id)
 	)
+	if victim.health <= 0:
+		fight_manager._push_action(KillCardAction.new(victim_id))
 
 
 func as_dict() -> Dictionary:

@@ -41,10 +41,12 @@ enum Type {
 	CARD_ATTACK,
 	## Action representing the card striking. This is the actual damage dealing action.
 	CARD_STRIKE,
-	## Action representing a card taking damage.
-	CARD_DAMAGE,
+	## Action representing damaging a card.
+	DAMAGE_CARD,
 	## Action representing the tipping of the scale.
 	TIP_SCALE,
+	## Action representing killing a card.
+	KILL_CARD
 }
 
 enum IDType { CARD, PLAYER }
@@ -97,4 +99,4 @@ static func from_dict(dict: Dictionary) -> Action:
 
 ## Return the action as a nicely formatted string for debug purposes
 func fmt() -> String:
-	return Action.Type.keys()[action_type()]
+	return Action.Type.keys()[action_type()] + str(as_dict())
