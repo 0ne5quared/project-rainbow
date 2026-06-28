@@ -57,7 +57,7 @@ func resolve(fight_manager: FightManager) -> void:
 			strike_groups.append_array(sigil.on_card_attacked(attacker))
 	# TODO: Actually never implemented this for private trigger.
 	strike_groups.sort_custom(
-		func(a: StrikeGroup, b: StrikeGroup) -> bool: return a.pos.x < b.pos.x
+		func(a: StrikeGroup, b: StrikeGroup) -> bool: return a.pos.x > b.pos.x
 	)
 	if strike_groups.is_empty():
 		strike_groups.append(
