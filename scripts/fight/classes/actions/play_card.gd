@@ -77,7 +77,7 @@ func duplicate() -> Action:
 	return PlayCardAction.new(card_id, pos, placer_type, placer_id)
 
 
-static func from_dict(dict: Dictionary) -> PlayCardAction:
+static func from_dict(dict: Dictionary) -> Action:
 	return PlayCardAction.new(
 		dict.card_id as String,
 		Vector2i(dict.pos.x as int, dict.pos.y as int),

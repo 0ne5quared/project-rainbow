@@ -17,5 +17,5 @@ func as_dict() -> Dictionary:
 	return {type = action_type()}
 
 
-static func from_dict(_dict: Dictionary) -> CombatAction:
+static func from_dict(_dict: Dictionary) -> Action:
 	return CombatAction.new()

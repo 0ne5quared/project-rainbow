@@ -46,7 +46,7 @@ func as_dict() -> Dictionary:
 	}
 
 
-static func from_dict(dict: Dictionary) -> CardStrikeAction:
+static func from_dict(dict: Dictionary) -> Action:
 	return CardStrikeAction.new(
 		Vector2i(dict.pos.x as int, dict.pos.y as int),
 		dict.striker_id as String,

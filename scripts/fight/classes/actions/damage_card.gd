@@ -39,7 +39,7 @@ func as_dict() -> Dictionary:
 	}
 
 
-static func from_dict(dict: Dictionary) -> DamageCard:
+static func from_dict(dict: Dictionary) -> Action:
 	return DamageCard.new(
 		dict.victim_id as String,
 		dict.amount as int,

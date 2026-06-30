@@ -24,5 +24,5 @@ func as_dict() -> Dictionary:
 	return {type = action_type(), amount = amount}
 
 
-static func from_dict(dict: Dictionary) -> TipScaleAction:
+static func from_dict(dict: Dictionary) -> Action:
 	return TipScaleAction.new(dict.amount as int)
