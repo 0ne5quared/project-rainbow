@@ -88,6 +88,8 @@ func _on_start_btn_pressed() -> void:
 		ConnectionManager.send(ConnectionManager.GameMessage.START_GAME, {start = starting_player})
 		visible = false
 		%Fight.is_active = starting_player == 0
+		# HACK: Janky rn fix it when spectator or multiple player is implemented
+		%Fight.opp_id = players.keys().filter(func(s: String) -> bool: return s != Global.uuid)[0]
 		%Fight._start_fight()
 
 
@@ -97,4 +99,7 @@ func _on_packet_recieved(packet: Dictionary) -> void:
 
 	visible = false
 	%Fight.is_active = 1 - packet.start == 0
+	# HACK: Janky rn fix it when spectator or multiple player is implemented
+	%Fight.opp_id = players.keys().filter(func(s: String) -> bool: return s != Global.uuid)[0]
+
 	%Fight._start_fight()

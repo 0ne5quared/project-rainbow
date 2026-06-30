@@ -41,6 +41,15 @@ func resolve(fight_manager: FightManager) -> void:
 	var slot := fight_manager.board_manager.get_slot(pos)
 	var card := fight_manager.card_manager.get_card_by_id(card_id)
 	slot.card = card
+
+	if placer_type == Action.IDType.PLAYER:
+		var data := fight_manager.my_data if placer_id == Global.uuid else fight_manager.opp_data
+		data.hand_size -= 1
+		var t := data.public_card.find_custom(func(c: Card) -> bool: return c.id == card_id)
+		push_warning(t)
+		if t != -1:
+			data.public_card.remove_at(t)
+
 	# Always call some sort of sigil activation function event if there are no sigil hook.
 	# in that case you can use fight_manager._no_activation() as the activation. If you don't
 	# include this your stack will stall indefinitely.

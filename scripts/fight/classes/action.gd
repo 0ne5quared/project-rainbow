@@ -21,6 +21,10 @@ extends Object
 ## helper and utility provided by [FightManager] as well as trigger sigil event hook.
 
 enum Type {
+	## Action representing adding a card into the hand.
+	ADD_CARD,
+	## Action representing drawing a card from a deck.
+	DRAW_CARD,
 	## Action representing playing a card.
 	PLAY_CARD,
 	## Action representing creating a new token, this token will just float around in limbo.

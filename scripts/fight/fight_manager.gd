@@ -30,22 +30,59 @@ var is_active: bool:
 var scale_position := 0:
 	set(new):
 		scale_position = new
-		$VBoxContainer/HBoxContainer2/LeftUI/RichTextLabel.text = "Scales: " + str(scale_position)
+		$VBoxContainer/HBoxContainer2/LeftUI/Scales.text = "Scales: " + str(scale_position)
 
 var _opp_private: Array[Array] = []
 var _opp_replacement: Array[Array] = []
 
+var my_data: Player
+var opp_data: Player
+
+var opp_id: String
+
+var main_deck: Array[Dictionary] = [
+	{name = "Warren", attack = 0, health = 2, sigils = ["Rabbit Hole"]},
+	{name = "Squirrel", attack = 0, health = 1},
+	{name = "Squirrel", attack = 0, health = 1},
+	{name = "Squirrel", attack = 0, health = 1},
+	{name = "Squirrel", attack = 0, health = 1},
+]
+var side_deck: Array[Dictionary] = [
+	{name = "Squirrel", attack = 0, health = 1},
+	{name = "Squirrel", attack = 0, health = 1},
+	{name = "Squirrel", attack = 0, health = 1},
+	{name = "Squirrel", attack = 0, health = 1},
+]
+
+
+func _process(_delta: float) -> void:
+	if opp_data == null:
+		return
+	$VBoxContainer/HBoxContainer2/LeftUI/OppHandSize.text = (
+		"Opp Hand Size:" + str(opp_data.hand_size)
+	)
+	$VBoxContainer/HBoxContainer2/LeftUI/OppPublic.text = (
+		"Opp Public Card:"
+		+ ", ".join(opp_data.public_card.map(func(c: Card) -> String: return c.card_name))
+	)
+
 
 class Player:
-	var lives: int
-	var bone: int
-	var max_energy: int
-	var energy: int
+	var lives: int = 2
+	var bone: int = 0
+	var max_energy: int = 0
+	var energy: int = 0
+	## The player hand size
+	var hand_size: int = 0
+	## The cards in the player hand that is public information
+	var public_card: Array[Card] = []
 
 
 func _start_fight() -> void:
 	visible = true
-	_draw_card()
+	my_data = Player.new()
+	opp_data = Player.new()
+	_draw_starting_hand()
 
 
 func lose_game() -> void:
@@ -54,13 +91,15 @@ func lose_game() -> void:
 	$Blocker/CenterContainer/Label.visible = false
 
 
-func _draw_card() -> void:
-	#hand_manager.draw_card({name = "Squirrel", attack = 1, health = 2, sigils = ["Airborne"]})
-	#hand_manager.draw_card({name = "Squirrel", attack = 1, health = 2, sigils = ["Airborne"]})
-	hand_manager.draw_card({name = "Squirrel", attack = 1, health = 2, sigils = ["Airborne"]})
-	hand_manager.draw_card({name = "Squirrel", attack = 0, health = 2, sigils = []})
-	hand_manager.draw_card({name = "Squirrel", attack = 0, health = 2, sigils = []})
-	hand_manager.draw_card({name = "Squirrel", attack = 0, health = 2, sigils = ["Mighty Leap"]})
+func _draw_starting_hand() -> void:
+	for i in range(5):
+		_push_action(DrawDeckAction.new(DrawDeckAction.Deck.MAIN, Global.uuid))
+	for i in range(5):
+		_push_action(DrawDeckAction.new(DrawDeckAction.Deck.SIDE, opp_id))
+	@warning_ignore("missing_await")
+	await _resolve_stack()
+	await get_tree().process_frame
+	hand_manager.position_card()
 
 
 func _ready() -> void:
@@ -195,7 +234,8 @@ func _resolve_stack() -> void:
 			and action.action_type() == Action.Type.PLAY_CARD
 			and action.card_id not in card_manager._cards
 		):
-			await ConnectionManager.recieved_packet
+			while action.card_id not in card_manager._cards:
+				await ConnectionManager.recieved_packet
 		action.resolve(self)
 		while _opp_private.is_empty():
 			await ConnectionManager.recieved_packet
@@ -219,6 +259,7 @@ func _find_replacement(cards: Array[Card], action: Action) -> Dictionary:
 			if sigil in replacement_history and replacement_history[sigil].has(action.id):
 				continue
 
+			seed(card.id.hash() + (0 if _stack.is_empty() else _stack[-1].id.hash()))
 			@warning_ignore("static_called_on_instance")
 			var replacement := sigil.replace_action(action.action_type(), action)
 

@@ -17,6 +17,12 @@ var _stack: Array[Action]
 @warning_ignore_start("unused_parameter")  # keep the signature clean while avoiding warning
 
 
+## Called after [AddCardAction] is resolved. This mean that the card have already been added.
+## [param card] can be null if the card added is private to the opponent
+func on_card_add(card: Card) -> void:
+	return
+
+
 ## Called after [PlayCardAction] is resolved. This mean that the card is already on board.
 func on_card_played(
 	card: Card, pos: Vector2i, placer_type: Action.IDType, placer_id: String
@@ -103,7 +109,22 @@ func damage_card(
 	victim_id: String, amount: int, attacker_type: Action.IDType, attacker_id: String
 ) -> void:
 	add_action(DamageCard.new(victim_id, amount, attacker_type, attacker_id))
-	pass
+
+
+func draw_card(deck: DrawDeckAction.Deck, player_id := "") -> void:
+	if player_id.is_empty():
+		player_id = Global.uuid
+	add_action(DrawDeckAction.new(deck, player_id))
+
+
+## Add a new card to the hand with [param card_data ] by [param source_id] amd play it at [param pos].
+## Return the new token's id.[br]
+func add_card(card_data: Dictionary, player_id := "") -> String:
+	if player_id.is_empty():
+		player_id = Global.uuid
+	var card_id := Global.gen_id()
+	add_action(AddCardAction.new(card_data, card_id, player_id))
+	return card_id
 
 
 func oppose_pos(pos: Vector2i) -> Vector2i:

@@ -9,11 +9,16 @@ signal card_unselected(card: Card)
 var selected: Card
 
 
-func draw_card(card_data: Dictionary) -> void:
+func _ready() -> void:
+	cards_manager.card_changed_zone.connect(_on_card_changed_zone)
+
+
+func draw_card(card_data: Dictionary) -> Card:
 	var new: Card = cards_manager.add_card(card_data, Card.Zone.HAND)
 	new.mouse_entered.connect(_on_card_hovered.bind(new))
 	new.mouse_exited.connect(_on_card_unhovered.bind(new))
 	new.pressed.connect(_select_card.bind(new))
+	return new
 
 
 ## Arrange all the card within this container
@@ -21,7 +26,7 @@ func draw_card(card_data: Dictionary) -> void:
 ## This method basically will get all of its children to fan around the
 ## [member CENTER] with radius equal to the length of [member START_VECTOR].
 func position_card() -> void:
-	var cards := cards_manager.get_cards_by_zone(Card.Zone.HAND)
+	var cards: Array[Card] = cards_manager.get_cards_by_zone(Card.Zone.HAND)
 	var count := cards.size()
 	if count == 0:
 		return
@@ -87,7 +92,6 @@ func _on_card_changed_zone(card: Card, from: Card.Zone, to: Card.Zone) -> void:
 	if card == selected and card.zone != Card.Zone.HAND:
 		# Oh the card I was holding is gone :(
 		selected = null
-
 	if from == Card.Zone.HAND or to == Card.Zone.HAND:
 		if from == Card.Zone.HAND:
 			card.disconnect(&"mouse_entered", _on_card_hovered)
