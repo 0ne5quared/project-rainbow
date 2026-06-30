@@ -119,10 +119,10 @@ func damage_card(
 	add_action(DamageCard.new(victim_id, amount, attacker_type, attacker_id))
 
 
-func draw_card(deck: DrawDeckAction.Deck, player_id := "") -> void:
+func draw_card(deck: DrawCardAction.Deck, player_id := "") -> void:
 	if player_id.is_empty():
 		player_id = Global.uuid
-	add_action(DrawDeckAction.new(deck, player_id))
+	add_action(DrawCardAction.new(deck, player_id))
 
 
 ## Add a new card to the hand with [param card_data ] by [param source_id] amd play it at [param pos].

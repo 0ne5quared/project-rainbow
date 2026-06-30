@@ -1,4 +1,4 @@
-class_name DrawDeckAction
+class_name DrawCardAction
 extends Action
 
 enum Deck { MAIN, SIDE }
@@ -17,7 +17,7 @@ func _init(d: Deck, pid: String) -> void:
 
 
 func resolve(fight_manager: FightManager) -> void:
-	var data := fight_manager.my_data if player_id == Global.uuid else fight_manager.opp_data
+	var data := fight_manager.get_data(player_id)
 	if player_id == Global.uuid:
 		if deck == Deck.MAIN:
 			fight_manager.hand_manager.draw_card(fight_manager.main_deck.pop_front() as Dictionary)
@@ -32,4 +32,4 @@ func as_dict() -> Dictionary:
 
 
 static func from_dict(dict: Dictionary) -> Action:
-	return DrawDeckAction.new(dict.deck as Deck, dict.player_id as String)
+	return DrawCardAction.new(dict.deck as Deck, dict.player_id as String)

@@ -96,9 +96,9 @@ func lose_game() -> void:
 
 func _draw_starting_hand() -> void:
 	for i in range(5):
-		_push_action(DrawDeckAction.new(DrawDeckAction.Deck.MAIN, Global.uuid))
+		_push_action(DrawCardAction.new(DrawCardAction.Deck.MAIN, Global.uuid))
 	for i in range(5):
-		_push_action(DrawDeckAction.new(DrawDeckAction.Deck.SIDE, opp_id))
+		_push_action(DrawCardAction.new(DrawCardAction.Deck.SIDE, opp_id))
 	@warning_ignore("missing_await")
 	await _resolve_stack()
 	await get_tree().process_frame
