@@ -12,6 +12,6 @@ func on_card_played(
 			{
 				name = "Rabbit",
 			},
-			(Global.uuid as String) if pos.y == BoardManager.Row.MINE else fight_manager.opp_id
+			controller_id()
 		)
 	)

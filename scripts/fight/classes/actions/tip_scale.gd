@@ -16,7 +16,7 @@ func _init(a: int) -> void:
 func resolve(fight_manager: FightManager) -> void:
 	fight_manager.scale_position += amount
 	if fight_manager.scale_position >= 5:
-		fight_manager.lose_game()
+		fight_manager._lose_game()
 	fight_manager._activate_sigils(func(sigil: Sigil) -> void: sigil.on_scale_tipped(amount))
 
 

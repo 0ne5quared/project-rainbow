@@ -69,13 +69,16 @@ func _process(_delta: float) -> void:
 
 class Player:
 	var lives: int = 2
-	var bone: int = 0
-	var max_energy: int = 0
+	var bones: int = 0
+	var cells: int = 0
 	var energy: int = 0
 	## The player hand size
 	var hand_size: int = 0
 	## The cards in the player hand that is public information
 	var public_card: Array[Card] = []
+
+
+# --- FIGHT UTILS ---
 
 
 func _start_fight() -> void:
@@ -100,6 +103,13 @@ func _draw_starting_hand() -> void:
 	await _resolve_stack()
 	await get_tree().process_frame
 	hand_manager.position_card()
+
+
+func get_data(player_id: String) -> Player:
+	return my_data if player_id == Global.uuid else opp_data
+
+
+# --- GODOT EVENT ---
 
 
 func _ready() -> void:

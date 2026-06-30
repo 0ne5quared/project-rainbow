@@ -17,7 +17,7 @@ func _init(cd: Dictionary, cid: String, pid: String) -> void:
 
 
 func resolve(fight_manager: FightManager) -> void:
-	var data := fight_manager.my_data if player_id == Global.uuid else fight_manager.opp_data
+	var data := fight_manager.get_data(player_id)
 	data.hand_size += 1
 	var card: Card
 	push_warning(player_id)

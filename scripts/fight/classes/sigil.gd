@@ -63,6 +63,14 @@ func on_scale_tipped(amount: int) -> void:
 	pass
 
 
+func on_bones_gain(amount: int, player_id: String) -> void:
+	return
+
+
+func on_cells_gain(amount: int, player_id: String) -> void:
+	return
+
+
 ## Called whenever an action is added to the stack. If this return a non empty array the top action
 ## of the stack is replace with the returned value.
 ## Unless it is absolutely necessary don't use this hook.
@@ -133,3 +141,9 @@ func oppose_pos(pos: Vector2i) -> Vector2i:
 
 func get_pos(card_id: String) -> Vector2i:
 	return fight_manager.board_manager.get_card_pos(card_id)
+
+
+func controller_id(pos := Vector2i.MIN) -> String:
+	if pos == Vector2i.MIN:
+		pos = fight_manager.board_manager.get_card_pos(attached_card.id)
+	return (Global.uuid as String) if pos.y == BoardManager.Row.MINE else fight_manager.opp_id

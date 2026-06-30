@@ -43,7 +43,7 @@ func resolve(fight_manager: FightManager) -> void:
 	slot.card = card
 
 	if placer_type == Action.IDType.PLAYER:
-		var data := fight_manager.my_data if placer_id == Global.uuid else fight_manager.opp_data
+		var data := fight_manager.get_data(placer_id)
 		data.hand_size -= 1
 		var t := data.public_card.find_custom(func(c: Card) -> bool: return c.id == card_id)
 		push_warning(t)
