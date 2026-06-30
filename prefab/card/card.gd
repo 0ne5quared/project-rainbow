@@ -1,7 +1,14 @@
 class_name Card
 extends Button
 
-enum Zone { HAND, BOARD, GRAVEYARD, EXILE, LIMBO }
+enum Zone {
+	HAND,
+	OPP_HAND,
+	BOARD,
+	GRAVEYARD,
+	EXILE,
+	LIMBO,
+}
 const PUBLIC_ZONE = [Zone.BOARD, Zone.GRAVEYARD, Zone.EXILE]
 
 const _DATA_SCHEMA: Dictionary[StringName, Dictionary] = {
@@ -27,7 +34,6 @@ var zone := Zone.LIMBO:
 	set(new):
 		zone = new
 		visible = zone != Zone.LIMBO
-var is_friendly := true
 var id := Global.gen_id()
 
 var attack_mod: int
