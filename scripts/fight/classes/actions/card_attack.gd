@@ -53,7 +53,7 @@ func resolve(fight_manager: FightManager) -> void:
 	var strike_groups: Array[StrikeGroup] = []
 	var attacker := fight_manager.card_manager.get_card_by_id(attacker_id)
 	for card in fight_manager._public_activation_order():
-		for sigil: Sigil in card.sigils.values():
+		for sigil: Sigil in card._sigil_script:
 			strike_groups.append_array(sigil.on_card_attacked(attacker))
 	# TODO: Actually never implemented this for private trigger.
 	strike_groups.sort_custom(

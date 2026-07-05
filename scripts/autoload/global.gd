@@ -68,12 +68,23 @@ func gen_id() -> String:
 
 ## This modify the original data in place.
 func validate_schema(
-	data: Dictionary, schema: Dictionary[StringName, Dictionary], show_warning := false
+	data: Dictionary, schema: Dictionary[String, Dictionary], show_warning := false
 ) -> void:
 	@warning_ignore("shadowed_global_identifier", "confusable_local_usage")
 	var push_warning := push_warning if show_warning else func(_x: String) -> void: pass
 	for prop: String in schema:
 		var s := schema[prop]
+		if (
+			TYPE_DICTIONARY in s.types
+			and (prop not in data or typeof(data[prop]) == TYPE_DICTIONARY)
+		):
+			var dict: Dictionary = data[prop] if prop in data else {}
+			var ds: Dictionary[String, Dictionary]
+			ds.assign(s.schema as Dictionary)
+			validate_schema(dict, ds)
+			data[prop] = dict
+			continue
+
 		if prop not in data:
 			push_warning.call('Data missing "%s" component using default: %s' % [prop, s.default])
 			data[prop] = s.default
@@ -91,11 +102,3 @@ func validate_schema(
 						'A value inside of data\'s "%s" is of the wrong type, removing it'
 					)
 					array.erase(array[i])
-		elif typeof(data[prop]) == TYPE_ARRAY and TYPE_ARRAY in schema.types:
-			var dict: Dictionary = data[prop]
-			for k: Variant in dict:
-				if typeof(k) != s.sub_type:
-					push_warning.call(
-						'A key inside of data\'s "%s" is of the wrong type, removing it'
-					)
-					dict.erase(k)

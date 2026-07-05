@@ -265,7 +265,7 @@ var replacement_history: Dictionary[Sigil, Array]
 
 func _find_replacement(cards: Array[Card], action: Action) -> Dictionary:
 	for card in cards:
-		for sigil: Sigil in card.sigils.values():
+		for sigil: Sigil in card._sigil_script:
 			if sigil in replacement_history and replacement_history[sigil].has(action.id):
 				continue
 
@@ -355,7 +355,7 @@ func _activate_sigils(callback: Callable) -> void:
 func _activate_sigil_on_cards(cards: Array[Card], callback: Callable) -> Array[Action]:
 	var out: Array[Action] = []
 	for card in cards:
-		for sigil: Sigil in card.sigils.values():
+		for sigil: Sigil in card._sigil_script:
 			seed(card.id.hash() + (0 if _stack.is_empty() else _stack[-1].id.hash()))
 			sigil._stack.clear()
 			callback.call(sigil)

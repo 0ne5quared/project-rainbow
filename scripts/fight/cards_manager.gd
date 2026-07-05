@@ -27,7 +27,7 @@ func add_card(card_data: Dictionary, zone: Card.Zone, id := "") -> Card:
 	card.card_data = card_data
 	if not id.is_empty():
 		card.id = id
-	for sigil: Sigil in card.sigils.values():
+	for sigil: Sigil in card._sigil_script:
 		sigil.fight_manager = fight_manager
 	_cards[card.id] = card
 	move_card(card.id, zone)
@@ -45,7 +45,7 @@ func move_card(card_id: String, zone: Card.Zone) -> void:
 
 func sync_id() -> void:
 	var t: Dictionary[String, Card] = {}
-	for card: Card in _cards.values():
+	for card: Card in get_children():
 		t[card.id] = card
 	_cards = t
 
