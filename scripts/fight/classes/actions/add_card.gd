@@ -20,7 +20,6 @@ func resolve(fight_manager: FightManager) -> void:
 	var data := fight_manager.get_data(player_id)
 	data.hand_size += 1
 	var card: Card
-	push_warning(player_id)
 	if player_id == Global.uuid:
 		card = fight_manager.hand_manager.draw_card(card_data)
 	else:
@@ -28,7 +27,6 @@ func resolve(fight_manager: FightManager) -> void:
 		card.visible = false
 	card.id = card_id
 	fight_manager.card_manager.sync_id()
-	push_warning(fight_manager.card_manager._cards)
 	data.public_card.append(card)
 	fight_manager._activate_sigils(func(sigil: Sigil) -> void: sigil.on_card_add(card))
 

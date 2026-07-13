@@ -24,6 +24,9 @@ func resolve(fight_manager: FightManager) -> void:
 		push_warning("Nuh uh no striking into non-existence slot >:(")
 		fight_manager._no_activation()
 		return
+	if striker.attack == 0:
+		fight_manager._no_activation()
+		return
 	if victim_slot.is_empty() or to_face:
 		fight_manager._push_action(
 			TipScaleAction.new(

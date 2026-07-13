@@ -14,11 +14,24 @@ func _init(cid: String) -> void:
 
 func resolve(fight_manager: FightManager) -> void:
 	var card := fight_manager.card_manager.get_card_by_id(card_id)
-	if card.zone == Card.Zone.BOARD:
-		var slot := fight_manager.board_manager.get_slot_with_card(card_id)
-		slot.card = null
+	if card.zone != Card.Zone.BOARD:
+		push_warning("Card can't be killed if they are on the board!!")
+		return
+	var slot := fight_manager.board_manager.get_slot_with_card(card_id)
 	fight_manager.card_manager.move_card(card_id, Card.Zone.GRAVEYARD)
+	slot.card = null
 	card.visible = false
+	fight_manager._push_action(
+		ChangeBonesAction.new(
+			1,
+			(
+				(Global.uuid as String)
+				if slot.pos.y == BoardManager.Row.MINE
+				else fight_manager.opp_id
+			),
+			card.id
+		)
+	)
 	fight_manager._activate_sigils(func(sigil: Sigil) -> void: sigil.on_card_perished(card))
 
 

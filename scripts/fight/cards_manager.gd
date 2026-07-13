@@ -52,6 +52,8 @@ func sync_id() -> void:
 
 ## May return [code]null[/code] is the card does not exist
 func get_card_by_id(id: String) -> Card:
+	if id not in _cards:
+		return null
 	var card := _cards[id]
 	return card
 

@@ -37,7 +37,8 @@ gdscript/warnings/missing_await=1
 
 window/size/viewport_width=768
 window/size/viewport_height=432
-window/stretch/mode="canvas_items"
+window/stretch/mode="viewport"
+window/stretch/scale_mode="integer"
 window/quality/msaa_2d=0
 
 [editor]

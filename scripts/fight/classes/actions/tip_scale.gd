@@ -14,6 +14,8 @@ func _init(a: int) -> void:
 
 
 func resolve(fight_manager: FightManager) -> void:
+	if amount == 0:
+		return
 	fight_manager.scale_position += amount
 	if fight_manager.scale_position >= 5:
 		fight_manager._lose_game()

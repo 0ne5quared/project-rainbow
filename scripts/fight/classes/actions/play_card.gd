@@ -41,12 +41,12 @@ func resolve(fight_manager: FightManager) -> void:
 	var slot := fight_manager.board_manager.get_slot(pos)
 	var card := fight_manager.card_manager.get_card_by_id(card_id)
 	slot.card = card
+	card.z_index = 0
 
 	if placer_type == Action.IDType.PLAYER:
 		var data := fight_manager.get_data(placer_id)
 		data.hand_size -= 1
 		var t := data.public_card.find_custom(func(c: Card) -> bool: return c.id == card_id)
-		push_warning(t)
 		if t != -1:
 			data.public_card.remove_at(t)
 

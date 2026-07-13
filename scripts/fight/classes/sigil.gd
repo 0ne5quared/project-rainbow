@@ -1,7 +1,7 @@
 @abstract class_name Sigil
 
-## Most method in this class create a token that is appended to the internal stack of this sigil.
-## They are promises that this will happens
+## Most method in this class create an action that is appended to the internal stack of this sigil.
+## They are promises that this will happens.
 
 ## The fight manager that is current "active".
 ## Just a reference to the fightmanager so you can access like the board, hand,
@@ -12,13 +12,23 @@ var attached_card: Card
 
 var _stack: Array[Action]
 
+# --- Sigil non event hook ---
+
+
+func blood_value() -> int:
+	return 0
+
+
+func mox_value() -> Card.Costs.Mox:
+	return Card.Costs.Mox.new()
+
+
 # --- All the sigil event hook ---
 
 @warning_ignore_start("unused_parameter")  # keep the signature clean while avoiding warning
 
 
 ## Called after [AddCardAction] is resolved. This mean that the card have already been added.
-## [param card] can be null if the card added is private to the opponent
 func on_card_add(card: Card) -> void:
 	return
 
@@ -58,16 +68,27 @@ func on_card_perished(card: Card) -> void:
 	return
 
 
-## Called after [TipScaleAction] resolved. This mean that the scale is already tipped.
+## Called after [TipScaleAction] resolved. This means that the scale is already tipped.
 func on_scale_tipped(amount: int) -> void:
 	pass
 
 
-func on_bones_gain(amount: int, player_id: String) -> void:
+## Called after [ChangeBonesAction] resolved. This means that the bones already changed. [death_card]
+## is the card that die to produce this bone, can be [code]null[/code] if bone changed otherwise
+func on_bone_changed(amount: int, player_id: String, death_card: Card) -> void:
 	return
 
 
-func on_cells_gain(amount: int, player_id: String) -> void:
+func on_cell_changed(amount: int, player_id: String) -> void:
+	return
+
+
+func on_energy_changed(amount: int, player_id: String) -> void:
+	return
+
+
+## Called after [SacrificeCardAction] resolved. This means the ard is still alive and on the board.
+func on_card_sacrificed(card: Card) -> void:
 	return
 
 

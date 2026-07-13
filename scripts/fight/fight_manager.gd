@@ -9,7 +9,8 @@ enum State {
 	## Awaiting a cost to be pay
 	PAYING_COST,
 	## Hammer time!!! :DDDD
-	HAMMER
+	HAMMER,
+	SACRIFICE
 }
 
 @onready var hand_manager: HandManager = %HandManager
@@ -38,14 +39,22 @@ var _opp_replacement: Array[Array] = []
 var my_data: Player
 var opp_data: Player
 
+var sac_candidate: Array[Card] = []
+
 var opp_id: String
 
 var main_deck: Array[Dictionary] = [
-	{name = "Warren", attack = 0, health = 2, sigils = ["Rabbit Hole"]},
-	{name = "Squirrel", attack = 0, health = 1},
-	{name = "Squirrel", attack = 0, health = 1},
-	{name = "Squirrel", attack = 0, health = 1},
-	{name = "Squirrel", attack = 0, health = 1},
+	{
+		name = "Hover Mage",
+		attack = 1,
+		health = 1,
+		costs = {mox = ["blue"]},
+		sigils = ["Orange Mox", "Blue Mox", "Green Mox"]
+	},
+	{name = "Ruby Mox", attack = 0, health = 1, sigils = ["Orange Mox"]},
+	{name = "Sapphire Mox", attack = 0, health = 1, sigils = ["Blue Mox"]},
+	{name = "Emerald Mox", attack = 0, health = 1, sigils = ["Green Mox"]},
+	{name = "Wolf", attack = 3, health = 2, costs = {blood = 2}},
 ]
 var side_deck: Array[Dictionary] = [
 	{name = "Squirrel", attack = 0, health = 1},
@@ -56,7 +65,7 @@ var side_deck: Array[Dictionary] = [
 
 
 func _process(_delta: float) -> void:
-	if opp_data == null:
+	if opp_data == null or my_data == null:
 		return
 	$VBoxContainer/HBoxContainer2/LeftUI/OppHandSize.text = (
 		"Opp Hand Size:" + str(opp_data.hand_size)
@@ -65,6 +74,12 @@ func _process(_delta: float) -> void:
 		"Opp Public Card:"
 		+ ", ".join(opp_data.public_card.map(func(c: Card) -> String: return c.card_name))
 	)
+	$VBoxContainer/HBoxContainer2/LeftUI/Bone.text = "Bones: " + str(my_data.bones)
+	$VBoxContainer/HBoxContainer2/LeftUI/Cell.text = "Energy Cells: " + str(my_data.cells)
+	$VBoxContainer/HBoxContainer2/LeftUI/Energy.text = "Energy: " + str(my_data.energy)
+	$VBoxContainer/HBoxContainer2/LeftUI/OppBone.text = "Opp Bones: " + str(opp_data.bones)
+	$VBoxContainer/HBoxContainer2/LeftUI/OppCell.text = "Opp Energy Cells: " + str(opp_data.cells)
+	$VBoxContainer/HBoxContainer2/LeftUI/OppEnergy.text = ("Opp Energy: " + str(opp_data.energy))
 
 
 class Player:
@@ -72,6 +87,7 @@ class Player:
 	var bones: int = 0
 	var cells: int = 0
 	var energy: int = 0
+	var mox: Card.Costs.Mox
 	## The player hand size
 	var hand_size: int = 0
 	## The cards in the player hand that is public information
@@ -85,7 +101,7 @@ func _start_fight() -> void:
 	visible = true
 	my_data = Player.new()
 	opp_data = Player.new()
-	_draw_starting_hand()
+	await _draw_starting_hand()
 
 
 func lose_game() -> void:
@@ -107,6 +123,23 @@ func _draw_starting_hand() -> void:
 
 func get_data(player_id: String) -> Player:
 	return my_data if player_id == Global.uuid else opp_data
+
+
+func count_sigil(sigil: String) -> int:
+	return get_cards().filter(func(c: Card) -> bool: return c.sigils.has(sigil)).size()
+
+
+func get_cards(row := BoardManager.Row.MINE) -> Array[Card]:
+	var t: Array[Card]
+	t.assign(
+		(
+			board_manager
+			. get_row(row)
+			. map(func(s: BoardManager.Slot) -> Card: return s.card)
+			. filter(func(c: Card) -> bool: return c != null)
+		)
+	)
+	return t
 
 
 # --- GODOT EVENT ---
@@ -148,19 +181,90 @@ func _on_slot_selected(slot: BoardManager.Slot) -> void:
 	if state == State.PLAYING_CARD and slot.pos.y == BoardManager.Row.MINE:
 		if slot.card != null:
 			return
-		hand_manager.selected.z_index = 0
-		var a := PlayCardAction.new(
-			hand_manager.selected.id, slot.pos, Action.IDType.PLAYER, Global.uuid
-		)
-		_add_then_resolve(a)
+		var card := hand_manager.selected
+		var actions: Array[Action] = []
+		if card.costs.bone != 0:
+			actions.push_front(ChangeBonesAction.new(-card.costs.bone as int, Global.uuid))
+		if card.costs.cell != 0:
+			actions.push_front(ChangeCellsAction.new(-card.costs.cell as int, Global.uuid))
+		if card.costs.energy != 0:
+			actions.push_front(ChangeEnergyAction.new(-card.costs.energy as int, Global.uuid))
+
+		actions.push_front(PlayCardAction.new(card.id, slot.pos, Action.IDType.PLAYER, Global.uuid))
+		_push_actions(actions)
+		@warning_ignore("missing_await")
+		_resolve_stack()
 		ConnectionManager.send(
-			ConnectionManager.GameMessage.ACTIONS, {actions = [a.as_dict()], private = false}
+			ConnectionManager.GameMessage.ACTIONS,
+			{
+				actions = actions.map(func(a: Action) -> Dictionary: return a.as_dict()),
+				private = false
+			}
 		)
 		await stack_resolved
 		state = State.IDLE
 
+	if state == State.SACRIFICE and slot.pos.y == BoardManager.Row.MINE:
+		if slot.card == null:
+			return
+		var card := slot.card
+		if card in sac_candidate:
+			sac_candidate.remove_at(sac_candidate.find(card))
+			card.card_name = card.card_data.name
+		else:
+			sac_candidate.append(card)
+		card.get_node("SacMarker").visible = card in sac_candidate
+		var total := 0
+		var actions: Array[Action] = []
+		sac_candidate.sort_custom(
+			func(ca: Card, cb: Card) -> bool:
+				return board_manager.get_card_pos(ca.id).x > board_manager.get_card_pos(cb.id).x
+		)
+		for c: Card in sac_candidate:
+			total += c.blood_value()
+			actions.push_back(SacrificeCardAction.new(c.id))
+		if total >= hand_manager.selected.costs.blood:
+			_push_actions(actions)
+			ConnectionManager.send(
+				ConnectionManager.GameMessage.ACTIONS,
+				{
+					actions = actions.map(func(a: Action) -> Dictionary: return a.as_dict()),
+					private = false
+				}
+			)
+			await _resolve_stack()
+			state = State.PLAYING_CARD
 
-func _on_card_selected(_card: Card) -> void:
+
+func _on_card_selected(card: Card) -> void:
+	sac_candidate.clear()
+	hand_manager.selected = null
+	if my_data.bones < card.costs.bone:
+		return
+	if my_data.cells < card.costs.cell:
+		return
+	if my_data.energy < card.costs.energy:
+		return
+	if card.costs.blood != 0:
+		var total := 0
+		for c: Card in get_cards():
+			total += c.blood_value()
+		if total < card.costs.blood:
+			return
+		state = State.SACRIFICE
+		hand_manager.selected = card
+		return
+	if not card.costs.mox.is_empty():
+		var mox := Card.Costs.Mox.new()
+		for c: Card in get_cards():
+			mox.add(c.mox_value())
+		if card.costs.mox.green > mox.green:
+			return
+		if card.costs.mox.orange > mox.orange:
+			return
+		if card.costs.mox.blue > mox.blue:
+			return
+	hand_manager.selected = card
 	state = State.PLAYING_CARD
 
 
@@ -242,10 +346,11 @@ func _resolve_stack() -> void:
 		if (
 			not is_active
 			and action.action_type() == Action.Type.PLAY_CARD
-			and action.card_id not in card_manager._cards
+			and action.card_id not in card_manager._cards.keys()
 		):
-			while action.card_id not in card_manager._cards:
+			while action.card_id not in card_manager._cards.keys():
 				await ConnectionManager.recieved_packet
+		randomize()
 		action.resolve(self)
 		while _opp_private.is_empty():
 			await ConnectionManager.recieved_packet

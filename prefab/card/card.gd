@@ -27,12 +27,60 @@ const _DATA_SCHEMA: Dictionary[String, Dictionary] = {
 			blood = {types = [TYPE_INT], default = 0},
 			energy = {types = [TYPE_INT], default = 0},
 			cell = {types = [TYPE_INT], default = 0},
-			mox = {types = [TYPE_STRING], default = ""}
+			mox =
+			{
+				types = [TYPE_ARRAY, TYPE_DICTIONARY],
+				sub_type = TYPE_STRING,
+				schema =
+				{
+					orange = {types = [TYPE_INT], default = 0},
+					blue = {types = [TYPE_INT], default = 0},
+					green = {types = [TYPE_INT], default = 0},
+				},
+				default = []
+			}
 		},
 		default = {}
 	},
 	tokens = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []}
 }
+
+
+class Costs:
+	class Mox:
+		var green := 0
+		var orange := 0
+		var blue := 0
+
+		func add(mox: Mox) -> void:
+			green += mox.green
+			orange += mox.orange
+			blue += mox.blue
+
+		func is_empty() -> bool:
+			return green != 0 and orange != 0 and blue != 0
+
+		static func g(amount := 1) -> Mox:
+			var m := Mox.new()
+			m.green = amount
+			return m
+
+		static func o(amount := 1) -> Mox:
+			var m := Mox.new()
+			m.orange = amount
+			return m
+
+		static func b(amount := 1) -> Mox:
+			var m := Mox.new()
+			m.blue = amount
+			return m
+
+	var bone: int
+	var blood: int
+	var energy: int
+	var cell: int
+	var mox: Mox
+
 
 var card_data: Dictionary:
 	set(new_data):
@@ -46,6 +94,7 @@ var zone := Zone.LIMBO:
 	set(new):
 		zone = new
 		visible = zone != Zone.LIMBO
+		%CostContainer.visible = zone != Zone.BOARD
 var id := Global.gen_id()
 
 var attack_mod: int
@@ -71,10 +120,19 @@ var _sigil_script: Array[Sigil]
 ## Trait of the card, these don't have any gameplay effect but instead they are checked by
 ## sigils and or cost.
 var traits: Array[String]
-var temples: String
-var costs: Dictionary[String, Variant]
+var temples: String:
+	set(new):
+		temples = new
+		redraw_card()
+var costs: Costs:
+	set(new):
+		costs = new
+		redraw_card()
 var tokens: Array[String]
-var card_name: String
+var card_name: String:
+	set(new):
+		card_name = new
+		redraw_card()
 
 var parsing_data := false
 
@@ -86,8 +144,17 @@ func blood_value() -> int:
 	return t if t != 0 else 1
 
 
+func mox_value() -> Costs.Mox:
+	var m := Costs.Mox.new()
+	for sigil: Sigil in _sigil_script:
+		m.add(sigil.mox_value())
+	return m
+
+
 ## Parse and assign infomation in [param data]
-func parse_data(data: Dictionary) -> Dictionary:
+func parse_data(data: Dictionary, show_warning := false) -> Dictionary:
+	@warning_ignore("confusable_local_usage", "shadowed_global_identifier")
+	var push_warning := push_warning if show_warning else func(_x: String) -> void: pass
 	parsing_data = true
 	Global.validate_schema(data, _DATA_SCHEMA)
 	for prop in _DATA_SCHEMA:
@@ -95,7 +162,7 @@ func parse_data(data: Dictionary) -> Dictionary:
 			for sigil: String in data[prop]:
 				var sigil_path := "res://scripts/fight/sigils/%s.gd" % sigil
 				if not FileAccess.file_exists(sigil_path):
-					push_warning(
+					push_warning.call(
 						'Sigil "%s" can\'t be found so using missing script instead' % sigil
 					)
 					sigil_path = "res://scripts/fight/sigils/MISSING.gd"
@@ -105,7 +172,26 @@ func parse_data(data: Dictionary) -> Dictionary:
 				_sigil_script.append(s)
 			continue
 		if prop == "costs":
-			costs.assign(data.costs as Dictionary)
+			var c := Costs.new()
+			c.bone = data.costs.bone
+			c.blood = data.costs.blood
+			c.energy = data.costs.energy
+			c.cell = data.costs.cell
+			var mox_cost := Costs.Mox.new()
+			if typeof(data.costs.mox) == TYPE_ARRAY:
+				var mox_array: Array[String]
+				mox_array.assign(data.costs.mox as Array)
+				mox_cost.green = mox_array.count("green")
+				mox_cost.orange = mox_array.count("orange")
+				mox_cost.blue = mox_array.count("blue")
+			if typeof(data.costs.mox) == TYPE_DICTIONARY:
+				var mox_dict: Dictionary[String, int]
+				mox_dict.assign(data.costs.mox as Dictionary)
+				mox_cost.green = mox_dict.green
+				mox_cost.orange = mox_dict.orange
+				mox_cost.blue = mox_dict.blue
+			c.mox = mox_cost
+			costs = c
 			continue
 		set(prop, data[prop])
 	card_name = data.name

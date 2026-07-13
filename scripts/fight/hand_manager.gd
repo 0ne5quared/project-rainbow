@@ -75,17 +75,25 @@ func _unraise_card(card: Card) -> void:
 	card.z_index = 0
 
 
-func _select_card(card: Card) -> void:
+func _select_card(card: Card, emit_event := true) -> void:
 	if selected == card:
 		_unraise_card(selected)
 		selected = null
 		card_unselected.emit(card)
 		return
 	if selected != null:
-		_unraise_card(selected)
+		_unselect_card(selected)
 	selected = card
 	_raise_card(card)
-	card_selected.emit(card)
+	if emit_event:
+		card_selected.emit(card)
+
+
+func _unselect_card(card: Card, emit_event := true) -> void:
+	_unraise_card(selected)
+	selected = null
+	if emit_event:
+		card_unselected.emit(card)
 
 
 func _on_card_changed_zone(card: Card, from: Card.Zone, to: Card.Zone) -> void:

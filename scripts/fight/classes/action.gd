@@ -28,16 +28,11 @@ enum Type {
 	## Action representing playing a card.
 	PLAY_CARD,
 	## Action representing creating a new token, this token will just float around in limbo.
-	## You need another action to do something with this token.[br]
-	## The spec for this action include:[br]
-	## - [code]card_data[/code]: [Dictionary]: The data to create this token.[br]
-	## - [code]token_id[/code]: [String]: The id of the new token, this id need to be deterministic
-	## on both client.[br]
-	## - [code]source_id[/code]: [String]: The source id that created this token. Usually is a card.
+	## You need another action to do something with this token.
 	CREATE_TOKEN,
-	## Action representing ending the turn. This action have no additonal information.
+	## Action representing ending the turn.
 	END_TURN,
-	## Action representing the start of combat. This action have no additional information.
+	## Action representing the start of combat.
 	COMBAT,
 	## Action representing the start of a card attack. This will simply resolve into CARD_STRIKE that
 	## actually take care of the damage and whatnot. Implementing [method Sigil.on_attack] will
@@ -50,7 +45,15 @@ enum Type {
 	## Action representing the tipping of the scale.
 	TIP_SCALE,
 	## Action representing killing a card.
-	KILL_CARD
+	KILL_CARD,
+	## Action representing a change in bone tokens, be it losing, spending or gaining bone tokens.
+	CHANGE_BONES,
+	## Action representing a change in energy cells, be it losing, spending or gaining energy cells.
+	CHANGE_CELLS,
+	## Action represrnting a chaneg in energy, be it losing, spending or gaining energy.
+	CHANGE_ENERGY,
+	## Action representing sacrificing a card, this will just resolve into KILL_CARD
+	SACRIFICE_CARD
 }
 
 enum IDType { CARD, PLAYER }

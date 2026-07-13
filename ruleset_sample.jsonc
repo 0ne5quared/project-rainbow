@@ -91,10 +91,17 @@
             "cost": {
                 "blood": 1,
                 "energy": 1,
-                // o for orange
-                // b for blue
-                // g for green
-                "mox": "obg"
+                "bone": 1,
+
+                // Mox can either be like this
+                "mox": {
+                    "orange": 1,
+                    "blue": 1,
+                    "green": 1,
+                }
+                // or like this
+                "mox": ["orange", "blue", "green"]
+                // Both first method is for multi mox cost and second is the default behaviour
             },
             // Related card or token that it make.
             // This don't do anything except tell the game to render related card in the overlay/tooltips

@@ -53,6 +53,30 @@ text = "Scale:"
 layout_mode = 2
 text = "Scale:"
 
+[node name="Bone" type="Label" parent="VBoxContainer/HBoxContainer2/LeftUI" unique_id=1555632161]
+layout_mode = 2
+text = "Scale:"
+
+[node name="Cell" type="Label" parent="VBoxContainer/HBoxContainer2/LeftUI" unique_id=1395797189]
+layout_mode = 2
+text = "Scale:"
+
+[node name="Energy" type="Label" parent="VBoxContainer/HBoxContainer2/LeftUI" unique_id=1188643372]
+layout_mode = 2
+text = "Scale:"
+
+[node name="OppBone" type="Label" parent="VBoxContainer/HBoxContainer2/LeftUI" unique_id=872763448]
+layout_mode = 2
+text = "Scale:"
+
+[node name="OppCell" type="Label" parent="VBoxContainer/HBoxContainer2/LeftUI" unique_id=1787370862]
+layout_mode = 2
+text = "Scale:"
+
+[node name="OppEnergy" type="Label" parent="VBoxContainer/HBoxContainer2/LeftUI" unique_id=1999201902]
+layout_mode = 2
+text = "Scale:"
+
 [node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/HBoxContainer2" unique_id=1161575921]
 layout_mode = 2
 size_flags_horizontal = 3
