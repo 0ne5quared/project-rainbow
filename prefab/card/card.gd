@@ -57,8 +57,11 @@ class Costs:
 			orange += mox.orange
 			blue += mox.blue
 
+		func as_dict() -> Dictionary[String, int]:
+			return {green = green, orange = orange, blue = blue}
+
 		func is_empty() -> bool:
-			return green != 0 and orange != 0 and blue != 0
+			return green == 0 and orange == 0 and blue == 0
 
 		static func g(amount := 1) -> Mox:
 			var m := Mox.new()
@@ -177,20 +180,18 @@ func parse_data(data: Dictionary, show_warning := false) -> Dictionary:
 			c.blood = data.costs.blood
 			c.energy = data.costs.energy
 			c.cell = data.costs.cell
-			var mox_cost := Costs.Mox.new()
 			if typeof(data.costs.mox) == TYPE_ARRAY:
 				var mox_array: Array[String]
 				mox_array.assign(data.costs.mox as Array)
-				mox_cost.green = mox_array.count("green")
-				mox_cost.orange = mox_array.count("orange")
-				mox_cost.blue = mox_array.count("blue")
-			if typeof(data.costs.mox) == TYPE_DICTIONARY:
+				c.mox.green = mox_array.count("green")
+				c.mox.orange = mox_array.count("orange")
+				c.mox.blue = mox_array.count("blue")
+			elif typeof(data.costs.mox) == TYPE_DICTIONARY:
 				var mox_dict: Dictionary[String, int]
 				mox_dict.assign(data.costs.mox as Dictionary)
-				mox_cost.green = mox_dict.green
-				mox_cost.orange = mox_dict.orange
-				mox_cost.blue = mox_dict.blue
-			c.mox = mox_cost
+				c.mox.green = mox_dict.green
+				c.mox.orange = mox_dict.orange
+				c.mox.blue = mox_dict.blue
 			costs = c
 			continue
 		set(prop, data[prop])
