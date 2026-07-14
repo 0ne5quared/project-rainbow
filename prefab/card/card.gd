@@ -78,11 +78,11 @@ class Costs:
 			m.blue = amount
 			return m
 
-	var bone: int
-	var blood: int
-	var energy: int
-	var cell: int
-	var mox: Mox
+	var bone: int = 0
+	var blood: int = 0
+	var energy: int = 0
+	var cell: int = 0
+	var mox: Mox = Mox.new()
 
 
 var card_data: Dictionary:
@@ -230,16 +230,23 @@ func redraw_card() -> void:
 	%Attack.text = str(attack)
 	%Health.text = str(health)
 	if costs.bone != 0:
-		%CostContainer.add_child(num_cost("res://asset/cost/bone_cost.png", costs.bone as int))
-	if costs.energy != 0:
-		%CostContainer.add_child(num_cost("res://asset/cost/energy_cost.png", costs.energy as int))
-	if costs.cell != 0:
-		%CostContainer.add_child(num_cost("res://asset/cost/cell_cost.png", costs.cell as int))
+		%CostContainer.add_child(num_cost_icon("res://asset/cost/bone_cost.png", costs.bone as int))
 	if costs.blood != 0:
-		%CostContainer.add_child(num_cost("res://asset/cost/blood_cost.png", costs.blood as int))
+		%CostContainer.add_child(
+			num_cost_icon("res://asset/cost/blood_cost.png", costs.blood as int)
+		)
+	if costs.energy != 0:
+		%CostContainer.add_child(
+			num_cost_icon("res://asset/cost/energy_cost.png", costs.energy as int)
+		)
+	if costs.cell != 0:
+		%CostContainer.add_child(num_cost_icon("res://asset/cost/cell_cost.png", costs.cell as int))
+
+	if not costs.mox.is_empty():
+		%CostContainer.add_child(mox_cost_icon())
 
 
-func num_cost(cost_icon: String, amount: int) -> HBoxContainer:
+func num_cost_icon(cost_icon: String, amount: int) -> HBoxContainer:
 	var cost := HBoxContainer.new()
 	cost.add_theme_constant_override("separation", -1)
 	@warning_ignore("shadowed_variable_base_class")
@@ -252,6 +259,27 @@ func num_cost(cost_icon: String, amount: int) -> HBoxContainer:
 		digit.stretch_mode = TextureRect.STRETCH_KEEP
 		digit.size_flags_vertical = Control.SIZE_SHRINK_END
 		cost.add_child(digit)
+	return cost
+
+
+func mox_cost_icon() -> HBoxContainer:
+	var cost := HBoxContainer.new()
+	push_warning(costs.mox.as_dict())
+	cost.add_theme_constant_override("separation", -5)
+	for i in range(costs.mox.green):
+		var t := TextureRect.new()
+		t.texture = load("res://asset/cost/mox/green.png")
+		cost.add_child(t)
+	for i in range(costs.mox.orange):
+		var t := TextureRect.new()
+		t.texture = load("res://asset/cost/mox/orange.png")
+		cost.add_child(t)
+	for i in range(costs.mox.blue):
+		var t := TextureRect.new()
+		t.texture = load("res://asset/cost/mox/blue.png")
+		cost.add_child(t)
+	for c in cost.get_children().size():
+		cost.get_child(c).z_index = cost.get_child_count() - c
 	return cost
 
 

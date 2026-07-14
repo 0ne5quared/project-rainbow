@@ -48,12 +48,28 @@ var main_deck: Array[Dictionary] = [
 		name = "Hover Mage",
 		attack = 1,
 		health = 1,
-		costs = {mox = ["blue"]},
-		sigils = ["Orange Mox", "Blue Mox", "Green Mox"]
+		costs = {mox = ["green", "green", "green"]},
 	},
-	{name = "Ruby Mox", attack = 0, health = 1, sigils = ["Orange Mox"]},
-	{name = "Sapphire Mox", attack = 0, health = 1, sigils = ["Blue Mox"]},
-	{name = "Emerald Mox", attack = 0, health = 1, sigils = ["Green Mox"]},
+	{
+		name = "Emerald Mox",
+		attack = 0,
+		health = 1,
+		sigils = ["Green Mox"],
+	},
+	{
+		name = "Emerald Mox",
+		attack = 0,
+		health = 1,
+		sigils = ["Green Mox"],
+		costs = {mox = ["green"]}
+	},
+	{
+		name = "Emerald Mox",
+		attack = 0,
+		health = 1,
+		sigils = ["Green Mox"],
+		costs = {mox = ["green", "green"]}
+	},
 	{name = "Wolf", attack = 3, health = 2, costs = {blood = 2}},
 ]
 var side_deck: Array[Dictionary] = [
@@ -114,7 +130,7 @@ func _draw_starting_hand() -> void:
 	for i in range(5):
 		_push_action(DrawCardAction.new(DrawCardAction.Deck.MAIN, Global.uuid))
 	for i in range(5):
-		_push_action(DrawCardAction.new(DrawCardAction.Deck.SIDE, opp_id))
+		_push_action(DrawCardAction.new(DrawCardAction.Deck.MAIN, opp_id))
 	@warning_ignore("missing_await")
 	await _resolve_stack()
 	await get_tree().process_frame
