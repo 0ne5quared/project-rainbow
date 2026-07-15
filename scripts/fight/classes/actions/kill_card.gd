@@ -32,7 +32,7 @@ func resolve(fight_manager: FightManager) -> void:
 			card.id
 		)
 	)
-	fight_manager._activate_sigils(func(sigil: Sigil) -> void: sigil.on_card_perished(card))
+	await fight_manager._activate_sigils(func(sigil: Sigil) -> void: sigil.on_card_perished(card))
 
 
 func as_dict() -> Dictionary:

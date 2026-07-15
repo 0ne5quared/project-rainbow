@@ -30,6 +30,8 @@ enum Type {
 	## Action representing creating a new token, this token will just float around in limbo.
 	## You need another action to do something with this token.
 	CREATE_TOKEN,
+	## Action representing starting the turn.
+	START_TURN,
 	## Action representing ending the turn.
 	END_TURN,
 	## Action representing the start of combat.
@@ -52,6 +54,9 @@ enum Type {
 	CHANGE_CELLS,
 	## Action represrnting a chaneg in energy, be it losing, spending or gaining energy.
 	CHANGE_ENERGY,
+	## Action representing the refresh in energy. Basically just set the energy back to the cells
+	## amount, this does not use [ChangeEnergyAction]
+	REFRESH_ENERGY,
 	## Action representing sacrificing a card, this will just resolve into KILL_CARD
 	SACRIFICE_CARD
 }

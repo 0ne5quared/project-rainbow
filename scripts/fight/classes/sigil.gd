@@ -28,20 +28,25 @@ func mox_value() -> Card.Costs.Mox:
 @warning_ignore_start("unused_parameter")  # keep the signature clean while avoiding warning
 
 
-## Called after [AddCardAction] is resolved. This mean that the card have already been added.
+## Called after [AddCardAction] resolved. This mean that the card have already been added.
 func on_card_add(card: Card) -> void:
 	return
 
 
-## Called after [PlayCardAction] is resolved. This mean that the card is already on board.
+## Called after [PlayCardAction] resolved. This mean that the card is already on board.
 func on_card_played(
 	card: Card, pos: Vector2i, placer_type: Action.IDType, placer_id: String
 ) -> void:
 	return
 
 
-## Called after [EndTurnAction] is resolved. This however
-func on_turn_end() -> void:
+## Called after [EndTurnAction] resolved.
+func on_turn_end(player_id: String) -> void:
+	return
+
+
+## Called after [StartTurnAction] resolved.
+func on_turn_start(player_id: String) -> void:
 	return
 
 
@@ -70,7 +75,7 @@ func on_card_perished(card: Card) -> void:
 
 ## Called after [TipScaleAction] resolved. This means that the scale is already tipped.
 func on_scale_tipped(amount: int) -> void:
-	pass
+	return
 
 
 ## Called after [ChangeBonesAction] resolved. This means that the bones already changed. [death_card]
@@ -84,6 +89,10 @@ func on_cell_changed(amount: int, player_id: String) -> void:
 
 
 func on_energy_changed(amount: int, player_id: String) -> void:
+	return
+
+
+func on_energy_refresh(player_id: String) -> void:
 	return
 
 
@@ -168,3 +177,27 @@ func controller_id(pos := Vector2i.MIN) -> String:
 	if pos == Vector2i.MIN:
 		pos = fight_manager.board_manager.get_card_pos(attached_card.id)
 	return (Global.uuid as String) if pos.y == BoardManager.Row.MINE else fight_manager.opp_id
+
+
+func request_target(
+	player_id: String,
+	filter := func(_slot: BoardManager.Slot) -> bool: return true,
+) -> BoardManager.Slot:
+	var slot: BoardManager.Slot = null
+	if player_id == Global.uuid:
+		fight_manager.state = FightManager.State.TARGET
+		while slot == null or not filter.call(slot):
+			slot = await fight_manager.target_acquired
+		fight_manager.state = FightManager.State.IDLE
+		var p := oppose_pos(slot.pos)
+		ConnectionManager.send(
+			ConnectionManager.GameMessage.TARGET_ACQUIRED, {pos = {x = p.x, y = p.y}}
+		)
+	else:
+		var packet: Dictionary = {}
+		while packet == {} or packet.type != ConnectionManager.GameMessage.TARGET_ACQUIRED:
+			packet = await ConnectionManager.recieved_packet
+		slot = fight_manager.board_manager.get_slot(
+			Vector2i(packet.pos.x as int, packet.pos.y as int)
+		)
+	return slot

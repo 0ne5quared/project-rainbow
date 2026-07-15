@@ -264,7 +264,6 @@ func num_cost_icon(cost_icon: String, amount: int) -> HBoxContainer:
 
 func mox_cost_icon() -> HBoxContainer:
 	var cost := HBoxContainer.new()
-	push_warning(costs.mox.as_dict())
 	cost.add_theme_constant_override("separation", -5)
 	for i in range(costs.mox.green):
 		var t := TextureRect.new()

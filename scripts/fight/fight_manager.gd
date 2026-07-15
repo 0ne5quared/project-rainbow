@@ -10,7 +10,9 @@ enum State {
 	PAYING_COST,
 	## Hammer time!!! :DDDD
 	HAMMER,
-	SACRIFICE
+	SACRIFICE,
+	RESOLVING_STACK,
+	TARGET
 }
 
 @onready var hand_manager: HandManager = %HandManager
@@ -19,6 +21,8 @@ enum State {
 
 signal stack_resolved
 signal just_resolved
+
+signal target_acquired(slot: BoardManager.Slot)
 
 var state := State.IDLE
 var turn := 1
@@ -45,10 +49,10 @@ var opp_id: String
 
 var main_deck: Array[Dictionary] = [
 	{
-		name = "Hover Mage",
+		name = "Energy Bot",
 		attack = 1,
 		health = 1,
-		costs = {mox = ["green", "green", "green"]},
+		costs = {energy = -11, cell = -1},
 	},
 	{
 		name = "Emerald Mox",
@@ -70,7 +74,12 @@ var main_deck: Array[Dictionary] = [
 		sigils = ["Green Mox"],
 		costs = {mox = ["green", "green"]}
 	},
-	{name = "Wolf", attack = 3, health = 2, costs = {blood = 2}},
+	{
+		name = "Sniperbot",
+		attack = 1,
+		health = 2,
+		sigils = ["Sniper", "Airborne", "Trifurcated Strike", "Bifurcated Strike"]
+	},
 ]
 var side_deck: Array[Dictionary] = [
 	{name = "Squirrel", attack = 0, health = 1},
@@ -117,8 +126,8 @@ func _update_cursor() -> void:
 class Player:
 	var lives: int = 2
 	var bones: int = 0
-	var cells: int = 0
-	var energy: int = 0
+	var cells: int = 1
+	var energy: int = 1
 	var mox: Card.Costs.Mox
 	## The player hand size
 	var hand_size: int = 0
@@ -172,6 +181,10 @@ func get_cards(row := BoardManager.Row.MINE) -> Array[Card]:
 		)
 	)
 	return t
+
+
+func active_id() -> String:
+	return (Global.uuid as String) if is_active else opp_id
 
 
 # --- GODOT EVENT ---
@@ -267,6 +280,9 @@ func _on_slot_selected(slot: BoardManager.Slot) -> void:
 			await _resolve_stack()
 			state = State.PLAYING_CARD
 
+	if state == State.TARGET:
+		target_acquired.emit(slot)
+
 
 func _on_card_selected(card: Card) -> void:
 	sac_candidate.clear()
@@ -308,12 +324,11 @@ func _on_card_unselected(_card: Card) -> void:
 func _on_end_pressed() -> void:
 	if state != State.IDLE:
 		return
-	_add_then_resolve(EndTurnAction.new())
+	var a := EndTurnAction.new()
+	_add_then_resolve(a)
 	ConnectionManager.send(
-		ConnectionManager.GameMessage.ACTIONS,
-		{actions = [EndTurnAction.new().as_dict()], private = false}
+		ConnectionManager.GameMessage.ACTIONS, {actions = [a.as_dict()], private = false}
 	)
-	await stack_resolved
 
 
 # --- STACK SHIT ---
@@ -353,7 +368,7 @@ func _add_then_resolve(action: Action) -> void:
 
 ## resolve the first item on top of the stack
 func _resolve_stack() -> void:
-	var gotta_end_turn := false
+	state = State.RESOLVING_STACK
 	while _stack.size() > 0:
 		var action: Action = _stack.pop_back()
 		just_resolved.emit()
@@ -361,10 +376,6 @@ func _resolve_stack() -> void:
 		if not replacement.is_empty():
 			_stack.append_array(replacement)
 			continue
-
-		@warning_ignore("static_called_on_instance")
-		if action.action_type() == Action.Type.END_TURN:
-			gotta_end_turn = true
 		$VBoxContainer/HBoxContainer2/RightUI/RichTextLabel.text = (
 			"TOP: "
 			+ action.fmt()
@@ -373,7 +384,7 @@ func _resolve_stack() -> void:
 		)
 		# HACK: Super janky fix that slightly delay play card on card that don't exist on the
 		# current client and so the other client can resolve it first and transfer the information
-		# over
+		# over :)
 		@warning_ignore("static_called_on_instance")
 		if (
 			not is_active
@@ -392,9 +403,8 @@ func _resolve_stack() -> void:
 		#await get_tree().create_timer(0.2).timeout
 	stack_resolved.emit()
 	replacement_history.clear()
-	if gotta_end_turn:
-		is_active = not is_active
 	$VBoxContainer/HBoxContainer2/RightUI/RichTextLabel.text = ""
+	state = State.IDLE
 
 
 var replacement_history: Dictionary[Sigil, Array]
@@ -408,7 +418,7 @@ func _find_replacement(cards: Array[Card], action: Action) -> Dictionary:
 
 			seed(card.id.hash() + (0 if _stack.is_empty() else _stack[-1].id.hash()))
 			@warning_ignore("static_called_on_instance")
-			var replacement := sigil.replace_action(action.action_type(), action)
+			var replacement := await sigil.replace_action(action.action_type(), action)
 
 			if not replacement.is_empty():
 				return {
@@ -425,7 +435,7 @@ func _find_replacement(cards: Array[Card], action: Action) -> Dictionary:
 # HACK: This code is kinda stinky :(
 func _get_replacement(action: Action) -> Array[Action]:
 	# Public information has priority.
-	var result := _find_replacement(_public_activation_order(), action)
+	var result := await _find_replacement(_public_activation_order(), action)
 	var replacement: Array[Action] = []
 	replacement.assign(result.replacement as Array)
 	var replacement_source: Sigil = result.source
@@ -433,7 +443,7 @@ func _get_replacement(action: Action) -> Array[Action]:
 	# If no public replacement exists, determine our own private replacement.
 	var private_replacement: Array[Action] = []
 	if replacement.is_empty():
-		result = _find_replacement(_private_activation_order(), action)
+		result = await _find_replacement(_private_activation_order(), action)
 		private_replacement.assign(result.replacement as Array)
 		replacement_source = result.source
 
@@ -481,8 +491,8 @@ func _no_activation() -> void:
 
 
 func _activate_sigils(callback: Callable) -> void:
-	_activate_sigil_on_cards(_public_activation_order(), callback)
-	var private := _activate_sigil_on_cards(_private_activation_order(), callback)
+	await _activate_sigil_on_cards(_public_activation_order(), callback)
+	var private := await _activate_sigil_on_cards(_private_activation_order(), callback)
 	ConnectionManager.send(
 		ConnectionManager.GameMessage.ACTIONS,
 		{actions = private.map(func(a: Action) -> Dictionary: return a.as_dict()), private = true}
@@ -495,7 +505,7 @@ func _activate_sigil_on_cards(cards: Array[Card], callback: Callable) -> Array[A
 		for sigil: Sigil in card._sigil_script:
 			seed(card.id.hash() + (0 if _stack.is_empty() else _stack[-1].id.hash()))
 			sigil._stack.clear()
-			callback.call(sigil)
+			await callback.call(sigil)
 			_push_actions(sigil._stack)
 			out.append_array(out)
 	return out

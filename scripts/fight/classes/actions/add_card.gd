@@ -28,7 +28,7 @@ func resolve(fight_manager: FightManager) -> void:
 	card.id = card_id
 	fight_manager.card_manager.sync_id()
 	data.public_card.append(card)
-	fight_manager._activate_sigils(func(sigil: Sigil) -> void: sigil.on_card_add(card))
+	await fight_manager._activate_sigils(func(sigil: Sigil) -> void: sigil.on_card_add(card))
 
 
 func as_dict() -> Dictionary:

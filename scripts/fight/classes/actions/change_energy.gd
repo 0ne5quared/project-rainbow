@@ -17,7 +17,7 @@ func _init(a: int, pid: String) -> void:
 func resolve(fight_manager: FightManager) -> void:
 	var data := fight_manager.get_data(player_id)
 	data.energy += amount
-	fight_manager._activate_sigils(
+	await fight_manager._activate_sigils(
 		func(sigil: Sigil) -> void: sigil.on_energy_changed(amount, player_id)
 	)
 
