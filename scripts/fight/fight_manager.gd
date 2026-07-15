@@ -97,6 +97,22 @@ func _process(_delta: float) -> void:
 	$VBoxContainer/HBoxContainer2/LeftUI/OppCell.text = "Opp Energy Cells: " + str(opp_data.cells)
 	$VBoxContainer/HBoxContainer2/LeftUI/OppEnergy.text = ("Opp Energy: " + str(opp_data.energy))
 
+	_update_cursor()
+
+
+func _update_cursor() -> void:
+	var texture: String = "res://asset/cursor/default.png"
+	match state:
+		State.SACRIFICE:
+			texture = "res://asset/cursor/sacrifice.png"
+		State.PLAYING_CARD:
+			texture = "res://asset/cursor/play_card.png"
+		State.HAMMER:
+			texture = "res://asset/cursor/hammer.png"
+		State.TARGET:
+			texture = "res://asset/cursor/target.png"
+	Input.set_custom_mouse_cursor(load(texture))
+
 
 class Player:
 	var lives: int = 2
