@@ -524,6 +524,7 @@ func _public_activation_order() -> Array[Card]:
 			. filter(func(c: Card) -> bool: return c != null)
 		)
 	)
+	res.append_array(card_manager.get_cards_by_zone(Card.Zone.GRAVEYARD))
 	return res
 
 
