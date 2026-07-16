@@ -152,10 +152,12 @@ func lose_game() -> void:
 
 
 func _draw_starting_hand() -> void:
-	for i in range(5):
+	for i in range(4):
 		_push_action(DrawCardAction.new(DrawCardAction.Deck.MAIN, Global.uuid))
-	for i in range(5):
+	_push_action(DrawCardAction.new(DrawCardAction.Deck.SIDE, Global.uuid))
+	for i in range(4):
 		_push_action(DrawCardAction.new(DrawCardAction.Deck.MAIN, opp_id))
+	_push_action(DrawCardAction.new(DrawCardAction.Deck.SIDE, opp_id))
 	@warning_ignore("missing_await")
 	await _resolve_stack()
 	await get_tree().process_frame
@@ -417,7 +419,7 @@ func _find_replacement(cards: Array[Card], action: Action) -> Dictionary:
 				continue
 
 			seed(card.id.hash() + (0 if _stack.is_empty() else _stack[-1].id.hash()))
-			@warning_ignore("static_called_on_instance")
+			@warning_ignore("static_called_on_instance", "redundant_await")
 			var replacement := await sigil.replace_action(action.action_type(), action)
 
 			if not replacement.is_empty():
