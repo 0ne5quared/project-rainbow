@@ -21,6 +21,8 @@ extends Object
 ## helper and utility provided by [FightManager] as well as trigger sigil event hook.
 
 enum Type {
+	## Action representing nothing. This is usually use by replacement effect to fizzle an action
+	NULL,
 	## Action representing adding a card into the hand.
 	ADD_CARD,
 	## Action representing drawing a card from a deck.
