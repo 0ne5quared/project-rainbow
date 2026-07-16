@@ -104,7 +104,7 @@ func on_card_sacrificed(card: Card) -> void:
 ## Called whenever an action is added to the stack. If this return a non empty array the top action
 ## of the stack is replace with the returned value.
 ## Unless it is absolutely necessary don't use this hook.
-func replace_action(type: Action.Type, action: Action) -> Array[Action]:
+func replace_action(type: Action.Type, act: Action) -> Array[Action]:
 	return []
 
 
