@@ -79,6 +79,8 @@ func on_card_damaged(
 	return
 
 
+## Called just before [KillCardAction] resolved. This mean that the card haven't actually die or
+## been move to the graveyard
 func on_card_perished(card: Card) -> void:
 	return
 
