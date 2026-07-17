@@ -98,6 +98,7 @@ var zone := Zone.LIMBO:
 		zone = new
 		visible = zone != Zone.LIMBO
 		%CostContainer.visible = zone != Zone.BOARD
+		redraw_card()
 var id := Global.gen_id()
 
 var attack_mod: int
@@ -223,6 +224,7 @@ func redraw_card() -> void:
 	# don't redraw while parsing card so that we don;t spam the log
 	if parsing_data:
 		return
+	$SacMarker.visible = false
 	%Name.text = card_name
 
 	var portrait_path := "res://asset/portraits/%s.png" % card_name
@@ -239,6 +241,9 @@ func redraw_card() -> void:
 		%SigilsContainer.add_child(sigil)
 	%Attack.text = str(attack)
 	%Health.text = str(health)
+	for n in %CostContainer.get_children():
+		%CostContainer.remove_child(n)
+		n.queue_free()
 	if costs.bone != 0:
 		%CostContainer.add_child(num_cost_icon("res://asset/cost/bone_cost.png", costs.bone as int))
 	if costs.blood != 0:

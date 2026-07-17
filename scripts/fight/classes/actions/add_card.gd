@@ -38,6 +38,10 @@ func resolve(fight_manager: FightManager) -> void:
 	)
 	if player_id != Global.uuid:
 		card.visible = false
+
+	# Artifically move the child to the last slot
+	fight_manager.card_manager.move_child(card, -1)
+
 	data.public_card.append(card)
 	fight_manager.hand_manager.position_card()
 	await fight_manager._activate_sigils(

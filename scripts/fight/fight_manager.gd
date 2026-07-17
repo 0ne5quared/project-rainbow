@@ -48,20 +48,9 @@ var sac_candidate: Array[Card] = []
 var opp_id: String
 
 var main_deck: Array[Dictionary] = [
-	{name = "Greater Smoke", attack = 1, health = 1, sigils = ["Rabbit Hole"]},
-	{
-		name = "Emerald Mox",
-		attack = 0,
-		health = 1,
-		sigils = ["Green Mox"],
-	},
-	{
-		name = "Emerald Mox",
-		attack = 0,
-		health = 1,
-		sigils = ["Green Mox"],
-		costs = {mox = ["green"]}
-	},
+	{name = "Greater Smoke", attack = 1, health = 1, sigils = ["Unkillable"]},
+	{name = "Wolf", attack = 0, health = 1, costs = {blood = 1}},
+	{name = "Wolf", attack = 0, health = 1, costs = {blood = 1}},
 	{name = "Sniper Bot", attack = 1, health = 2, sigils = ["Sniper"]},
 ]
 var side_deck: Array[Dictionary] = [
