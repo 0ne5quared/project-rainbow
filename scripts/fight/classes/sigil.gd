@@ -30,7 +30,8 @@ func mox_value() -> Card.Costs.Mox:
 
 
 ## Called after [AddCardAction] resolved. This mean that the card have already been added.
-func on_card_add(card: Card) -> void:
+## [param card] can be [code]null[/code] if the card is not public or known to the current player.
+func on_card_added(card: Card, player_id: String) -> void:
 	return
 
 
@@ -140,9 +141,12 @@ func create_token(card_data: Dictionary, source_id: String) -> String:
 	return token_id
 
 
-## Create a new token with [param card_data] by [param source_id] amd play it at [param pos].
-## Return the new token's id.[br]
-func create_and_play_token(card_data: Dictionary, pos: Vector2i, source_id: String) -> String:
+## Create a new token with [param card_data] by [param source_id] and play it at [param pos].
+## [source_id] default to [attached_card]'s id.[br]
+## Return the new token's id.
+func create_and_play_token(card_data: Dictionary, pos: Vector2i, source_id := "") -> String:
+	if source_id.is_empty():
+		source_id = attached_card.id
 	var id := create_token(card_data, source_id)
 	play_card(id, pos, Action.IDType.CARD, source_id)
 	return id
@@ -168,14 +172,24 @@ func draw_card(deck: DrawCardAction.Deck, player_id := "") -> void:
 	add_action(DrawCardAction.new(deck, player_id))
 
 
-## Add a new card to the hand with [param card_data ] by [param source_id] amd play it at [param pos].
-## Return the new token's id.[br]
-func add_card(card_data: Dictionary, player_id := "") -> String:
+## Add a new card to the [param player_id]'s hand with id [param card_id]
+func add_card(player_id: String, card_id: String) -> String:
+	add_action(AddCardAction.new(player_id, card_id))
+	return card_id
+
+
+## Create a new token and add it to [param player_id]'s hand with id [param card_data].
+## [param player_id] default to [method controller_id], [param source_id] default to
+## [member attached_card]'s id.[br]
+## Return the new token's id.
+func create_and_add_token(card_data: Dictionary, player_id := "", source_id := "") -> String:
 	if player_id.is_empty():
 		player_id = controller_id()
-	var card_id := Global.gen_id()
-	add_action(AddCardAction.new(card_data, card_id, player_id))
-	return card_id
+	if source_id.is_empty():
+		source_id = attached_card.id
+	var id := create_token(card_data, source_id)
+	add_card(player_id, id)
+	return id
 
 
 func oppose_pos(pos: Vector2i) -> Vector2i:

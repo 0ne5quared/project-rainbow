@@ -6,9 +6,8 @@ func on_card_played(
 ) -> void:
 	if card != attached_card:
 		return
-	add_card(
+	create_and_add_token(
 		{
 			name = "Rabbit",
 		},
-		controller_id()
 	)

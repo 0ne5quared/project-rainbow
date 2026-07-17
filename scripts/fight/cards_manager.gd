@@ -39,6 +39,8 @@ func move_card(card_id: String, zone: Card.Zone) -> void:
 	var from := card.zone
 	card.zone = zone
 	card_changed_zone.emit(card, from, zone)
+	if from == zone:
+		return
 	if zone in Card.PUBLIC_ZONE:
 		ConnectionManager.send(ConnectionManager.GameMessage.NEW_CARD, {card = card.as_dict()})
 

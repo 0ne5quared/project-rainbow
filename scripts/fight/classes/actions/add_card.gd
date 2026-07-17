@@ -1,46 +1,59 @@
 class_name AddCardAction
 extends Action
 
-var card_data: Dictionary
-var card_id: String
 var player_id: String
+var card_id: String
 
 
 static func action_type() -> Type:
 	return Action.Type.ADD_CARD
 
 
-func _init(cd: Dictionary, cid: String, pid: String) -> void:
-	card_data = cd
-	card_id = cid
+func _init(
+	pid: String,
+	cid: String,
+) -> void:
 	player_id = pid
+	card_id = cid
 
 
 func resolve(fight_manager: FightManager) -> void:
+	var card := fight_manager.card_manager.get_card_by_id(card_id)
+	if card == null and player_id != Global.uuid:
+		# if it is null assume the card is valid on the other end and just add it to the hand
+		fight_manager.opp_data.hand_size += 1
+		await fight_manager._activate_sigils(
+			func(sigil: Sigil) -> void: sigil.on_card_added(card, player_id)
+		)
+		return
+	if card == null:
+		# Uh oh shit it the fan this time
+		push_warning("Can't resolve card to add to hand")
+		fight_manager._no_activation()
+		return
 	var data := fight_manager.get_data(player_id)
 	data.hand_size += 1
-	var card: Card
-	if player_id == Global.uuid:
-		card = fight_manager.hand_manager.draw_card(card_data)
-	else:
-		card = fight_manager.card_manager.add_card(card_data, Card.Zone.OPP_HAND)
+	fight_manager.card_manager.move_card(
+		card_id, Card.Zone.HAND if player_id == Global.uuid else Card.Zone.OPP_HAND
+	)
+	if player_id != Global.uuid:
 		card.visible = false
-	card.id = card_id
-	fight_manager.card_manager.sync_id()
 	data.public_card.append(card)
-	await fight_manager._activate_sigils(func(sigil: Sigil) -> void: sigil.on_card_add(card))
+	fight_manager.hand_manager.position_card()
+	await fight_manager._activate_sigils(
+		func(sigil: Sigil) -> void: sigil.on_card_added(card, player_id)
+	)
 
 
 func as_dict() -> Dictionary:
-	return {type = action_type(), card_data = card_data, card_id = card_id, player_id = player_id}
+	return {type = action_type(), player_id = player_id, card_id = card_id}
 
 
 static func from_dict(dict: Dictionary) -> Action:
 	return (
 		AddCardAction
 		. new(
-			dict.card_data as Dictionary,
-			dict.card_id as String,
 			dict.player_id as String,
+			dict.card_id as String,
 		)
 	)

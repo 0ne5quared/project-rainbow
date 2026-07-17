@@ -15,9 +15,6 @@ func _ready() -> void:
 
 func draw_card(card_data: Dictionary) -> Card:
 	var new: Card = cards_manager.add_card(card_data, Card.Zone.HAND)
-	new.mouse_entered.connect(_on_card_hovered.bind(new))
-	new.mouse_exited.connect(_on_card_unhovered.bind(new))
-	new.pressed.connect(_select_card.bind(new))
 	return new
 
 
@@ -105,5 +102,8 @@ func _on_card_changed_zone(card: Card, from: Card.Zone, to: Card.Zone) -> void:
 			card.disconnect(&"mouse_entered", _on_card_hovered)
 			card.disconnect(&"mouse_exited", _on_card_unhovered)
 			card.disconnect(&"pressed", _select_card)
-
+		if to == Card.Zone.HAND:
+			card.mouse_entered.connect(_on_card_hovered.bind(card))
+			card.mouse_exited.connect(_on_card_unhovered.bind(card))
+			card.pressed.connect(_select_card.bind(card))
 		position_card()
