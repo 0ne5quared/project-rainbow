@@ -16,6 +16,7 @@ func resolve(fight_manager: FightManager) -> void:
 	var card := fight_manager.card_manager.get_card_by_id(card_id)
 	if card.zone != Card.Zone.BOARD:
 		push_warning("Card can't be killed if they aren't on the board!!")
+		fight_manager._no_activation()
 		return
 	await fight_manager._activate_sigils(func(sigil: Sigil) -> void: sigil.on_card_perished(card))
 	var slot := fight_manager.board_manager.get_slot_with_card(card_id)
