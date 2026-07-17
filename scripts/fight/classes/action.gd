@@ -43,6 +43,9 @@ enum Type {
 	END_TURN,
 	## Action representing the start of combat.
 	COMBAT,
+	## Action indicating the end of the combat. This don't do much but chaneg the state of the
+	## fight manager back
+	END_COMBAT,
 	## Action representing the start of a card attack. This will simply resolve into CARD_STRIKE that
 	## actually take care of the damage and whatnot. Implementing [method Sigil.on_attack] will
 	## override the default of adding a center strike for this action

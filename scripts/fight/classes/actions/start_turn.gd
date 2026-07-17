@@ -13,6 +13,7 @@ func _init(pid: String) -> void:
 
 
 func resolve(fight_manager: FightManager) -> void:
+	fight_manager.phase = FightManager.phase_helper(player_id, FightManager.Phase.MAIN, true)
 	fight_manager.is_active = Global.uuid == player_id
 	fight_manager._push_action(RefreshEnergyAction.new(fight_manager.active_id()))
 	fight_manager._push_action(ChangeCellsAction.new(1, fight_manager.active_id()))

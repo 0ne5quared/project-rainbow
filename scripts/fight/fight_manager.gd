@@ -15,6 +15,16 @@ enum State {
 	TARGET
 }
 
+## All the phases during a game.
+enum Phase {
+	## Main Phase
+	MAIN,
+	## Combat phase
+	COMBAT,
+	## Opponent turn phase
+	OPP
+}
+
 @onready var hand_manager: HandManager = %HandManager
 @onready var board_manager: BoardManager = %BoardManager
 @onready var card_manager: CardsManager = %CardsManager
@@ -25,6 +35,7 @@ signal just_resolved
 signal target_acquired(slot: BoardManager.Slot)
 
 var state := State.IDLE
+var phase := Phase.MAIN
 var turn := 1
 ## Am I the active player
 var is_active: bool:
@@ -159,6 +170,11 @@ func get_cards(row := BoardManager.Row.MINE) -> Array[Card]:
 
 func active_id() -> String:
 	return (Global.uuid as String) if is_active else opp_id
+
+
+## [param do_opp] will flip the condition and do the opposite
+static func phase_helper(player_id: String, new_phase: Phase, do_opp := false) -> Phase:
+	return new_phase if ((player_id == Global.uuid) != do_opp) else Phase.OPP
 
 
 # --- GODOT EVENT ---
@@ -374,7 +390,7 @@ func _resolve_stack() -> void:
 		var private_trigger: Array[Action]
 		private_trigger.assign(_opp_private.pop_back() as Array)
 		_push_actions(private_trigger)
-		#await get_tree().create_timer(0.2).timeout
+		#await get_tree().create_timer(0.5).timeout
 	stack_resolved.emit()
 	replacement_history.clear()
 	$VBoxContainer/HBoxContainer2/RightUI/RichTextLabel.text = ""

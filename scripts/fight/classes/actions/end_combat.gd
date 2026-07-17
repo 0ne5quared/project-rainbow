@@ -1,4 +1,4 @@
-class_name CombatAction
+class_name EndCombatAction
 extends Action
 
 var player_id: String
@@ -13,11 +13,8 @@ func _init(pid: String) -> void:
 
 
 func resolve(fight_manager: FightManager) -> void:
-	fight_manager.phase = FightManager.phase_helper(player_id, FightManager.Phase.COMBAT)
-	await fight_manager._activate_sigils(func(s: Sigil) -> void: s.on_combat_start())
-	for slot in fight_manager.board_manager.get_active_row(player_id == Global.uuid):
-		if slot.card != null:
-			fight_manager._push_action(CardAttackAction.new(slot.card.id))
+	fight_manager.phase = FightManager.phase_helper(player_id, FightManager.Phase.MAIN)
+	await fight_manager._activate_sigils(func(s: Sigil) -> void: s.on_combat_end())
 
 
 func as_dict() -> Dictionary:
