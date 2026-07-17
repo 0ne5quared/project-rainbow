@@ -114,12 +114,15 @@ var health: int:
 	set(new):
 		health = new
 		redraw_card()
-## The sigils on the card, if you want to temporarily add sigil to the card use [member sigils]
+## The list of sigils name on the card. If you want to get the list of actual [Sigil] objects, use
+## [member _sigils]
 var sigils: Array[String]:
 	set(new):
 		sigils = new
 		redraw_card()
-var _sigil_script: Array[Sigil]
+## The list of actual [Sigil] object on the card. If you want to get the list of names use
+## [member sigils]
+var _sigils: Array[Sigil]
 ## Trait of the card, these don't have any gameplay effect but instead they are checked by
 ## sigils and or cost.
 var traits: Array[String]
@@ -142,14 +145,14 @@ var parsing_data := false
 
 func blood_value() -> int:
 	var t := 0
-	for sigil: Sigil in _sigil_script:
+	for sigil: Sigil in _sigils:
 		t += sigil.blood_value()
 	return t if t != 0 else 1
 
 
 func mox_value() -> Costs.Mox:
 	var m := Costs.Mox.new()
-	for sigil: Sigil in _sigil_script:
+	for sigil: Sigil in _sigils:
 		m.add(sigil.mox_value())
 	return m
 
@@ -163,16 +166,32 @@ func parse_data(data: Dictionary, show_warning := false) -> Dictionary:
 	for prop in _DATA_SCHEMA:
 		if prop == "sigils":
 			for sigil: String in data[prop]:
-				var sigil_path := "res://scripts/fight/sigils/%s.gd" % sigil
-				if not FileAccess.file_exists(sigil_path):
+				# Figuring out where the script is
+				var script_path := "res://scripts/fight/sigils/%s.gd" % sigil
+				if not FileAccess.file_exists(script_path):
 					push_warning.call(
-						'Sigil "%s" can\'t be found so using missing script instead' % sigil
+						(
+							'Sigil script can\'t be found for "%s" so using missing script instead'
+							% sigil
+						)
 					)
-					sigil_path = "res://scripts/fight/sigils/MISSING.gd"
-				var s: Sigil = load(sigil_path).new()
+					script_path = "res://scripts/fight/sigils/MISSING.gd"
+				var s: Sigil = load(script_path).new()
 				s.attached_card = self
+
+				# Now the texture
+				var sigil_path := "res://asset/sigils/%s.png" % sigil
+				if not FileAccess.file_exists(sigil_path):
+					push_warning(
+						(
+							'Sigil icon can\'t be found for "%s" so using missing texture instead'
+							% sigil
+						)
+					)
+					sigil_path = "res://asset/sigils/MISSING.png"
+				s.texture = load(sigil_path)
 				sigils.append(sigil)
-				_sigil_script.append(s)
+				_sigils.append(s)
 			continue
 		if prop == "costs":
 			var c := Costs.new()
@@ -216,17 +235,8 @@ func redraw_card() -> void:
 		%Portrait.texture = load("res://asset/portraits/MISSING.png")
 	for n in %SigilsContainer.get_children():
 		%SigilsContainer.remove_child(n)
-		n.queue_free()
-	for sigil in sigils:
-		var sigil_path := "res://asset/sigils/%s.png" % sigil
-		if not FileAccess.file_exists(sigil_path):
-			push_warning(
-				'Sigil icon can\'t be found for "%s" so using missing texture instead' % sigil
-			)
-			sigil_path = "res://asset/sigils/MISSING.png"
-		var text_rect := TextureRect.new()
-		text_rect.texture = load(sigil_path)
-		%SigilsContainer.add_child(text_rect)
+	for sigil in _sigils:
+		%SigilsContainer.add_child(sigil)
 	%Attack.text = str(attack)
 	%Health.text = str(health)
 	if costs.bone != 0:

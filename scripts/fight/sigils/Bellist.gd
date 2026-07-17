@@ -2,4 +2,4 @@ extends SpawnFriendSigil
 
 
 func friend_data() -> Dictionary:
-	return {name = "Dam", attack = 0, health = 0}
+	return {name = "Chime", attack = 0, health = 2}

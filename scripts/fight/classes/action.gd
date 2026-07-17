@@ -32,6 +32,11 @@ enum Type {
 	## Action representing creating a new token, this token will just float around in limbo.
 	## You need another action to do something with this token.
 	CREATE_TOKEN,
+	## Action representing moving a card from one slot on the board to another.
+	MOVE_CARD,
+	## Action representing ringing the bell. This will put [CombatAction] and [EndTurnAction] onto
+	## the stack
+	RING_BELL,
 	## Action representing starting the turn.
 	START_TURN,
 	## Action representing ending the turn.

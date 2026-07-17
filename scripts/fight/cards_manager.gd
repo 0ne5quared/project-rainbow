@@ -27,7 +27,7 @@ func add_card(card_data: Dictionary, zone: Card.Zone, id := "") -> Card:
 	card.card_data = card_data
 	if not id.is_empty():
 		card.id = id
-	for sigil: Sigil in card._sigil_script:
+	for sigil: Sigil in card._sigils:
 		sigil.fight_manager = fight_manager
 	_cards[card.id] = card
 	move_card(card.id, zone)

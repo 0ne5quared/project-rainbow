@@ -1,4 +1,5 @@
 @abstract class_name Sigil
+extends TextureRect
 
 ## Most method in this class create an action that is appended to the internal stack of this sigil.
 ## They are promises that this will happens.
@@ -37,6 +38,14 @@ func on_card_add(card: Card) -> void:
 func on_card_played(
 	card: Card, pos: Vector2i, placer_type: Action.IDType, placer_id: String
 ) -> void:
+	return
+
+
+func on_card_moved(card: Card, from: BoardManager.Slot, to: BoardManager.Slot) -> void:
+	return
+
+
+func on_bell_rung(player_id: String) -> void:
 	return
 
 
@@ -139,6 +148,10 @@ func create_and_play_token(card_data: Dictionary, pos: Vector2i, source_id: Stri
 	return id
 
 
+func move_card(card_id: String, to_pos: Vector2i) -> void:
+	add_action(MoveCardAction.new(card_id, to_pos))
+
+
 func kill_card(card_id: String) -> void:
 	add_action(KillCardAction.new(card_id))
 
@@ -151,7 +164,7 @@ func damage_card(
 
 func draw_card(deck: DrawCardAction.Deck, player_id := "") -> void:
 	if player_id.is_empty():
-		player_id = Global.uuid
+		player_id = controller_id()
 	add_action(DrawCardAction.new(deck, player_id))
 
 
@@ -159,7 +172,7 @@ func draw_card(deck: DrawCardAction.Deck, player_id := "") -> void:
 ## Return the new token's id.[br]
 func add_card(card_data: Dictionary, player_id := "") -> String:
 	if player_id.is_empty():
-		player_id = Global.uuid
+		player_id = controller_id()
 	var card_id := Global.gen_id()
 	add_action(AddCardAction.new(card_data, card_id, player_id))
 	return card_id
@@ -171,6 +184,20 @@ func oppose_pos(pos: Vector2i) -> Vector2i:
 
 func get_pos(card_id: String) -> Vector2i:
 	return fight_manager.board_manager.get_card_pos(card_id)
+
+
+## Return the 2 neighbouring spot, The array will always be of length 2 with the first item being
+## left slot and second the right slot. If the slot didn't exist the item would be [code]null[/code]
+func get_neighbour_slot() -> Array[BoardManager.Slot]:
+	var pos := fight_manager.board_manager.get_card_pos(attached_card.id)
+	var out: Array[BoardManager.Slot]
+	out.assign(
+		[
+			fight_manager.board_manager.get_slot(pos + Vector2i.LEFT),
+			fight_manager.board_manager.get_slot(pos + Vector2i.RIGHT)
+		]
+	)
+	return out
 
 
 func controller_id(pos := Vector2i.MIN) -> String:

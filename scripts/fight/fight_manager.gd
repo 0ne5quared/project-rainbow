@@ -48,12 +48,7 @@ var sac_candidate: Array[Card] = []
 var opp_id: String
 
 var main_deck: Array[Dictionary] = [
-	{
-		name = "Energy Bot",
-		attack = 1,
-		health = 1,
-		costs = {energy = -11, cell = -1},
-	},
+	{name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bellist"]},
 	{
 		name = "Emerald Mox",
 		attack = 0,
@@ -67,19 +62,7 @@ var main_deck: Array[Dictionary] = [
 		sigils = ["Green Mox"],
 		costs = {mox = ["green"]}
 	},
-	{
-		name = "Emerald Mox",
-		attack = 0,
-		health = 1,
-		sigils = ["Green Mox"],
-		costs = {mox = ["green", "green"]}
-	},
-	{
-		name = "Sniperbot",
-		attack = 1,
-		health = 2,
-		sigils = ["Sniper", "Airborne", "Trifurcated Strike", "Bifurcated Strike"]
-	},
+	{name = "Sniper bot", attack = 1, health = 2, sigils = ["Sniper"]},
 ]
 var side_deck: Array[Dictionary] = [
 	{name = "Squirrel", attack = 0, health = 1},
@@ -326,7 +309,7 @@ func _on_card_unselected(_card: Card) -> void:
 func _on_end_pressed() -> void:
 	if state != State.IDLE:
 		return
-	var a := EndTurnAction.new()
+	var a := RingBellAction.new(Global.uuid)
 	_add_then_resolve(a)
 	ConnectionManager.send(
 		ConnectionManager.GameMessage.ACTIONS, {actions = [a.as_dict()], private = false}
@@ -414,7 +397,7 @@ var replacement_history: Dictionary[Sigil, Array]
 
 func _find_replacement(cards: Array[Card], action: Action) -> Dictionary:
 	for card in cards:
-		for sigil: Sigil in card._sigil_script:
+		for sigil: Sigil in card._sigils:
 			if sigil in replacement_history and replacement_history[sigil].has(action.id):
 				continue
 
@@ -504,7 +487,7 @@ func _activate_sigils(callback: Callable) -> void:
 func _activate_sigil_on_cards(cards: Array[Card], callback: Callable) -> Array[Action]:
 	var out: Array[Action] = []
 	for card in cards:
-		for sigil: Sigil in card._sigil_script:
+		for sigil: Sigil in card._sigils:
 			seed(card.id.hash() + (0 if _stack.is_empty() else _stack[-1].id.hash()))
 			sigil._stack.clear()
 			await callback.call(sigil)
