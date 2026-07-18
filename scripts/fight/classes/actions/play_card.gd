@@ -31,7 +31,7 @@ func _init(c: String, p: Vector2i, pt: IDType, pi: String) -> void:
 # Resolver for this sigil action, the fight manager is the copy of the current fight manager
 func resolve(fight_manager: FightManager) -> void:
 	if not fight_manager.board_manager.is_slot_empty(pos):
-		print("Nuh uh no playing into non empty slot >:(")
+		push_warning("Nuh uh no playing into non empty slot >:(")
 		# Always call some sort of sigil activation function event if there are no sigil hook.
 		# If you don't include this your stack will stall indefinitely.
 		fight_manager._no_activation()
