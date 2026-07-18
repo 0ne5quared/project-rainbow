@@ -18,11 +18,7 @@ func resolve(fight_manager: FightManager) -> void:
 		push_warning("Card can't be killed if they aren't on the board!!")
 		fight_manager._no_activation()
 		return
-	await fight_manager._activate_sigils(func(sigil: Sigil) -> void: sigil.on_card_perished(card))
 	var slot := fight_manager.board_manager.get_slot_with_card(card_id)
-	fight_manager.card_manager.move_card(card_id, Card.Zone.GRAVEYARD)
-	slot.card = null
-	card.visible = false
 	fight_manager._push_action(
 		ChangeBonesAction.new(
 			1,
@@ -34,6 +30,10 @@ func resolve(fight_manager: FightManager) -> void:
 			card.id
 		)
 	)
+	await fight_manager._activate_sigils(func(sigil: Sigil) -> void: sigil.on_card_perished(card))
+	fight_manager.card_manager.move_card(card_id, Card.Zone.GRAVEYARD)
+	slot.card = null
+	card.visible = false
 
 
 func as_dict() -> Dictionary:
