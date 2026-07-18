@@ -15,16 +15,6 @@ enum State {
 	TARGET
 }
 
-## All the phases during a game.
-enum Phase {
-	## Main Phase
-	MAIN,
-	## Combat phase
-	COMBAT,
-	## Opponent turn phase
-	OPP
-}
-
 @onready var hand_manager: HandManager = %HandManager
 @onready var board_manager: BoardManager = %BoardManager
 @onready var card_manager: CardsManager = %CardsManager
@@ -35,7 +25,7 @@ signal just_resolved
 signal target_acquired(slot: BoardManager.Slot)
 
 var state := State.IDLE
-var phase := Phase.MAIN
+var in_combat := false
 var turn := 1
 ## Am I the active player
 var is_active: bool:
@@ -59,7 +49,7 @@ var sac_candidate: Array[Card] = []
 var opp_id: String
 
 var main_deck: Array[Dictionary] = [
-	{name = "Greater Smoke", attack = 1, health = 1, sigils = ["Unkillable"]},
+	{name = "Greater Smoke", attack = 1, health = 1, sigils = ["Corpse Eater"]},
 	{name = "Wolf", attack = 0, health = 1, costs = {blood = 1}},
 	{name = "Wolf", attack = 0, health = 1, costs = {blood = 1}},
 	{name = "Sniper Bot", attack = 1, health = 2, sigils = ["Sniper"]},
@@ -170,11 +160,6 @@ func get_cards(row := BoardManager.Row.MINE) -> Array[Card]:
 
 func active_id() -> String:
 	return (Global.uuid as String) if is_active else opp_id
-
-
-## [param do_opp] will flip the condition and do the opposite
-static func phase_helper(player_id: String, new_phase: Phase, do_opp := false) -> Phase:
-	return new_phase if ((player_id == Global.uuid) != do_opp) else Phase.OPP
 
 
 # --- GODOT EVENT ---
@@ -342,6 +327,7 @@ func get_next_stack_id(base: Action = null) -> String:
 
 
 func _push_actions(actions: Array[Action]) -> void:
+	actions.reverse()
 	for a in actions:
 		_push_action(a)
 
@@ -377,8 +363,7 @@ func _resolve_stack() -> void:
 		# over :)
 		@warning_ignore("static_called_on_instance")
 		if (
-			not is_active
-			and action.action_type() == Action.Type.PLAY_CARD
+			action.action_type() == Action.Type.PLAY_CARD
 			and action.card_id not in card_manager._cards.keys()
 		):
 			while action.card_id not in card_manager._cards.keys():
@@ -497,7 +482,7 @@ func _activate_sigil_on_cards(cards: Array[Card], callback: Callable) -> Array[A
 			sigil._stack.clear()
 			await callback.call(sigil)
 			_push_actions(sigil._stack)
-			out.append_array(out)
+			out.append_array(sigil._stack)
 	return out
 
 

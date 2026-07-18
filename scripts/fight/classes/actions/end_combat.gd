@@ -13,7 +13,7 @@ func _init(pid: String) -> void:
 
 
 func resolve(fight_manager: FightManager) -> void:
-	fight_manager.phase = FightManager.phase_helper(player_id, FightManager.Phase.MAIN)
+	fight_manager.in_combat = false
 	await fight_manager._activate_sigils(func(s: Sigil) -> void: s.on_combat_end())
 
 
