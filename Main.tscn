@@ -73,7 +73,7 @@ size_flags_vertical = 3
 [node name="Title" type="Label" parent="TitleScreen/VBoxContainer" unique_id=1317554811]
 layout_mode = 2
 theme_override_font_sizes/font_size = 96
-text = "INSCRYPTION"
+text = "Multiscryption"
 horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TitleScreen/VBoxContainer" unique_id=1349506769]

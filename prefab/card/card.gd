@@ -143,6 +143,9 @@ var card_name: String:
 
 var parsing_data := false
 
+@onready var sac_marker: TextureRect = %SacMarker
+@onready var submerge_overlay: TextureRect = %SubmergeOverlay
+
 
 func blood_value() -> int:
 	var t := 0
