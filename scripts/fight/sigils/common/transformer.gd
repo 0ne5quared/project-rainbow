@@ -1,0 +1,16 @@
+@abstract class_name TransformerSigil
+extends Sigil
+
+var turn_on_board := 0
+
+@abstract func turn_threshold() -> int
+
+@abstract func new_form() -> Dictionary
+
+
+func on_turn_start(player_id: String) -> void:
+	if player_id != controller_id() or attached_card.zone != Card.Zone.BOARD:
+		return
+	turn_on_board += 1
+	if turn_on_board >= turn_threshold():
+		transform_card(attached_card.id, new_form())

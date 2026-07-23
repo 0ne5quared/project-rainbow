@@ -164,6 +164,8 @@ func parse_data(data: Dictionary, show_warning := false) -> Dictionary:
 	var push_warning := push_warning if show_warning else func(_x: String) -> void: pass
 	parsing_data = true
 	Global.validate_schema(data, _DATA_SCHEMA)
+	sigils.clear()
+	_sigils.clear()
 	for prop in _DATA_SCHEMA:
 		if prop == "sigils":
 			for sigil: String in data[prop]:

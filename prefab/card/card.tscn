@@ -5,7 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://bie1qwdx23na7" path="res://asset/portraits/Squirrel.png" id="3_f2uqh"]
 [ext_resource type="Texture2D" uid="uid://d4fhkxwnobdxl" path="res://asset/card_frame/tech_frame.png" id="4_rpw1c"]
 [ext_resource type="Texture2D" uid="uid://d0qiu1j4oon11" path="res://asset/card_frame/beast_icon.png" id="5_cryra"]
-[ext_resource type="Texture2D" uid="uid://bw1deabnl56ig" path="res://asset/pixel_card_sacrifice_marker.png" id="6_cryra"]
+[ext_resource type="Texture2D" uid="uid://bw1deabnl56ig" path="res://asset/sacrifice_marker.png" id="6_cryra"]
+[ext_resource type="Texture2D" uid="uid://b531uel5u5ohf" path="res://asset/submerge_overlay.png" id="7_ww8vi"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_vp3qw"]
 grow_begin = -2.0
@@ -144,3 +145,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("6_cryra")
+
+[node name="SubmergeOverlay" type="TextureRect" parent="." unique_id=147527280]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_ww8vi")

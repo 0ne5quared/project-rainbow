@@ -15,7 +15,10 @@ func _init(pid: String) -> void:
 func resolve(fight_manager: FightManager) -> void:
 	fight_manager.in_combat = true
 	await fight_manager._activate_sigils(func(s: Sigil) -> void: s.on_combat_start())
-	for slot in fight_manager.board_manager.get_active_row(player_id == Global.uuid):
+	fight_manager._push_action(EndCombatAction.new(player_id))
+	var t := fight_manager.board_manager.get_active_row(player_id == Global.uuid)
+	t.reverse()
+	for slot in t:
 		if slot.card != null:
 			fight_manager._push_action(CardAttackAction.new(slot.card.id))
 

@@ -7,7 +7,5 @@ func on_card_played(
 	if card != attached_card:
 		return
 	create_and_add_token(
-		{
-			name = "Rabbit",
-		},
+		{name = "Rabbit", health = 0, attack = 1},
 	)

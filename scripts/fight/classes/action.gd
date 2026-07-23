@@ -34,6 +34,8 @@ enum Type {
 	CREATE_TOKEN,
 	## Action representing moving a card from one slot on the board to another.
 	MOVE_CARD,
+	## Action represrnting a card transforming into another.
+	TRANSFORM_CARD,
 	## Action representing ringing the bell. This will put [CombatAction] and [EndTurnAction] onto
 	## the stack
 	RING_BELL,
@@ -46,10 +48,13 @@ enum Type {
 	## Action indicating the end of the combat. This don't do much but chaneg the state of the
 	## fight manager back
 	END_COMBAT,
-	## Action representing the start of a card attack. This will simply resolve into CARD_STRIKE that
-	## actually take care of the damage and whatnot. Implementing [method Sigil.on_attack] will
+	## Action representing the start of a card attack. This will simply resolve into [PreCardStrikg]
+	## that actually take care of the damage and whatnot. Implementing [method Sigil.on_attack] will
 	## override the default of adding a center strike for this action
 	CARD_ATTACK,
+	## Action representing the step just before the card strike. This provide time for sigil to
+	## intervene before the card strike
+	PRE_CARD_STRIKE,
 	## Action representing the card striking. This is the actual damage dealing action.
 	CARD_STRIKE,
 	## Action representing damaging a card.

@@ -49,10 +49,21 @@ var sac_candidate: Array[Card] = []
 var opp_id: String
 
 var main_deck: Array[Dictionary] = [
-	{name = "Greater Smoke", attack = 1, health = 1, sigils = ["Corpse Eater"]},
-	{name = "Wolf", attack = 0, health = 1, costs = {blood = 1}},
-	{name = "Wolf", attack = 0, health = 1, costs = {blood = 1}},
-	{name = "Sniper Bot", attack = 1, health = 2, sigils = ["Sniper"]},
+	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
+	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
+	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
+	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
+	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
+	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
+	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
+	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
+	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
+	{
+		name = "Cat",
+		attack = 1,
+		health = 2,
+		sigils = ["Bone Digger"],
+	},
 ]
 var side_deck: Array[Dictionary] = [
 	{name = "Squirrel", attack = 0, health = 1},
@@ -125,10 +136,10 @@ func lose_game() -> void:
 
 
 func _draw_starting_hand() -> void:
-	for i in range(4):
+	for i in range(10):
 		_push_action(DrawCardAction.new(DrawCardAction.Deck.MAIN, Global.uuid))
 	_push_action(DrawCardAction.new(DrawCardAction.Deck.SIDE, Global.uuid))
-	for i in range(4):
+	for i in range(10):
 		_push_action(DrawCardAction.new(DrawCardAction.Deck.MAIN, opp_id))
 	_push_action(DrawCardAction.new(DrawCardAction.Deck.SIDE, opp_id))
 	@warning_ignore("missing_await")
@@ -244,6 +255,8 @@ func _on_slot_selected(slot: BoardManager.Slot) -> void:
 			total += c.blood_value()
 			actions.push_back(SacrificeCardAction.new(c.id))
 		if total >= hand_manager.selected.costs.blood:
+			for c in sac_candidate:
+				c.get_node("SacMarker").visible = false
 			_push_actions(actions)
 			ConnectionManager.send(
 				ConnectionManager.GameMessage.ACTIONS,
@@ -292,8 +305,10 @@ func _on_card_selected(card: Card) -> void:
 
 
 func _on_card_unselected(_card: Card) -> void:
-	if state == State.PLAYING_CARD:
+	if state == State.PLAYING_CARD or state == State.SACRIFICE:
 		state = State.IDLE
+		for c in sac_candidate:
+			c.get_node("SacMarker").visible = false
 
 
 func _on_end_pressed() -> void:
@@ -327,7 +342,6 @@ func get_next_stack_id(base: Action = null) -> String:
 
 
 func _push_actions(actions: Array[Action]) -> void:
-	actions.reverse()
 	for a in actions:
 		_push_action(a)
 

@@ -7,4 +7,8 @@ func on_card_damaged(
 	if victim != attached_card:
 		return
 
-	add_card({name = "Bee", attack = 1, health = 1, sigils = ["Airborne"]}, controller_id())
+	create_and_add_token(
+		{name = "Bee", attack = 1, health = 1, sigils = ["Airborne"]},
+		controller_id(),
+		attached_card.id
+	)

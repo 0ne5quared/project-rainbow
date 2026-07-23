@@ -46,6 +46,10 @@ func on_card_moved(card: Card, from: BoardManager.Slot, to: BoardManager.Slot) -
 	return
 
 
+func on_card_transformed(card: Card, card_data: Dictionary) -> void:
+	return
+
+
 func on_bell_rung(player_id: String) -> void:
 	return
 
@@ -63,6 +67,14 @@ func on_turn_start(player_id: String) -> void:
 ## Called when [CombatAction] resolved bef fore all the strike and attack are put onto the stack. For
 ## those that change how the card attack use [method on_attack].
 func on_combat_start() -> void:
+	return
+
+
+func on_combat_end() -> void:
+	return
+
+
+func pre_card_strike(striker: Card, victim_slot: BoardManager.Slot, to_face: bool) -> void:
 	return
 
 
@@ -158,6 +170,10 @@ func move_card(card_id: String, to_pos: Vector2i) -> void:
 	add_action(MoveCardAction.new(card_id, to_pos))
 
 
+func transform_card(card_id: String, card_data: Dictionary) -> void:
+	add_action(TransformCardAction.new(card_id, card_data))
+
+
 func kill_card(card_id: String) -> void:
 	add_action(KillCardAction.new(card_id))
 
@@ -194,6 +210,10 @@ func create_and_add_token(card_data: Dictionary, player_id := "", source_id := "
 	return id
 
 
+func change_bone(amount: int, player_id: String, death_source_id := "") -> void:
+	add_action(ChangeBonesAction.new(amount, player_id, death_source_id))
+
+
 func oppose_pos(pos: Vector2i) -> Vector2i:
 	return BoardManager.oppose_pos(pos)
 
@@ -220,6 +240,12 @@ func controller_id(pos := Vector2i.MIN) -> String:
 	if pos == Vector2i.MIN:
 		pos = fight_manager.board_manager.get_card_pos(attached_card.id)
 	return (Global.uuid as String) if pos.y == BoardManager.Row.MINE else fight_manager.opp_id
+
+
+func get_config(config_name: String, default: Variant) -> Variant:
+	return (
+		attached_card.card_data[config_name] if config_name in attached_card.card_data else default
+	)
 
 
 func request_target(
