@@ -8,7 +8,7 @@ var first_time := true
 var selected_ruleset: Dictionary
 
 
-class Ruleset:
+class RulesetIcon:
 	var name: String
 	var description: String
 	var url: String
@@ -40,7 +40,7 @@ func _ready() -> void:
 	)
 
 
-func add_ruleset(ruleset: Ruleset) -> void:
+func add_ruleset(ruleset: RulesetIcon) -> void:
 	var button: RulesetButton = ruleset_button.instantiate()
 	button.ruleset = ruleset
 	button.horvered.connect(_on_button_horvered)
@@ -58,7 +58,7 @@ func _on_request_complete(
 	var response: Dictionary = JSON.parse_string(body.get_string_from_utf8())
 	if first_time:
 		for ruleset: Dictionary in response.rulesets:
-			add_ruleset(Ruleset.new(ruleset))
+			add_ruleset(RulesetIcon.new(ruleset))
 		first_time = false
 		_on_button_unhorvered()
 		return
@@ -83,5 +83,5 @@ func _on_button_selected(ruleset: Ruleset) -> void:
 	else:
 		var file := FileAccess.open("user://rulesets/%s.json" % ruleset.name, FileAccess.READ)
 		selected_ruleset = JSON.parse_string(file.get_as_text())
-	Global.ruleset = selected_ruleset
+	Global.ruleset = Ruleset.new(selected_ruleset)
 	visible = false

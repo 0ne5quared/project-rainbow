@@ -24,7 +24,6 @@ config/icon="res://icon.svg"
 
 Global="*uid://d0u2tuyhq6554"
 ConnectionManager="*uid://ff071x27wtwy"
-RulesetParser="*uid://mu3j37gfhwly"
 
 [debug]
 

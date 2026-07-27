@@ -2,7 +2,7 @@
 extends Sigil
 
 ## Return the data that is used to spawn the friend.
-@abstract func friend_data() -> Dictionary
+@abstract func friend_data() -> Ruleset.CardData
 
 
 func on_card_played(

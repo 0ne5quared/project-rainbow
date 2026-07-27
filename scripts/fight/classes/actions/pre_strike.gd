@@ -1,8 +1,8 @@
 class_name PreCardStrikeAction
 extends Action
 
-var pos: Vector2i
 var striker_id: String
+var pos: Vector2i
 ## Wherever this will strike directly to face disregarding everything
 var to_face: bool
 
@@ -11,9 +11,9 @@ static func action_type() -> Type:
 	return Type.PRE_CARD_STRIKE
 
 
-func _init(p: Vector2i, sid: String, tf := false) -> void:
-	pos = p
+func _init(sid: String, p: Vector2i, tf := false) -> void:
 	striker_id = sid
+	pos = p
 	to_face = tf
 
 
@@ -27,7 +27,7 @@ func resolve(fight_manager: FightManager) -> void:
 	if striker.attack == 0:
 		fight_manager._no_activation()
 		return
-	fight_manager._push_action(CardStrikeAction.new(pos, striker_id, to_face))
+	fight_manager._push_action(CardStrikeAction.new(striker_id, pos, to_face))
 	await fight_manager._activate_sigils(
 		func(sigil: Sigil) -> void: return sigil.pre_card_strike(striker, victim_slot, to_face)
 	)
@@ -44,7 +44,7 @@ func as_dict() -> Dictionary:
 
 static func from_dict(dict: Dictionary) -> Action:
 	return CardStrikeAction.new(
-		Vector2i(dict.pos.x as int, dict.pos.y as int),
 		dict.striker_id as String,
+		Vector2i(dict.pos.x as int, dict.pos.y as int),
 		dict.to_face as int
 	)

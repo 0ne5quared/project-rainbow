@@ -2,14 +2,14 @@ class_name TransformCardAction
 extends Action
 
 var card_id: String
-var card_data: Dictionary
+var card_data: Ruleset.CardData
 
 
 static func action_type() -> Type:
 	return Type.TRANSFORM_CARD
 
 
-func _init(cid: String, cd: Dictionary) -> void:
+func _init(cid: String, cd: Ruleset.CardData) -> void:
 	card_id = cid
 	card_data = cd
 
@@ -29,4 +29,4 @@ func as_dict() -> Dictionary:
 
 
 static func from_dict(dict: Dictionary) -> Action:
-	return TransformCardAction.new(dict.card_id as String, dict.card_data as Dictionary)
+	return TransformCardAction.new(dict.card_id as String, dict.card_data as Ruleset.CardData)

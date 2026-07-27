@@ -8,8 +8,8 @@
         // candle related settings
         "candles": {
             "amount": 2,
-            "snuff_smoke": "Greater Smoke"
-        }
+            "smoke": "Greater Smoke"
+        },
     },
     // allow for any amount of custom rarities.
     // name should be in camel_case so that the game can convert them into normal name
@@ -30,12 +30,7 @@
         },
         "rare": {},
     },
-    // other information that have gameplay different but not mechanic. Rarities are not metadata because they affect deck building.
-    // this include but not limited to
-    // - traits (unhammerable, bloodless, boneless, etc.)
-    // - temples (beast, undead, magik, etc.)
-    // - 
-    "metadatas": {
+    "traits": {
         // traits
         "no_hammer": {
             // optional follows same procedure as rarities
@@ -47,12 +42,16 @@
         "no_bone": { "name": "Boneless" },
         // etc.
 
+    },
+    "temples": {
         "beast": {}
         "undead": {},
         // etc.
+    },
+    "tribes": {
         "canine": {},
         "reptile": {}
-    }
+    },
     // tools are items that the player can always use
     "tools": {
         "hammer": {
@@ -88,6 +87,8 @@
                 "no_hammer", // this here should match the key in trait not name
                 "conductive"
             ],
+            "temple": "Beast",
+            "tribes": ["Canine", "Avian"]
             "cost": {
                 "blood": 1,
                 "energy": 1,
@@ -151,13 +152,8 @@
         }
     }
     "sigils": {
-        // by default all the sigil have priority 0, this will override it so they can be sorted differenly
-        "priority": {
-            // change sigil 1 priority to be 2
-            "Sigil 1": 2
-        },
-        "description": {
-            "Sigil 1": "hello world"
-        }
+        "Frozen Away": {
+                "description": "Blah Blah Blah sigil text",
+            }
     }
 }

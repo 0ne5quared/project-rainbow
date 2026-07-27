@@ -5,7 +5,7 @@ var turn_on_board := 0
 
 @abstract func turn_threshold() -> int
 
-@abstract func new_form() -> Dictionary
+@abstract func new_form() -> Ruleset.CardData
 
 
 func on_turn_start(player_id: String) -> void:

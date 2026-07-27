@@ -20,7 +20,7 @@ var pfp := "res://asset/portraits/Stoat.png"
 var uuid: StringName
 var is_host := false
 
-var ruleset: Dictionary:
+var ruleset: Ruleset:
 	get:
 		return ruleset
 	set(val):
@@ -60,6 +60,10 @@ func show_loading(txt: String) -> void:
 
 func hide_popup() -> void:
 	_hide_popup.emit()
+
+
+func get_card_by_name(card_name: String) -> Ruleset.CardData:
+	return ruleset.cards[card_name]
 
 
 func gen_id() -> String:

@@ -33,7 +33,7 @@ class StrikeGroup:
 		return self
 
 	func add_strike(striker_id: String, to_face := false) -> StrikeGroup:
-		return add_action(PreCardStrikeAction.new(pos, striker_id, to_face))
+		return add_action(PreCardStrikeAction.new(striker_id, pos, to_face))
 
 	func as_dict() -> Dictionary:
 		return {

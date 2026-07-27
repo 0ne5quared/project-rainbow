@@ -46,7 +46,7 @@ func on_card_moved(card: Card, from: BoardManager.Slot, to: BoardManager.Slot) -
 	return
 
 
-func on_card_transformed(card: Card, card_data: Dictionary) -> void:
+func on_card_transformed(card: Card, card_data: Ruleset.CardData) -> void:
 	return
 
 
@@ -83,6 +83,10 @@ func pre_card_strike(striker: Card, victim_slot: BoardManager.Slot, to_face: boo
 ## the card still have no [StrikeGroup] the default center strike is issued.
 func on_card_attacked(card: Card) -> Array[CardAttackAction.StrikeGroup]:
 	return []
+
+
+func on_card_strike(striker: Card, pos: Vector2i, to_face: bool) -> void:
+	pass
 
 
 func on_card_damaged(
@@ -149,7 +153,7 @@ func play_card(
 
 
 ## Create a new token with [param card_data] by [param source_id]. Return the new token's id[br]
-func create_token(card_data: Dictionary, source_id: String) -> String:
+func create_token(card_data: Ruleset.CardData, source_id: String) -> String:
 	var token_id := Global.gen_id()
 	add_action(CreateTokenAction.new(card_data, token_id, source_id))
 	return token_id
@@ -158,7 +162,7 @@ func create_token(card_data: Dictionary, source_id: String) -> String:
 ## Create a new token with [param card_data] by [param source_id] and play it at [param pos].
 ## [source_id] default to [attached_card]'s id.[br]
 ## Return the new token's id.
-func create_and_play_token(card_data: Dictionary, pos: Vector2i, source_id := "") -> String:
+func create_and_play_token(card_data: Ruleset.CardData, pos: Vector2i, source_id := "") -> String:
 	if source_id.is_empty():
 		source_id = attached_card.id
 	var id := create_token(card_data, source_id)
@@ -170,7 +174,7 @@ func move_card(card_id: String, to_pos: Vector2i) -> void:
 	add_action(MoveCardAction.new(card_id, to_pos))
 
 
-func transform_card(card_id: String, card_data: Dictionary) -> void:
+func transform_card(card_id: String, card_data: Ruleset.CardData) -> void:
 	add_action(TransformCardAction.new(card_id, card_data))
 
 
@@ -200,7 +204,7 @@ func add_card(player_id: String, card_id: String) -> String:
 ## [param player_id] default to [method controller_id], [param source_id] default to
 ## [member attached_card]'s id.[br]
 ## Return the new token's id.
-func create_and_add_token(card_data: Dictionary, player_id := "", source_id := "") -> String:
+func create_and_add_token(card_data: Ruleset.CardData, player_id := "", source_id := "") -> String:
 	if player_id.is_empty():
 		player_id = controller_id()
 	if source_id.is_empty():
@@ -218,7 +222,10 @@ func oppose_pos(pos: Vector2i) -> Vector2i:
 	return BoardManager.oppose_pos(pos)
 
 
-func get_pos(card_id: String) -> Vector2i:
+## Get the positon of the card on the board. [param card_id] default to [member attached_card]'s id
+func get_pos(card_id := "") -> Vector2i:
+	if card_id.is_empty():
+		card_id = attached_card.id
 	return fight_manager.board_manager.get_card_pos(card_id)
 
 
@@ -244,7 +251,9 @@ func controller_id(pos := Vector2i.MIN) -> String:
 
 func get_config(config_name: String, default: Variant) -> Variant:
 	return (
-		attached_card.card_data[config_name] if config_name in attached_card.card_data else default
+		attached_card.card_data.sigils_config[config_name]
+		if config_name in attached_card.card_data.sigils_config
+		else default
 	)
 
 

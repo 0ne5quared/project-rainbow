@@ -18,10 +18,14 @@ func _on_recieved_packet(packet: Dictionary) -> void:
 	if packet.type != ConnectionManager.GameMessage.NEW_CARD or packet.card.id in _cards:
 		return
 
-	add_card(packet.card.data as Dictionary, packet.card.zone as int, packet.card.id as String)
+	add_card(
+		Ruleset.CardData.new(packet.card.data as Dictionary),
+		packet.card.zone as int,
+		packet.card.id as String
+	)
 
 
-func add_card(card_data: Dictionary, zone: Card.Zone, id := "") -> Card:
+func add_card(card_data: Ruleset.CardData, zone: Card.Zone, id := "") -> Card:
 	var card: Card = CARD_PREFAB.instantiate()
 	add_child(card)
 	card.card_data = card_data

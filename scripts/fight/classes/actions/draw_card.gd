@@ -20,9 +20,13 @@ func resolve(fight_manager: FightManager) -> void:
 	var data := fight_manager.get_data(player_id)
 	if player_id == Global.uuid:
 		if deck == Deck.MAIN:
-			fight_manager.hand_manager.draw_card(fight_manager.main_deck.pop_front() as Dictionary)
+			fight_manager.hand_manager.draw_card(
+				fight_manager.main_deck.pop_front() as Ruleset.CardData
+			)
 		else:
-			fight_manager.hand_manager.draw_card(fight_manager.side_deck.pop_front() as Dictionary)
+			fight_manager.hand_manager.draw_card(
+				fight_manager.side_deck.pop_front() as Ruleset.CardData
+			)
 	data.hand_size += 1
 	fight_manager._no_activation()
 

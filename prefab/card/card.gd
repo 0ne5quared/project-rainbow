@@ -11,40 +11,6 @@ enum Zone {
 }
 const PUBLIC_ZONE = [Zone.BOARD, Zone.GRAVEYARD, Zone.EXILE]
 
-const _DATA_SCHEMA: Dictionary[String, Dictionary] = {
-	name = {types = [TYPE_STRING], default = "MISSING"},
-	attack = {types = [TYPE_INT, TYPE_STRING], default = 0},
-	health = {types = [TYPE_INT], default = 1},
-	sigils = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []},
-	traits = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []},
-	temples = {types = [TYPE_STRING], default = "Beast"},
-	costs =
-	{
-		types = [TYPE_DICTIONARY],
-		schema =
-		{
-			bone = {types = [TYPE_INT], default = 0},
-			blood = {types = [TYPE_INT], default = 0},
-			energy = {types = [TYPE_INT], default = 0},
-			cell = {types = [TYPE_INT], default = 0},
-			mox =
-			{
-				types = [TYPE_ARRAY, TYPE_DICTIONARY],
-				sub_type = TYPE_STRING,
-				schema =
-				{
-					orange = {types = [TYPE_INT], default = 0},
-					blue = {types = [TYPE_INT], default = 0},
-					green = {types = [TYPE_INT], default = 0},
-				},
-				default = []
-			}
-		},
-		default = {}
-	},
-	tokens = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []}
-}
-
 
 class Costs:
 	class Mox:
@@ -85,7 +51,7 @@ class Costs:
 	var mox: Mox = Mox.new()
 
 
-var card_data: Dictionary:
+var card_data: Ruleset.CardData:
 	set(new_data):
 		parse_data(new_data)
 		card_data = new_data
@@ -131,6 +97,10 @@ var temples: String:
 	set(new):
 		temples = new
 		redraw_card()
+var tribes: String:
+	set(new):
+		temples = new
+		redraw_card()
 var costs: Costs:
 	set(new):
 		costs = new
@@ -162,14 +132,18 @@ func mox_value() -> Costs.Mox:
 
 
 ## Parse and assign infomation in [param data]
-func parse_data(data: Dictionary, show_warning := false) -> Dictionary:
+func parse_data(data: Ruleset.CardData, show_warning := false) -> void:
 	@warning_ignore("confusable_local_usage", "shadowed_global_identifier")
 	var push_warning := push_warning if show_warning else func(_x: String) -> void: pass
 	parsing_data = true
-	Global.validate_schema(data, _DATA_SCHEMA)
 	sigils.clear()
 	_sigils.clear()
-	for prop in _DATA_SCHEMA:
+	for prop: String in (
+		data
+		. get_property_list()
+		. filter(func(d: Dictionary) -> bool: return d.usage & PROPERTY_USAGE_SCRIPT_VARIABLE > 0)
+		. map(func(d: Dictionary) -> String: return d.name)
+	):
 		if prop == "sigils":
 			for sigil: String in data[prop]:
 				# Figuring out where the script is
@@ -205,24 +179,12 @@ func parse_data(data: Dictionary, show_warning := false) -> Dictionary:
 			c.blood = data.costs.blood
 			c.energy = data.costs.energy
 			c.cell = data.costs.cell
-			if typeof(data.costs.mox) == TYPE_ARRAY:
-				var mox_array: Array[String]
-				mox_array.assign(data.costs.mox as Array)
-				c.mox.green = mox_array.count("green")
-				c.mox.orange = mox_array.count("orange")
-				c.mox.blue = mox_array.count("blue")
-			elif typeof(data.costs.mox) == TYPE_DICTIONARY:
-				var mox_dict: Dictionary[String, int]
-				mox_dict.assign(data.costs.mox as Dictionary)
-				c.mox.green = mox_dict.green
-				c.mox.orange = mox_dict.orange
-				c.mox.blue = mox_dict.blue
+
 			costs = c
 			continue
 		set(prop, data[prop])
 	card_name = data.name
 	parsing_data = false
-	return data
 
 
 func redraw_card() -> void:

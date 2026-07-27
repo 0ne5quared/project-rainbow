@@ -48,28 +48,19 @@ var sac_candidate: Array[Card] = []
 
 var opp_id: String
 
-var main_deck: Array[Dictionary] = [
-	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
-	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
-	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
-	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
-	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
-	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
-	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
-	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
-	{name = "Wolf", attack = 2, health = 1, costs = {blood = 2}},
-	{
-		name = "Cat",
-		attack = 1,
-		health = 2,
-		sigils = ["Bone Digger"],
-	},
+var main_deck: Array[Ruleset.CardData] = [
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1})
 ]
-var side_deck: Array[Dictionary] = [
-	{name = "Squirrel", attack = 0, health = 1},
-	{name = "Squirrel", attack = 0, health = 1},
-	{name = "Squirrel", attack = 0, health = 1},
-	{name = "Squirrel", attack = 0, health = 1},
+var side_deck: Array[Ruleset.CardData] = [
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1})
 ]
 
 
@@ -136,10 +127,10 @@ func lose_game() -> void:
 
 
 func _draw_starting_hand() -> void:
-	for i in range(10):
+	for i in range(2):
 		_push_action(DrawCardAction.new(DrawCardAction.Deck.MAIN, Global.uuid))
 	_push_action(DrawCardAction.new(DrawCardAction.Deck.SIDE, Global.uuid))
-	for i in range(10):
+	for i in range(2):
 		_push_action(DrawCardAction.new(DrawCardAction.Deck.MAIN, opp_id))
 	_push_action(DrawCardAction.new(DrawCardAction.Deck.SIDE, opp_id))
 	@warning_ignore("missing_await")

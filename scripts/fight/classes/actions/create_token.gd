@@ -1,7 +1,7 @@
 class_name CreateTokenAction
 extends Action
 
-var card_data: Dictionary
+var card_data: Ruleset.CardData
 var token_id: String
 var source_id: String
 
@@ -10,7 +10,7 @@ static func action_type() -> Type:
 	return Type.CREATE_TOKEN
 
 
-func _init(cd: Dictionary, ti: String, si: String) -> void:
+func _init(cd: Ruleset.CardData, ti: String, si: String) -> void:
 	card_data = cd
 	token_id = ti
 	source_id = si
@@ -27,5 +27,7 @@ func as_dict() -> Dictionary:
 
 static func from_dict(dict: Dictionary) -> Action:
 	return CreateTokenAction.new(
-		dict.card_data as Dictionary, dict.token_id as String, dict.source_id as String
+		Ruleset.CardData.new(dict.card_data as Dictionary),
+		dict.token_id as String,
+		dict.source_id as String
 	)

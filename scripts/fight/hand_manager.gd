@@ -13,7 +13,7 @@ func _ready() -> void:
 	cards_manager.card_changed_zone.connect(_on_card_changed_zone)
 
 
-func draw_card(card_data: Dictionary) -> Card:
+func draw_card(card_data: Ruleset.CardData) -> Card:
 	var new: Card = cards_manager.add_card(card_data, Card.Zone.HAND)
 	return new
 

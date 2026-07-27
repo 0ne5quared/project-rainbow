@@ -2,7 +2,7 @@ class_name RulesetButton
 extends Button
 
 signal horvered(name: String, description: String)
-signal selected(button: _ruleset_selector.Ruleset)
+signal selected(button: _ruleset_selector.RulesetIcon)
 
 #gdlint: ignore=load-constant-name
 const _ruleset_selector := preload("res://scripts/ruleset_selector.gd")
@@ -10,7 +10,7 @@ const _ruleset_selector := preload("res://scripts/ruleset_selector.gd")
 @export var ruleset_name: String
 @export var url: String
 @export var description: String
-var ruleset: _ruleset_selector.Ruleset
+var ruleset: _ruleset_selector.RulesetIcon
 
 
 # Called when the node enters the scene tree for the first time.
