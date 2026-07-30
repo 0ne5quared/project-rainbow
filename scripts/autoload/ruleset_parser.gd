@@ -80,7 +80,6 @@ class CardData:
 					default = []
 				}
 			},
-			default = {}
 		},
 		tokens = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []}
 	}
@@ -96,8 +95,13 @@ class CardData:
 	var sigils_config: Dictionary
 
 	func as_dict() -> Dictionary:
-		# TODO: Implement this
-		return {}
+		return Global.as_dict_generator(
+			self,
+			func(prop: String, value: Variant) -> Dictionary:
+				if prop == "costs":
+					return (value as Card.Costs).as_dict()
+				return {}
+		)
 
 	func _init(dict: Dictionary) -> void:
 		Global.validate_schema(dict, SCHEMA)
@@ -119,11 +123,87 @@ class CardData:
 					costs.mox.green = mox_dict.green
 					costs.mox.orange = mox_dict.orange
 					costs.mox.blue = mox_dict.blue
+				continue
+			# Godot hate "unsafe" type cast
+			if typeof(dict[prop]) == TYPE_ARRAY:
+				get(prop).assign(dict[prop])
+				continue
 			set(prop, dict[prop])
+		push_warning(sigils, dict.sigils)
 
 	func duplicate() -> CardData:
 		return CardData.new(as_dict().duplicate())
 
+
+var RULESET_SCHEME: Dictionary[String, Dictionary] = {
+	name = {types = [TYPE_STRING], default = "Placeholder ruleset name"},
+	description = {types = [TYPE_STRING], default = "Placeholder description"},
+	icon = {types = [TYPE_STRING], default = "'res://asset/ruleset_icon/MISSING.png'"},
+	settings =
+	{
+		types = [TYPE_DICTIONARY],
+		schema =
+		{
+			deck_size_min = {types = [TYPE_INT], default = 30},
+			enable_backrow = {types = [TYPE_BOOL], default = false},
+			candles =
+			{
+				types = [TYPE_DICTIONARY],
+				schema =
+				{
+					amount = {types = [TYPE_INT], default = 2},
+					smoke = {types = [TYPE_STRING], default = "Greater Smoke"}
+				}
+			}
+		}
+	},
+	rarities =
+	{
+		types = [TYPE_DICTIONARY],
+		key_type = TYPE_STRING,
+		value_type = TYPE_DICTIONARY,
+		schema =
+		{
+			default = {types = [TYPE_BOOL], default = false},
+			max =
+			{
+				types = [TYPE_DICTIONARY],
+				schema =
+				{main = {types = [TYPE_INT], default = 1}, side = {types = [TYPE_INT], default = 1}}
+			},
+			icon = {types = [TYPE_STRING], default = ""},
+			name = {types = [TYPE_STRING], default = ""}
+		}
+	},
+	traits =
+	{
+		types = [TYPE_DICTIONARY],
+		key_type = TYPE_STRING,
+		value_type = TYPE_DICTIONARY,
+		schema =
+		{
+			icon = {types = [TYPE_STRING], default = null},
+			name = {types = [TYPE_STRING], default = ""}
+		}
+	},
+	temple =
+	{
+		types = [TYPE_DICTIONARY],
+		key_type = TYPE_STRING,
+		value_type = TYPE_DICTIONARY,
+		schema =
+		{icon = {types = [TYPE_STRING], default = ""}, name = {types = [TYPE_STRING], default = ""}}
+	},
+	tribes =
+	{
+		types = [TYPE_DICTIONARY],
+		key_type = TYPE_STRING,
+		value_type = TYPE_DICTIONARY,
+		schema =
+		{icon = {types = [TYPE_STRING], default = ""}, name = {types = [TYPE_STRING], default = ""}}
+	},
+	# TODO: Implement side deck later
+}
 
 var name: String
 var description: String
@@ -134,8 +214,8 @@ var traits: Array[Metadata]
 var temples: Array[Metadata]
 var tribes: Array[Metadata]
 var cards: Dictionary[String, CardData]
+# TODO: Implement side deck later
 
 
 func _init(ruleset: Dictionary) -> void:
-	# TODO: Implement ruleset parsing
 	pass

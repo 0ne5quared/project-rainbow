@@ -53,6 +53,7 @@
         "reptile": {}
     },
     // tools are items that the player can always use
+    // not implemented
     "tools": {
         "hammer": {
             "script": "res://scripts/tools/hammer.gd",
@@ -66,11 +67,14 @@
         // something else idk?
     },
 
-    // reserves the name but do nothing
+    // item/consumable like in act 1.
+    // not implemented
     "items": {}
-    // reserves the name but do nothing
+    // custom cost
+    // not implemented
     "costs": {}
-    // reserves the name but do nothing
+    // custom variable attack
+    // not implemented
     "var_atk": {},
 
     "cards": {

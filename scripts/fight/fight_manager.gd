@@ -49,18 +49,19 @@ var sac_candidate: Array[Card] = []
 var opp_id: String
 
 var main_deck: Array[Ruleset.CardData] = [
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1})
+	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
 ]
 var side_deck: Array[Ruleset.CardData] = [
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1})
+	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
 ]
 
 

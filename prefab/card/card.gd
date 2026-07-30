@@ -50,6 +50,15 @@ class Costs:
 	var cell: int = 0
 	var mox: Mox = Mox.new()
 
+	func as_dict() -> Dictionary:
+		return Global.as_dict_generator(
+			self,
+			func(prop: String, value: Variant) -> Dictionary:
+				if prop == "mox":
+					return (value as Variant).as_dict()
+				return {}
+		)
+
 
 var card_data: Ruleset.CardData:
 	set(new_data):
@@ -265,4 +274,4 @@ func mox_cost_icon() -> HBoxContainer:
 
 
 func as_dict() -> Dictionary:
-	return {data = card_data, id = id, zone = zone}
+	return {data = card_data.as_dict(), id = id, zone = zone}

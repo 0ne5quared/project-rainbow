@@ -6,4 +6,4 @@ func turn_threshold() -> int:
 
 
 func new_form() -> Ruleset.CardData:
-	return Global.get_card_by_name(get_config("transform_form", {}) as String)
+	return Global.get_card_by_name(get_config("transform_form", "MISSING") as String)

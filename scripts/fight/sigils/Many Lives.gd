@@ -8,7 +8,7 @@ func sac_limit() -> int:
 	return get_config("sac_limit", (1 << 63) - 1)
 
 
-func new_form() -> Dictionary:
+func new_form() -> Ruleset.CardData:
 	return get_config("new_form", {})
 
 

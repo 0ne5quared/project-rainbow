@@ -7,4 +7,4 @@ func replace_action(type: Action.Type, act: Action) -> Array[Action]:
 	var action := act as CardStrikeAction
 	if action.striker_id != attached_card.id:
 		return []
-	return [CardStrikeAction.new(action.pos, action.striker_id, true)]
+	return [CardStrikeAction.new(action.striker_id, action.pos, true)]

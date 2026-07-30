@@ -13,4 +13,4 @@ func replace_action(type: Action.Type, act: Action) -> Array[Action]:
 	var action := act as CardStrikeAction
 	if action.pos != fight_manager.board_manager.get_card_pos(attached_card.id):
 		return []
-	return [CardStrikeAction.new(action.pos, action.striker_id, true)]
+	return [CardStrikeAction.new(action.striker_id, action.pos, true)]

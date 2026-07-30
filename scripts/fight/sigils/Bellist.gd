@@ -1,5 +1,5 @@
 extends SpawnFriendSigil
 
 
-func friend_data() -> Dictionary:
-	return {name = "Chime", attack = 0, health = 2}
+func friend_data() -> Ruleset.CardData:
+	return Global.get_card_by_name(get_config("chime_card", "Chime") as String)

@@ -10,4 +10,4 @@ func replace_action(type: Action.Type, act: Action) -> Array[Action]:
 	var slot := await request_target(
 		controller_id(), func(s: BoardManager.Slot) -> bool: return s.pos.y == BoardManager.Row.OPP
 	)
-	return [CardStrikeAction.new(slot.pos, action.striker_id, action.to_face)]
+	return [CardStrikeAction.new(action.striker_id, slot.pos, action.to_face)]
