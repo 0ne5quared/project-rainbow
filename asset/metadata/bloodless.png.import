@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0qiu1j4oon11"
-path="res://.godot/imported/beast_icon.png-c153dc004b5b48547fa3e87828b64017.ctex"
+uid="uid://xtucrp2a5egn"
+path="res://.godot/imported/bloodless.png-4b9aba4b7e3cde0c8c363b10e18dfb1d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://asset/card_frame/beast_icon.png"
-dest_files=["res://.godot/imported/beast_icon.png-c153dc004b5b48547fa3e87828b64017.ctex"]
+source_file="res://asset/metadata/bloodless.png"
+dest_files=["res://.godot/imported/bloodless.png-4b9aba4b7e3cde0c8c363b10e18dfb1d.ctex"]
 
 [params]
 

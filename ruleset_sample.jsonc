@@ -44,7 +44,14 @@
 
     },
     "temples": {
-        "beast": {}
+        "beast": {
+            "name": "Beast",
+            "icon": "res://asset/temples/beast.png",
+            "frame": {
+                "common": "",
+                "rare": "res://asset/frame/rare/beast.png"
+            }
+        }
         "undead": {},
         // etc.
     },

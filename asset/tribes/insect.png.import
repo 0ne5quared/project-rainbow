@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c1bqqyjm6n86i"
-path="res://.godot/imported/missing.png-1bf8d0e94dfdf867fa0c522638f96027.ctex"
+uid="uid://c6ggvhmwlx5sf"
+path="res://.godot/imported/insect.png-6b5dc9255f9de864588f117f1e72141f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://asset/ruleset_icon/missing.png"
-dest_files=["res://.godot/imported/missing.png-1bf8d0e94dfdf867fa0c522638f96027.ctex"]
+source_file="res://asset/tribes/insect.png"
+dest_files=["res://.godot/imported/insect.png-6b5dc9255f9de864588f117f1e72141f.ctex"]
 
 [params]
 

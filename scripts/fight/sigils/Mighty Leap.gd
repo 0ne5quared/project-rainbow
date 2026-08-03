@@ -10,5 +10,5 @@ func replace_action(type: Action.Type, act: Action) -> Array[Action]:
 		action.pos == fight_manager.board_manager.get_card_pos(attached_card.id)
 		and fight_manager.card_manager.get_card_by_id(action.striker_id).sigils.has("Airborne")
 	):
-		return [CardStrikeAction.new(action.pos, action.striker_id)]
+		return [CardStrikeAction.new(action.striker_id, action.pos)]
 	return []

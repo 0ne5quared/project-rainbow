@@ -61,12 +61,12 @@ func hide_popup() -> void:
 	_hide_popup.emit()
 
 
-func get_card_by_name(card_name: String) -> Ruleset.CardData:
-	return ruleset.cards[card_name] if card_name in ruleset.cards else Ruleset.CardData.new({})
-
-
 func gen_id() -> String:
 	return String.num_uint64(floor(randf() * 1e9) as int, 16)
+
+
+func get_card_by_name(card_name: String) -> Ruleset.CardData:
+	return ruleset.cards[card_name] if card_name in ruleset.cards else Ruleset.CardData.new({})
 
 
 func as_dict_generator(
@@ -85,6 +85,7 @@ func as_dict_generator(
 
 
 ## This modify the original data in place.
+# TODO: This code is pretty stinky improve it eventually
 func validate_schema(
 	data: Dictionary, schema: Dictionary[String, Dictionary], show_warning := false
 ) -> void:
@@ -98,6 +99,10 @@ func validate_schema(
 			TYPE_DICTIONARY in s.types
 			and (prop not in data or typeof(data[prop]) == TYPE_DICTIONARY)
 		):
+			if prop not in data and "default" in s:
+				data[prop] = s.default
+				continue
+
 			var dict: Dictionary = data[prop] if prop in data else {}
 			var ds: Dictionary[String, Dictionary]
 			ds.assign(s.schema as Dictionary)

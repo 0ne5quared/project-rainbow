@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://blhcx78lnp2kf" path="res://prefab/card/card.gd" id="1_8nimt"]
 [ext_resource type="Script" uid="uid://d0y06b2xbgam2" path="res://scripts/utils/name_scroller.gd" id="2_pe5rd"]
 [ext_resource type="Texture2D" uid="uid://bie1qwdx23na7" path="res://asset/portraits/Squirrel.png" id="3_f2uqh"]
-[ext_resource type="Texture2D" uid="uid://d4fhkxwnobdxl" path="res://asset/card_frame/tech_frame.png" id="4_rpw1c"]
-[ext_resource type="Texture2D" uid="uid://d0qiu1j4oon11" path="res://asset/card_frame/beast_icon.png" id="5_cryra"]
+[ext_resource type="Texture2D" uid="uid://dwqomvvflnhbv" path="res://asset/frame/common.png" id="4_ww8vi"]
+[ext_resource type="Texture2D" uid="uid://d0pgud2366y2d" path="res://asset/temples/technology.png" id="5_dtxg0"]
 [ext_resource type="Texture2D" uid="uid://bw1deabnl56ig" path="res://asset/sacrifice_marker.png" id="6_cryra"]
 [ext_resource type="Texture2D" uid="uid://b531uel5u5ohf" path="res://asset/submerge_overlay.png" id="7_ww8vi"]
 
@@ -84,13 +84,12 @@ texture = ExtResource("3_f2uqh")
 stretch_mode = 2
 
 [node name="RareFrame" type="TextureRect" parent="VBoxContainer/Container" unique_id=1369187095]
-visible = false
 layout_mode = 0
 offset_left = 2.0
 offset_top = -1.0
 offset_right = 73.0
 offset_bottom = 32.0
-texture = ExtResource("4_rpw1c")
+texture = ExtResource("4_ww8vi")
 stretch_mode = 2
 
 [node name="Temple" type="TextureRect" parent="VBoxContainer/Container" unique_id=327389234]
@@ -98,7 +97,8 @@ layout_mode = 0
 offset_top = 20.0
 offset_right = 15.0
 offset_bottom = 35.0
-texture = ExtResource("5_cryra")
+texture = ExtResource("5_dtxg0")
+stretch_mode = 3
 
 [node name="CenterContainer" type="CenterContainer" parent="VBoxContainer" unique_id=95632632]
 custom_minimum_size = Vector2(73, 36)
