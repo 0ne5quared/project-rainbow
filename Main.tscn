@@ -437,7 +437,6 @@ theme_override_font_sizes/font_size = 32
 text = "- EXIT LOBBY -"
 
 [node name="RulesetSelector" type="PanelContainer" parent="." unique_id=651548178]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -466,21 +465,26 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="RulesetList" type="HBoxContainer" parent="RulesetSelector/VBoxContainer/CenterContainer" unique_id=1179726853]
+[node name="VBoxContainer" type="VBoxContainer" parent="RulesetSelector/VBoxContainer/CenterContainer" unique_id=600822374]
+layout_mode = 2
+
+[node name="RulesetList" type="HBoxContainer" parent="RulesetSelector/VBoxContainer/CenterContainer/VBoxContainer" unique_id=1179726853]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="AddBtn" type="HBoxContainer" parent="RulesetSelector/VBoxContainer/CenterContainer/RulesetList" unique_id=523865785]
+[node name="AddBtn" type="HBoxContainer" parent="RulesetSelector/VBoxContainer/CenterContainer/VBoxContainer" unique_id=523865785]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
-[node name="AddLinkBtn" parent="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn" unique_id=298796156 instance=ExtResource("6_wkp8b")]
+[node name="AddLinkBtn" parent="RulesetSelector/VBoxContainer/CenterContainer/VBoxContainer/AddBtn" unique_id=775333343 instance=ExtResource("6_wkp8b")]
 layout_mode = 2
 icon = ExtResource("7_03owx")
 ruleset_name = "Add URL"
 description = "Add new ruleset using url"
 
-[node name="AddFileBtn" parent="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn" unique_id=1524599786 instance=ExtResource("6_wkp8b")]
+[node name="AddFileBtn" parent="RulesetSelector/VBoxContainer/CenterContainer/VBoxContainer/AddBtn" unique_id=1524599786 instance=ExtResource("6_wkp8b")]
 layout_mode = 2
 icon = ExtResource("8_wkp8b")
 ruleset_name = "Add File"
@@ -577,8 +581,8 @@ text = "Close"
 [connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/CopyCodeBtn" to="Lobby" method="_on_copy_code_btn_pressed"]
 [connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/StartBtn" to="Lobby" method="_on_start_btn_pressed"]
 [connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/EndBtn" to="Lobby" method="_on_end_btn_pressed"]
-[connection signal="horvered" from="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn/AddLinkBtn" to="RulesetSelector" method="_on_button_horvered"]
-[connection signal="mouse_exited" from="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn/AddLinkBtn" to="RulesetSelector" method="_on_button_unhorvered"]
-[connection signal="horvered" from="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn/AddFileBtn" to="RulesetSelector" method="_on_button_horvered"]
-[connection signal="mouse_exited" from="RulesetSelector/VBoxContainer/CenterContainer/RulesetList/AddBtn/AddFileBtn" to="RulesetSelector" method="_on_button_unhorvered"]
+[connection signal="horvered" from="RulesetSelector/VBoxContainer/CenterContainer/VBoxContainer/AddBtn/AddLinkBtn" to="RulesetSelector" method="_on_button_horvered"]
+[connection signal="mouse_exited" from="RulesetSelector/VBoxContainer/CenterContainer/VBoxContainer/AddBtn/AddLinkBtn" to="RulesetSelector" method="_on_button_unhorvered"]
+[connection signal="horvered" from="RulesetSelector/VBoxContainer/CenterContainer/VBoxContainer/AddBtn/AddFileBtn" to="RulesetSelector" method="_on_button_horvered"]
+[connection signal="mouse_exited" from="RulesetSelector/VBoxContainer/CenterContainer/VBoxContainer/AddBtn/AddFileBtn" to="RulesetSelector" method="_on_button_unhorvered"]
 [connection signal="pressed" from="PopupBlocker/CenterContainer/Popup/VBoxContainer/ClosePopupBtn" to="PopupBlocker" method="_on_button_pressed"]
