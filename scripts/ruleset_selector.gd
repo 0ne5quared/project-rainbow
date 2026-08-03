@@ -12,7 +12,7 @@ class RulesetIcon:
 	var name: String
 	var description: String
 	var url: String
-	var portrait: String
+	var icon: String
 	var installed: bool
 
 	@warning_ignore("untyped_declaration")
@@ -20,16 +20,17 @@ class RulesetIcon:
 		name = json.name
 		description = json.description
 		url = json.url
-		portrait = json.portrait
+		icon = json.portrait
 		installed = FileAccess.file_exists("user://rulesets/%s.json" % name)
+		# TODO: unhardcode this
 		if name.begins_with("IMF Standard"):
-			portrait = "res://asset/ruleset_icon/scales.png"
+			icon = "res://asset/ruleset_icon/scales.png"
 		elif name.begins_with("IMF Eternal"):
-			portrait = "res://asset/ruleset_icon/hourglass.png"
+			icon = "res://asset/ruleset_icon/hourglass.png"
 		elif name.begins_with("IMF Vanilla"):
-			portrait = "res://asset/ruleset_icon/vanilla.png"
+			icon = "res://asset/ruleset_icon/vanilla.png"
 		elif name.begins_with("Mr.Egg's Goofy"):
-			portrait = "res://asset/ruleset_icon/egg.png"
+			icon = "res://asset/ruleset_icon/egg.png"
 
 
 # Called when the node enters the scene tree for the first time.
@@ -38,6 +39,21 @@ func _ready() -> void:
 	$HTTPRequest.request(
 		"https://raw.githubusercontent.com/107zxz/inscr-onln-ruleset/refs/heads/main/featured.json"
 	)
+	var ruleset_path := "user://rulesets"
+	for file in DirAccess.open(ruleset_path).get_files():
+		var txt := FileAccess.open(ruleset_path.path_join(file), FileAccess.READ).get_as_text()
+		var ruleset := JSON.parse_string(txt) as Dictionary
+		Global.validate_schema(ruleset, Ruleset.RULESET_SCHEMA)
+		add_ruleset(
+			RulesetIcon.new(
+				{
+					name = ruleset.name,
+					description = ruleset.description,
+					portrait = ruleset.icon,
+					url = ""
+				}
+			)
+		)
 
 
 func add_ruleset(ruleset: RulesetIcon) -> void:
@@ -47,14 +63,13 @@ func add_ruleset(ruleset: RulesetIcon) -> void:
 	button.mouse_exited.connect(_on_button_unhorvered)
 	button.selected.connect(_on_button_selected)
 	%RulesetList.add_child(button)
-	%RulesetList.move_child(%AddBtn, -1)
 
 
 func _on_request_complete(
 	_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray
 ) -> void:
 	# TODO implement error handling
-	return
+	#return
 	var response: Dictionary = JSON.parse_string(body.get_string_from_utf8())
 	if first_time:
 		for ruleset: Dictionary in response.rulesets:
@@ -76,7 +91,7 @@ func _on_button_unhorvered() -> void:
 	_on_button_horvered("Select a ruleset", "Select a ruleset to start playing")
 
 
-func _on_button_selected(ruleset: Ruleset) -> void:
+func _on_button_selected(ruleset: RulesetIcon) -> void:
 	if not ruleset.installed:
 		$HTTPRequest.request(ruleset.url)
 		await $HTTPRequest.request_completed
