@@ -52,7 +52,7 @@ class Rarity:
 		max_main = rarity_config.max.main
 		max_side = rarity_config.max.side
 
-		var icon_path := rarity_config.icon as String
+		var icon_path := "res://asset".path_join(rarity_config.icon as String)
 		if icon_path.is_empty():
 			icon_path = "res://asset/rarities/%s.png" % rarity_name
 		if not FileAccess.file_exists(icon_path):
@@ -81,14 +81,14 @@ class Temple:
 
 	func _init(temple_name: String, temple_config: Dictionary) -> void:
 		name = temple_name
-		var icon_path := temple_config.icon as String
+		var icon_path := "res://asset".path_join(temple_config.icon as String)
 		if icon_path.is_empty():
 			icon_path = "res://asset/temples/%s.png" % temple_name
 		if not FileAccess.file_exists(icon_path):
 			icon_path = "res://asset/temples/MISSING.png"
 		icon = load(icon_path)
 		for rarity: String in (temple_config.frame as Dictionary).keys():
-			frame[rarity] = load(temple_config.frame[rarity] as String)
+			frame[rarity] = load("res://asset".path_join(temple_config.frame[rarity] as String))
 
 	static func _basic_config(temple_name: String) -> Temple:
 		return Temple.new(
@@ -96,11 +96,7 @@ class Temple:
 			{
 				name = "",
 				icon = "",
-				frame =
-				{
-					rare = "res://asset/frame/rare/%s.png" % temple_name,
-					common = "res://asset/frame/common.png"
-				}
+				frame = {rare = "frame/rare/%s.png" % temple_name, common = "frame/common.png"}
 			}
 		)
 
@@ -120,7 +116,7 @@ class Tribe:
 
 	func _init(tribe_name: String, tribe_config: Dictionary) -> void:
 		name = tribe_name
-		var icon_path := tribe_config.icon as String
+		var icon_path := "res://asset".path_join(tribe_config.icon as String)
 		if icon_path == null or icon_path.is_empty():
 			icon_path = "res://asset/tribes/%s.png" % tribe_name
 		if not FileAccess.file_exists(icon_path):
@@ -153,7 +149,7 @@ class Trait:
 
 	func _init(trait_name: String, trait_config: Dictionary) -> void:
 		name = trait_name
-		var icon_path := trait_config.icon as String
+		var icon_path := "res://asset".path_join(trait_config.icon as String)
 		if icon_path.is_empty():
 			icon_path = "res://asset/traits/%s.png" % trait_config
 		if not FileAccess.file_exists(icon_path):
@@ -167,7 +163,7 @@ class Trait:
 			name_override = name.capitalize()
 
 	static func _basic_config(trait_name: String) -> Trait:
-		return Trait.new(trait_name, {name = "", icon = "", hidden = true})
+		return Trait.new(trait_name, {name = "", icon = "", hidden = false})
 
 
 class CardData:
@@ -258,7 +254,7 @@ class CardData:
 static var RULESET_SCHEMA: Dictionary[String, Dictionary] = {
 	name = {types = [TYPE_STRING], default = "Placeholder ruleset name"},
 	description = {types = [TYPE_STRING], default = "Placeholder description"},
-	icon = {types = [TYPE_STRING], default = "res://asset/ruleset_icon/MISSING.png"},
+	icon = {types = [TYPE_STRING], default = "ruleset_icon/MISSING.png"},
 	settings =
 	{
 		types = [TYPE_DICTIONARY],
@@ -364,7 +360,7 @@ func _init(ruleset: Dictionary) -> void:
 	Global.validate_schema(ruleset, RULESET_SCHEMA)
 	name = ruleset.name
 	description = ruleset.description
-	icon = load(ruleset.icon as String)
+	icon = load("res://asset".path_join(ruleset.icon as String))
 	settings = RulesetSettings.new(ruleset.settings as Dictionary)
 
 	for rarity_name: String in (ruleset.rarities as Dictionary).keys():

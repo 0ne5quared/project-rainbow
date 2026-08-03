@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xtucrp2a5egn"
-path="res://.godot/imported/bloodless.png-4b9aba4b7e3cde0c8c363b10e18dfb1d.ctex"
+uid="uid://bi6j12yvp8gd0"
+path="res://.godot/imported/MISSING.png-404c7a9dc1e1f9860b1292753250f5a8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://asset/metadata/bloodless.png"
-dest_files=["res://.godot/imported/bloodless.png-4b9aba4b7e3cde0c8c363b10e18dfb1d.ctex"]
+source_file="res://asset/tribes/MISSING.png"
+dest_files=["res://.godot/imported/MISSING.png-404c7a9dc1e1f9860b1292753250f5a8.ctex"]
 
 [params]
 

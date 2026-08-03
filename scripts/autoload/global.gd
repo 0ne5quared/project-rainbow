@@ -35,6 +35,9 @@ func _ready() -> void:
 	if not user_dir.dir_exists("rulesets"):
 		push_warning("Rulesets dir not found creating it...")
 		user_dir.make_dir("rulesets")
+	var t := {}
+	validate_schema(t, Ruleset.RULESET_SCHEMA)
+	push_warning(t)
 
 
 func quadratic_bezier(start: Vector2, end: Vector2, mid: Vector2) -> Callable:
