@@ -123,9 +123,8 @@ func validate_schema(
 						)
 					if s.value_type == TYPE_DICTIONARY:
 						validate_schema(value as Dictionary, ds)
-				continue
-
-			validate_schema(dict, ds)
+			else:
+				validate_schema(dict, ds)
 			data[prop] = dict
 			continue
 

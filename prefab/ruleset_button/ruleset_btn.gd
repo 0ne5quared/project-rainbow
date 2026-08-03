@@ -20,7 +20,7 @@ func _ready() -> void:
 	if ruleset != null:
 		ruleset_name = ruleset.name
 		description = ruleset.description
-		icon = load(ruleset.portrait)
+		icon = load(ruleset.icon)
 		url = ruleset.url
 		$Installed.visible = ruleset.installed
 

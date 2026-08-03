@@ -255,10 +255,10 @@ class CardData:
 		return CardData.new(as_dict().duplicate())
 
 
-var RULESET_SCHEMA: Dictionary[String, Dictionary] = {
+static var RULESET_SCHEMA: Dictionary[String, Dictionary] = {
 	name = {types = [TYPE_STRING], default = "Placeholder ruleset name"},
 	description = {types = [TYPE_STRING], default = "Placeholder description"},
-	icon = {types = [TYPE_STRING], default = "'res://asset/ruleset_icon/MISSING.png'"},
+	icon = {types = [TYPE_STRING], default = "res://asset/ruleset_icon/MISSING.png"},
 	settings =
 	{
 		types = [TYPE_DICTIONARY],
@@ -364,7 +364,7 @@ func _init(ruleset: Dictionary) -> void:
 	Global.validate_schema(ruleset, RULESET_SCHEMA)
 	name = ruleset.name
 	description = ruleset.description
-	icon = ruleset.icon
+	icon = load(ruleset.icon as String)
 	settings = RulesetSettings.new(ruleset.settings as Dictionary)
 
 	for rarity_name: String in (ruleset.rarities as Dictionary).keys():
