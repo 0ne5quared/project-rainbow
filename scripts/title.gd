@@ -6,8 +6,8 @@ func _ready() -> void:
 	Global.ruleset_changed.connect(_on_ruleset_changed)
 
 
-func _on_ruleset_changed(ruleset: Dictionary) -> void:
-	%RulesetLb.text = ruleset.ruleset
+func _on_ruleset_changed(ruleset: Ruleset) -> void:
+	%RulesetLb.text = ruleset.name
 
 
 func _on_host_btn_pressed() -> void:

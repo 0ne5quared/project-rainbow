@@ -7,7 +7,7 @@ signal _show_popup(txt: String, type: PopupType, closeable: bool)
 signal _show_loading(txt: String)
 signal _hide_popup
 
-signal ruleset_changed(ruleset: Dictionary)
+signal ruleset_changed(ruleset: Ruleset)
 
 enum PopupType { ERR, INFO, WARN }
 
