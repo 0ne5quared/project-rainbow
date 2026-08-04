@@ -250,7 +250,7 @@ func controller_id(pos := Vector2i.MIN) -> String:
 
 
 func get_config(config_name: String, default: Variant) -> Variant:
-	var config: Variant = attached_card.card_data.sigils_config[config_name]
+	var config: Variant = attached_card.card_data.metadata[config_name]
 	if typeof(config) != typeof(default):
 		return default
 	return config

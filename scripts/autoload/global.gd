@@ -120,7 +120,7 @@ func validate_schema(
 						)
 						continue
 					var value: Variant = dict[key]
-					if typeof(value) != s.value_type:
+					if typeof(value) != s.value_type and s.value_type != TYPE_MAX:
 						push_warning.call(
 							"Dictionary value does not have the correct value type, removing it"
 						)
@@ -136,7 +136,7 @@ func validate_schema(
 			push_warning.call('Data missing "%s" component using default: %s' % [prop, s.default])
 			data[prop] = s.default
 			continue
-		if typeof(data[prop]) not in s.types:
+		if typeof(data[prop]) not in s.types and TYPE_MAX not in s.types:
 			push_warning.call(
 				'Data\'s "%s" component is of the wrong type, using default: %s' % [prop, s.default]
 			)
@@ -149,7 +149,7 @@ func validate_schema(
 					ds.assign(s.schema as Dictionary)
 					validate_schema(array[i] as Dictionary, ds)
 					continue
-				if typeof(array[i]) != s.sub_type:
+				if typeof(array[i]) != s.sub_type and s.sub_type != TYPE_MAX:
 					push_warning.call(
 						'A value inside of data\'s "%s" is of the wrong type, removing it'
 					)

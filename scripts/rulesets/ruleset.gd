@@ -180,8 +180,8 @@ class CardData:
 			types = [TYPE_DICTIONARY],
 			schema =
 			{
-				bone = {types = [TYPE_INT], default = 0},
 				blood = {types = [TYPE_INT], default = 0},
+				bone = {types = [TYPE_INT], default = 0},
 				energy = {types = [TYPE_INT], default = 0},
 				cell = {types = [TYPE_INT], default = 0},
 				mox =
@@ -198,7 +198,9 @@ class CardData:
 				}
 			},
 		},
-		tokens = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []}
+		tokens = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []},
+		# TYPE_MAX is used for variant type
+		metadata = {types = [TYPE_DICTIONARY], key_type = TYPE_STRING, value_TYPE = TYPE_MAX}
 	}
 	var name: String
 	var attack: Variant
@@ -328,7 +330,8 @@ static var RULESET_SCHEMA: Dictionary[String, Dictionary] = {
 		types = [TYPE_DICTIONARY],
 		key_type = TYPE_STRING,
 		value_type = TYPE_DICTIONARY,
-		schema = CardData.SCHEMA
+		schema = CardData.SCHEMA,
+		default = {}
 	}
 	# TODO: Implement side deck later
 }

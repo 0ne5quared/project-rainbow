@@ -1,0 +1,87 @@
+class_name IMFRuleset
+extends Ruleset
+
+
+func _init(ruleset: Dictionary) -> void:
+	name = ruleset.ruleset
+	description = ruleset.description
+	icon = load("res://asset/ruleset_icon/simple.png")
+	settings = (
+		RulesetSettings
+		. new(
+			{
+				deck_size_min = ruleset.deck_size_min,
+				enable_backrow = false,
+				candles =
+				{
+					amount = ruleset.num_candles,
+					smoke = "Greater Smoke" if ruleset.allow_snuffing_candles else "",
+				}
+			}
+		)
+	)
+
+	for card: Dictionary in ruleset.cards:
+		var old_data := card
+
+		var traits := []
+		if "nohammer" in old_data:
+			traits.append("unhammerable")
+		if "nosac" in old_data:
+			traits.append("bloodless")
+		if "sigils" in old_data and "Boneless" in old_data.sigils:
+			traits.append("boneless")
+
+		var temple := "beast"
+		if "blood_cost" in old_data:
+			temple = "beast"
+		elif "bone_cost" in old_data:
+			temple = "undead"
+		elif "energy_cost" in old_data:
+			temple = "technology"
+		elif "mox_cost" in old_data:
+			temple = "magick"
+
+		var tokens := []
+		var metadata := {}
+		var token_fields := ["evolution", "left_half", "right_hand"]
+		for field: String in token_fields:
+			if field in old_data:
+				tokens.append(old_data[field])
+		if "evolution" in old_data and "sigil" in old_data:
+			if "Fledgling" in old_data.sigils:
+				metadata.evolve_form = old_data.evolution
+			elif "Frozen Away" in old_data.sigils:
+				metadata.defrost_form = old_data.evolution
+			elif "Transformer" in old_data.sigils:
+				metadata.transform_form = old_data.evolution
+
+		cards[card.name] = (CardData.new(
+			{
+				name = old_data.name,
+				attack = old_data.atkspecial if "atkspecial" in old_data else old_data.attack,
+				health = old_data.health,
+				sigils = old_data.sigils if "sigils" in old_data else [],
+				traits = traits,
+				temple = temple,
+				tribes = [],
+				# TODO: implement this
+				# portrait = old_data
+				# description = old_data.description
+				costs =
+				{
+					blood = old_data.blood_cost if "blood_cost" in old_data else 0,
+					bone = old_data.bone_cost if "bone_cost" in old_data else 0,
+					energy = old_data.energy_cost if "energy_cost" in old_data else 0,
+					cells = 2 if "sigils" in old_data and "Depleting" in old_data.sigils else 0,
+					mox =
+					(
+						old_data.mox_cost.map(func(m: String) -> String: return m.to_lower())
+						if "mox_cost" in old_data
+						else []
+					)
+				},
+				tokens = tokens,
+				metadata = metadata
+			}
+		))
