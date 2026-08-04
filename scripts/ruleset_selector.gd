@@ -49,7 +49,7 @@ func _ready() -> void:
 				{
 					name = ruleset.name,
 					description = ruleset.description,
-					portrait = ruleset.icon,
+					portrait = "res://asset".path_join(ruleset.icon as String),
 					url = ""
 				}
 			)

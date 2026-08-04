@@ -323,6 +323,13 @@ static var RULESET_SCHEMA: Dictionary[String, Dictionary] = {
 		schema =
 		{icon = {types = [TYPE_STRING], default = ""}, name = {types = [TYPE_STRING], default = ""}}
 	},
+	cards =
+	{
+		types = [TYPE_DICTIONARY],
+		key_type = TYPE_STRING,
+		value_type = TYPE_DICTIONARY,
+		schema = CardData.SCHEMA
+	}
 	# TODO: Implement side deck later
 }
 
@@ -364,10 +371,13 @@ func _init(ruleset: Dictionary) -> void:
 	settings = RulesetSettings.new(ruleset.settings as Dictionary)
 
 	for rarity_name: String in (ruleset.rarities as Dictionary).keys():
-		rarities[rarity_name] = Rarity.new(rarity_name, ruleset.rarites[rarity_name] as Dictionary)
+		rarities[rarity_name] = Rarity.new(rarity_name, ruleset.rarities[rarity_name] as Dictionary)
 
 	for trait_name: String in (ruleset.traits as Dictionary).keys():
-		traits[trait_name] = Trait.new(trait_name, ruleset.rarites[trait_name] as Dictionary)
+		traits[trait_name] = Trait.new(trait_name, ruleset.traits[trait_name] as Dictionary)
 
 	for temple_name: String in (ruleset.temples as Dictionary).keys():
-		temples[temple_name] = Temple.new(temple_name, ruleset.rarites[temple_name] as Dictionary)
+		temples[temple_name] = Temple.new(temple_name, ruleset.temples[temple_name] as Dictionary)
+
+	for card_name: String in (ruleset.cards as Dictionary).keys():
+		cards[card_name] = CardData.new(ruleset.cards[card_name] as Dictionary)

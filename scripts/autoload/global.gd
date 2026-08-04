@@ -108,7 +108,7 @@ func validate_schema(
 
 			var dict: Dictionary = data[prop] if prop in data else {}
 			var ds: Dictionary[String, Dictionary]
-			ds.assign(s.schema as Dictionary)
+			ds.assign(s.schema as Dictionary if "schema" in s else {})
 			# If the schema mention a key_type check all the key if they match the key_type and
 			# check if all the value match the value_type. If value_type is TYPE_DICTIONARY,
 			# validate them using the schema
