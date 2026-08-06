@@ -44,8 +44,8 @@ class Costs:
 			m.blue = amount
 			return m
 
-	var bone: int = 0
 	var blood: int = 0
+	var bone: int = 0
 	var energy: int = 0
 	var cell: int = 0
 	var mox: Mox = Mox.new()
@@ -99,16 +99,17 @@ var sigils: Array[String]:
 ## The list of actual [Sigil] object on the card. If you want to get the list of names use
 ## [member sigils]
 var _sigils: Array[Sigil]
+var rarity: Ruleset.Rarity
 ## Trait of the card, these don't have any gameplay effect but instead they are checked by
 ## sigils and or cost.
-var traits: Array[String]
-var temples: String:
+var traits: Array[Ruleset.Trait]
+var temple: Ruleset.Temple:
 	set(new):
-		temples = new
+		temple = new
 		redraw_card()
-var tribes: String:
+var tribes: Array[Ruleset.Tribe]:
 	set(new):
-		temples = new
+		tribes = new
 		redraw_card()
 var costs: Costs:
 	set(new):
@@ -147,51 +148,50 @@ func parse_data(data: Ruleset.CardData, show_warning := false) -> void:
 	parsing_data = true
 	sigils.clear()
 	_sigils.clear()
-	for prop: String in (
-		data
-		. get_property_list()
-		. filter(func(d: Dictionary) -> bool: return d.usage & PROPERTY_USAGE_SCRIPT_VARIABLE > 0)
-		. map(func(d: Dictionary) -> String: return d.name)
-	):
-		if prop == "sigils":
-			for sigil: String in data[prop]:
-				# Figuring out where the script is
-				var script_path := "res://scripts/fight/sigils/%s.gd" % sigil
-				if not FileAccess.file_exists(script_path):
-					push_warning.call(
-						(
-							'Sigil script can\'t be found for "%s" so using missing script instead'
-							% sigil
-						)
-					)
-					script_path = "res://scripts/fight/sigils/MISSING.gd"
-				var s: Sigil = load(script_path).new()
-				s.attached_card = self
 
-				# Now the texture
-				var sigil_path := "res://asset/sigils/%s.png" % sigil
-				if not FileAccess.file_exists(sigil_path):
-					push_warning(
-						(
-							'Sigil icon can\'t be found for "%s" so using missing texture instead'
-							% sigil
-						)
-					)
-					sigil_path = "res://asset/sigils/MISSING.png"
-				s.texture = load(sigil_path)
-				sigils.append(sigil)
-				_sigils.append(s)
-			continue
-		if prop == "costs":
-			var c := Costs.new()
-			c.bone = data.costs.bone
-			c.blood = data.costs.blood
-			c.energy = data.costs.energy
-			c.cell = data.costs.cell
+	# TODO: Fix this, use an enum or soemthing
+	attack = data.attack if typeof(data.attack) == TYPE_INT else 0
+	health = data.health
 
-			costs = c
-			continue
-		set(prop, data[prop])
+	for sigil: String in data.sigils:
+		# Figuring out where the script is
+		var script_path := "res://scripts/fight/sigils/%s.gd" % sigil
+		if not FileAccess.file_exists(script_path):
+			push_warning.call(
+				'Sigil script can\'t be found for "%s" so using missing script instead' % sigil
+			)
+			script_path = "res://scripts/fight/sigils/MISSING.gd"
+		var s: Sigil = load(script_path).new()
+		s.attached_card = self
+
+		# Now the texture
+		var sigil_path := "res://asset/sigils/%s.png" % sigil
+		if not FileAccess.file_exists(sigil_path):
+			push_warning(
+				'Sigil icon can\'t be found for "%s" so using missing texture instead' % sigil
+			)
+			sigil_path = "res://asset/sigils/MISSING.png"
+		s.texture = load(sigil_path)
+		sigils.append(sigil)
+		_sigils.append(s)
+
+	rarity = Global.ruleset.rarities[data.rarity]
+	traits.assign(
+		data.traits.map(func(t: String) -> Ruleset.Trait: return Global.ruleset.traits[t])
+	)
+	temple = Global.ruleset.temples[data.temple]
+	tribes.assign(
+		data.tribes.map(func(t: String) -> Ruleset.Tribe: return Global.ruleset.tribes[t])
+	)
+
+	var c := Costs.new()
+	c.bone = data.costs.bone
+	c.blood = data.costs.blood
+	c.energy = data.costs.energy
+	c.cell = data.costs.cell
+
+	costs = c
+	tokens = data.tokens
 	card_name = data.name
 	parsing_data = false
 
@@ -211,6 +211,10 @@ func redraw_card() -> void:
 			'Portrait can\'t be found for "%s" so using missing texture instead' % card_name
 		)
 		%Portrait.texture = load("res://asset/portraits/MISSING.png")
+
+	%Frame.texture = temple.frame[rarity.name]
+	%Temple.texture = temple.icon
+
 	for n in %SigilsContainer.get_children():
 		%SigilsContainer.remove_child(n)
 	for sigil in _sigils:
@@ -221,17 +225,13 @@ func redraw_card() -> void:
 		%CostContainer.remove_child(n)
 		n.queue_free()
 	if costs.bone != 0:
-		%CostContainer.add_child(num_cost_icon("res://asset/cost/bone_cost.png", costs.bone as int))
+		%CostContainer.add_child(num_cost_icon("res://asset/cost/bone.png", costs.bone as int))
 	if costs.blood != 0:
-		%CostContainer.add_child(
-			num_cost_icon("res://asset/cost/blood_cost.png", costs.blood as int)
-		)
+		%CostContainer.add_child(num_cost_icon("res://asset/cost/blood.png", costs.blood as int))
 	if costs.energy != 0:
-		%CostContainer.add_child(
-			num_cost_icon("res://asset/cost/energy_cost.png", costs.energy as int)
-		)
+		%CostContainer.add_child(num_cost_icon("res://asset/cost/energy.png", costs.energy as int))
 	if costs.cell != 0:
-		%CostContainer.add_child(num_cost_icon("res://asset/cost/cell_cost.png", costs.cell as int))
+		%CostContainer.add_child(num_cost_icon("res://asset/cost/cell.png", costs.cell as int))
 
 	if not costs.mox.is_empty():
 		%CostContainer.add_child(mox_cost_icon())

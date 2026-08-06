@@ -55,13 +55,22 @@ func _init(ruleset: Dictionary) -> void:
 				metadata.defrost_form = old_data.evolution
 			elif "Transformer" in old_data.sigils:
 				metadata.transform_form = old_data.evolution
-
+		# various int conversion are due to json defaulting to float
 		cards[card.name] = (CardData.new(
 			{
 				name = old_data.name,
-				attack = old_data.atkspecial if "atkspecial" in old_data else old_data.attack,
+				attack =
+				old_data.atkspecial if "atkspecial" in old_data else (old_data.attack as int),
 				health = old_data.health,
-				sigils = old_data.sigils if "sigils" in old_data else [],
+				sigils =
+				(
+					old_data.sigils.filter(
+						func(sigil: String) -> bool: return sigil not in ["Depleting", "Boneless"]
+					)
+					if "sigils" in old_data
+					else []
+				),
+				rarity = "rare" if "rare" in old_data else "common",
 				traits = traits,
 				temple = temple,
 				tribes = [],
@@ -70,9 +79,9 @@ func _init(ruleset: Dictionary) -> void:
 				# description = old_data.description
 				costs =
 				{
-					blood = old_data.blood_cost if "blood_cost" in old_data else 0,
-					bone = old_data.bone_cost if "bone_cost" in old_data else 0,
-					energy = old_data.energy_cost if "energy_cost" in old_data else 0,
+					blood = (old_data.blood_cost as int) if "blood_cost" in old_data else 0,
+					bone = (old_data.bone_cost as int) if "bone_cost" in old_data else 0,
+					energy = (old_data.energy_cost as int) if "energy_cost" in old_data else 0,
 					cells = 2 if "sigils" in old_data and "Depleting" in old_data.sigils else 0,
 					mox =
 					(

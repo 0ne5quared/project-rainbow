@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://kg6v6miko7dt"
-path="res://.godot/imported/energy_cost.png-09211c84622fd33ff1c544cdf36d04d6.ctex"
+uid="uid://bp6mredt04qp1"
+path="res://.godot/imported/energy.png-266a5210991a5908dea63c41daa430ae.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://asset/cost/energy_cost.png"
-dest_files=["res://.godot/imported/energy_cost.png-09211c84622fd33ff1c544cdf36d04d6.ctex"]
+source_file="res://asset/cost/icon/energy.png"
+dest_files=["res://.godot/imported/energy.png-266a5210991a5908dea63c41daa430ae.ctex"]
 
 [params]
 

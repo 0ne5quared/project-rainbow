@@ -18,9 +18,21 @@ func _notification(what: int) -> void:
 
 
 func _update_max_scroll() -> void:
-	max_scroll = max(0.0, label.size.x - size.x)
+	# Get the actual rendered width of the text
+	var font := label.get_theme_font("font")
+	var font_size := label.get_theme_font_size("font_size")
+
+	var text_width := font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+
+	max_scroll = max(0.0, text_width - size.x)
 
 	if max_scroll <= 0.0:
+		# Short text: center it
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.position.x = 0.0
+	else:
+		# Long text: align left for scrolling
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		label.position.x = 0.0
 
 

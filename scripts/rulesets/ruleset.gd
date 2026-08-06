@@ -70,7 +70,6 @@ class Rarity:
 class Temple:
 	var name: String
 	var icon: Texture2D
-	## A frame can be [code]null[/code], in which case there is no frame.
 	var frame: Dictionary[String, Texture2D]
 	var name_override: String
 
@@ -82,8 +81,9 @@ class Temple:
 	func _init(temple_name: String, temple_config: Dictionary) -> void:
 		name = temple_name
 		var icon_path := "res://asset".path_join(temple_config.icon as String)
-		if icon_path.is_empty():
+		if temple_config.icon.is_empty():
 			icon_path = "res://asset/temples/%s.png" % temple_name
+			push_warning("res://asset/temples/%s.png" % temple_name)
 		if not FileAccess.file_exists(icon_path):
 			icon_path = "res://asset/temples/MISSING.png"
 		icon = load(icon_path)
@@ -172,6 +172,7 @@ class CardData:
 		attack = {types = [TYPE_INT, TYPE_STRING], default = 0},
 		health = {types = [TYPE_INT], default = 1},
 		sigils = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []},
+		rarity = {types = [TYPE_STRING], default = ""},
 		traits = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []},
 		temple = {types = [TYPE_STRING], default = ""},
 		tribes = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []},
@@ -206,6 +207,7 @@ class CardData:
 	var attack: Variant
 	var health: Variant
 	var sigils: Array[String]
+	var rarity: String
 	var traits: Array[String]
 	var temple: String
 	var tribes: Array[String]
@@ -227,9 +229,9 @@ class CardData:
 		for prop in SCHEMA:
 			if prop == "costs":
 				costs = Card.Costs.new()
+				costs.blood = dict.costs.blood
 				costs.bone = dict.costs.bone
-				costs.bone = dict.costs.bone
-				costs.bone = dict.costs.bone
+				costs.energy = dict.costs.energy
 				if typeof(dict.costs.mox) == TYPE_ARRAY:
 					var mox_array: Array[String]
 					mox_array.assign(dict.costs.mox as Array)

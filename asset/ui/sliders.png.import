@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bc08pwxalpfb4"
-path="res://.godot/imported/blood_cost.png-1b2955c986f6cb53ecb54a8ea6e09b27.ctex"
+uid="uid://eufx35opg5nn"
+path="res://.godot/imported/sliders.png-c62a6bf526523a1fc6ab3d0e0429eb71.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://asset/cost/blood_cost.png"
-dest_files=["res://.godot/imported/blood_cost.png-1b2955c986f6cb53ecb54a8ea6e09b27.ctex"]
+source_file="res://asset/ui/sliders.png"
+dest_files=["res://.godot/imported/sliders.png-c62a6bf526523a1fc6ab3d0e0429eb71.ctex"]
 
 [params]
 
