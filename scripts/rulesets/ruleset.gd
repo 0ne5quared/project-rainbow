@@ -172,9 +172,9 @@ class CardData:
 		attack = {types = [TYPE_INT, TYPE_STRING], default = 0},
 		health = {types = [TYPE_INT], default = 1},
 		sigils = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []},
-		rarity = {types = [TYPE_STRING], default = ""},
+		rarity = {types = [TYPE_STRING], default = "common"},
 		traits = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []},
-		temple = {types = [TYPE_STRING], default = ""},
+		temple = {types = [TYPE_STRING], default = "beast"},
 		tribes = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []},
 		costs =
 		{
