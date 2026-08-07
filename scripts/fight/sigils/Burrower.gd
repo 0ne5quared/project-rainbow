@@ -3,8 +3,7 @@ extends Sigil
 
 func pre_card_strike(striker: Card, victim_slot: BoardManager.Slot, _to_face: bool) -> void:
 	if (
-		attached_card.zone != Card.Zone.BOARD
-		or (
+		(
 			oppose_pos(victim_slot.pos).y
 			== fight_manager.board_manager.get_card_pos(attached_card.id).y
 		)

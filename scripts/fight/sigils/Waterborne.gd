@@ -2,8 +2,6 @@ extends Sigil
 
 
 func on_turn_start(player_id: String) -> void:
-	if attached_card.zone != Card.Zone.BOARD:
-		return
 	attached_card.submerge_overlay.visible = player_id != controller_id()
 
 

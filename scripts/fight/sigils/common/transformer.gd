@@ -9,7 +9,7 @@ var turn_on_board := 0
 
 
 func on_turn_start(player_id: String) -> void:
-	if player_id != controller_id() or attached_card.zone != Card.Zone.BOARD:
+	if player_id != controller_id():
 		return
 	turn_on_board += 1
 	if turn_on_board >= turn_threshold():

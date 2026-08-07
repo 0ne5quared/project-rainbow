@@ -1,6 +1,10 @@
 extends Sigil
 
 
+func activate_in_hand() -> bool:
+	return true
+
+
 func on_card_perished(card: Card) -> void:
 	push_warning(not fight_manager.in_combat)
 	if (

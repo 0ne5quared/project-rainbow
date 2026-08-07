@@ -49,7 +49,9 @@ var sac_candidate: Array[Card] = []
 var opp_id: String
 
 var main_deck: Array[Ruleset.CardData] = [
-	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new(
+		{name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bifurcated Strike"]}
+	),
 	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
 	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
 	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
@@ -484,6 +486,8 @@ func _activate_sigil_on_cards(cards: Array[Card], callback: Callable) -> Array[A
 	var out: Array[Action] = []
 	for card in cards:
 		for sigil: Sigil in card._sigils:
+			if not sigil.activate_in_hand() and card.zone == Card.Zone.HAND:
+				continue
 			seed(card.id.hash() + (0 if _stack.is_empty() else _stack[-1].id.hash()))
 			sigil._stack.clear()
 			await callback.call(sigil)

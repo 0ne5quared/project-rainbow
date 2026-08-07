@@ -24,6 +24,10 @@ func mox_value() -> Card.Costs.Mox:
 	return Card.Costs.Mox.new()
 
 
+func activate_in_hand() -> bool:
+	return false
+
+
 # --- All the sigil event hook ---
 
 @warning_ignore_start("unused_parameter")  # keep the signature clean while avoiding warning
