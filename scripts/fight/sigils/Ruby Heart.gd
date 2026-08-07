@@ -2,7 +2,7 @@ extends Sigil
 
 
 func new_form() -> Ruleset.CardData:
-	return Global.get_card_by_name(get_config("rmox_card", "Ruby Mox") as String)
+	return Global.get_card_by_name(get_config("ruby_card", "Ruby Mox") as String)
 
 
 func on_card_perished(card: Card) -> void:
