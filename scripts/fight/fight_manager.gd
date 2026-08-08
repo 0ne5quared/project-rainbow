@@ -50,19 +50,13 @@ var opp_id: String
 
 var main_deck: Array[Ruleset.CardData] = [
 	Ruleset.CardData.new(
-		{name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bifurcated Strike"]}
+		{name = "Squirrel", attack = 1, health = 1, sigils = ["Bifurcated Strike"]}
 	),
-	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
-	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
-	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
-	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
 ]
 var side_deck: Array[Ruleset.CardData] = [
-	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
-	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
-	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
-	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
-	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
 	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
 ]
 
@@ -83,8 +77,13 @@ func _process(_delta: float) -> void:
 	$VBoxContainer/HBoxContainer2/LeftUI/OppBone.text = "Opp Bones: " + str(opp_data.bones)
 	$VBoxContainer/HBoxContainer2/LeftUI/OppCell.text = "Opp Energy Cells: " + str(opp_data.cells)
 	$VBoxContainer/HBoxContainer2/LeftUI/OppEnergy.text = ("Opp Energy: " + str(opp_data.energy))
-
 	_update_cursor()
+
+	for slot in board_manager.slots:
+		if slot == null:
+			continue
+		if slot.card != null:
+			slot.card.attack_buf = slot.attack_buf
 
 
 func _update_cursor() -> void:
@@ -130,10 +129,10 @@ func lose_game() -> void:
 
 
 func _draw_starting_hand() -> void:
-	for i in range(2):
+	for i in range(3):
 		_push_action(DrawCardAction.new(DrawCardAction.Deck.MAIN, Global.uuid))
 	_push_action(DrawCardAction.new(DrawCardAction.Deck.SIDE, Global.uuid))
-	for i in range(2):
+	for i in range(3):
 		_push_action(DrawCardAction.new(DrawCardAction.Deck.MAIN, opp_id))
 	_push_action(DrawCardAction.new(DrawCardAction.Deck.SIDE, opp_id))
 	@warning_ignore("missing_await")
@@ -148,6 +147,17 @@ func get_data(player_id: String) -> Player:
 
 func count_sigil(sigil: String) -> int:
 	return get_cards().filter(func(c: Card) -> bool: return c.sigils.has(sigil)).size()
+
+
+func has_sigil(sigil: String, row := BoardManager.Row.MINE) -> bool:
+	return get_cards(row).any(func(c: Card) -> bool: return c.sigils.has(sigil))
+
+
+func get_moxes(row := BoardManager.Row.MINE) -> Card.Costs.Mox:
+	var mox := Card.Costs.Mox.new()
+	for c: Card in get_cards(row):
+		mox.add(c.mox_value())
+	return mox
 
 
 func get_cards(row := BoardManager.Row.MINE) -> Array[Card]:
@@ -509,6 +519,8 @@ func _activate_sigil_on_cards(cards: Array[Card], callback: Callable) -> Array[A
 			await callback.call(sigil)
 			_push_actions(sigil._stack)
 			out.append_array(sigil._stack)
+			sigil.static_ability(true)
+			sigil.static_ability(false)
 	return out
 
 

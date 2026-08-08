@@ -168,7 +168,8 @@ class Trait:
 class CardData:
 	const SCHEMA: Dictionary[String, Dictionary] = {
 		name = {types = [TYPE_STRING], default = "MISSING"},
-		attack = {types = [TYPE_INT, TYPE_STRING], default = 0},
+		attack = {types = [TYPE_INT], default = 0},
+		special_attack = {types = [TYPE_STRING], default = ""},
 		health = {types = [TYPE_INT], default = 1},
 		sigils = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []},
 		rarity = {types = [TYPE_STRING], default = "common"},
@@ -203,7 +204,8 @@ class CardData:
 		metadata = {types = [TYPE_DICTIONARY], key_type = TYPE_STRING, value_TYPE = TYPE_MAX}
 	}
 	var name: String
-	var attack: Variant
+	var attack: int
+	var special_attack: String
 	var health: Variant
 	var sigils: Array[String]
 	var rarity: String
@@ -225,6 +227,7 @@ class CardData:
 
 	func _init(dict: Dictionary) -> void:
 		Global.validate_schema(dict, SCHEMA)
+		push_warning(dict)
 		for prop in SCHEMA:
 			if prop == "costs":
 				costs = Card.Costs.new()

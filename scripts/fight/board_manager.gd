@@ -23,6 +23,9 @@ class Slot:
 			var old_card := card
 			card = new
 			card_changed.emit(old_card as Card, new as Card)
+
+	var attack_buf: int = 0
+
 	var pos: Vector2i
 
 	func _init(p: Vector2i) -> void:

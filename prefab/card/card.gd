@@ -80,8 +80,7 @@ var zone := Zone.LIMBO:
 		redraw_card()
 var id := Global.gen_id()
 
-var attack_mod: int
-var sigil_mod: int
+var attack_buf: int = 0
 
 # These are just extracted out of the card_data for type safety
 ## The attack of the card, if you want to temporarily buff the card use [member attack_mod]
@@ -154,7 +153,7 @@ func parse_data(data: Ruleset.CardData, show_warning := false) -> void:
 	_sigils.clear()
 
 	# TODO: Fix this, use an enum or soemthing
-	attack = data.attack if typeof(data.attack) == TYPE_INT else 0
+	attack = data.attack
 	health = data.health
 
 	for sigil: String in data.sigils:
@@ -233,7 +232,8 @@ func redraw_card() -> void:
 			sigil.reparent(btn)
 			btn.connect("pressed", func() -> void: active_pressed.emit(sigil_idx))
 
-	%Attack.text = str(attack)
+	%Attack.text = str(attack + attack_buf)
+	%Attack.add_theme_color_override(&"font_color", Color("007c00"))
 	%Health.text = str(health)
 	for n in %CostContainer.get_children():
 		%CostContainer.remove_child(n)
