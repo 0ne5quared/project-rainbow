@@ -6,7 +6,7 @@ func quill_damage() -> int:
 
 
 func on_card_damaged(
-	victim: Card, amount: int, attacker_type: Action.IDType, attacker_id: String
+	victim: Card, _amount: int, attacker_type: Action.IDType, attacker_id: String
 ) -> void:
 	if victim != attached_card or attacker_type == Action.IDType.PLAYER:
 		return

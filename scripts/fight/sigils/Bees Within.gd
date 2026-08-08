@@ -6,7 +6,7 @@ func bee_data() -> Ruleset.CardData:
 
 
 func on_card_damaged(
-	victim: Card, amount: int, attacker_type: Action.IDType, attacker_id: String
+	victim: Card, _amount: int, _attacker_type: Action.IDType, _attacker_id: String
 ) -> void:
 	if victim != attached_card:
 		return

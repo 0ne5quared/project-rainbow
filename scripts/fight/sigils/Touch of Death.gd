@@ -2,7 +2,7 @@ extends Sigil
 
 
 func on_card_damaged(
-	victim: Card, amount: int, attacker_type: Action.IDType, attacker_id: String
+	victim: Card, _amount: int, attacker_type: Action.IDType, attacker_id: String
 ) -> void:
 	if attacker_type == Action.IDType.PLAYER or attacker_id != attached_card.id:
 		return
