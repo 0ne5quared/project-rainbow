@@ -31,8 +31,12 @@ func add_card(card_data: Ruleset.CardData, zone: Card.Zone, id := "") -> Card:
 	card.card_data = card_data
 	if not id.is_empty():
 		card.id = id
-	for sigil: Sigil in card._sigils:
+	for sigil_idx: int in len(card._sigils):
+		var sigil := card._sigils[sigil_idx]
 		sigil.fight_manager = fight_manager
+	card.active_pressed.connect(
+		func(sigil_idx: int) -> void: fight_manager._on_active_pressed(card, sigil_idx)
+	)
 	_cards[card.id] = card
 	move_card(card.id, zone)
 	return card

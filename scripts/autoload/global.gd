@@ -37,7 +37,6 @@ func _ready() -> void:
 		user_dir.make_dir("rulesets")
 	var t := {}
 	validate_schema(t, Ruleset.RULESET_SCHEMA)
-	push_warning(t)
 
 
 func quadratic_bezier(start: Vector2, end: Vector2, mid: Vector2) -> Callable:

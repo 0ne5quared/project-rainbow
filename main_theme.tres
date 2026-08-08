@@ -92,6 +92,8 @@ border_width_bottom = 1
 border_color = Color(0.8745098, 0.8745098, 0.8745098, 1)
 
 [resource]
+ActiveSigil/base_type = &"Button"
+ActiveSigil/styles/normal = null
 BasicPopup/base_type = &"PanelContainer"
 BasicPopup/styles/panel = SubResource("StyleBoxFlat_58jnp")
 Button/colors/font_hover_color = Color(0.12941177, 0.47843137, 0.84705883, 1)

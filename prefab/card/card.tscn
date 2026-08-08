@@ -6,7 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://dwqomvvflnhbv" path="res://asset/frame/common.png" id="4_ww8vi"]
 [ext_resource type="Texture2D" uid="uid://d0pgud2366y2d" path="res://asset/temples/technology.png" id="5_dtxg0"]
 [ext_resource type="Texture2D" uid="uid://bw1deabnl56ig" path="res://asset/sacrifice_marker.png" id="6_cryra"]
+[ext_resource type="PackedScene" uid="uid://cseru25qu6wrb" path="res://prefab/card/active_button.tscn" id="6_dtxg0"]
 [ext_resource type="Texture2D" uid="uid://b531uel5u5ohf" path="res://asset/submerge_overlay.png" id="7_ww8vi"]
+[ext_resource type="Texture2D" uid="uid://dmfx6pvl4tvqs" path="res://asset/sigils/Enlarge.png" id="10_lvdbq"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_vp3qw"]
 grow_begin = -2.0
@@ -103,16 +105,28 @@ offset_bottom = 35.0
 texture = ExtResource("5_dtxg0")
 stretch_mode = 3
 
-[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer" unique_id=95632632]
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer" unique_id=482993605]
 custom_minimum_size = Vector2(73, 36)
 layout_mode = 2
 
-[node name="SigilsContainer" type="GridContainer" parent="VBoxContainer/CenterContainer" unique_id=254318988]
+[node name="SigilsContainer" type="FlowContainer" parent="VBoxContainer/CenterContainer" unique_id=1108239277]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(55, 0)
 layout_mode = 2
 theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 2
-columns = 3
+alignment = 1
+
+[node name="ActiveButton" parent="VBoxContainer/CenterContainer/SigilsContainer" unique_id=1105368346 instance=ExtResource("6_dtxg0")]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/CenterContainer/SigilsContainer/ActiveButton" unique_id=1873195687]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 24.0
+offset_bottom = 12.0
+texture = ExtResource("10_lvdbq")
 
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer" unique_id=471424775]
 layout_mode = 2

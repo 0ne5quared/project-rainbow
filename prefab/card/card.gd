@@ -1,6 +1,8 @@
 class_name Card
 extends Button
 
+var active_button := preload("res://prefab/card/active_button.tscn")
+
 enum Zone {
 	HAND,
 	OPP_HAND,
@@ -10,6 +12,8 @@ enum Zone {
 	LIMBO,
 }
 const PUBLIC_ZONE = [Zone.BOARD, Zone.GRAVEYARD, Zone.EXILE]
+
+signal active_pressed(sigil_idx: int)
 
 
 class Costs:
@@ -217,8 +221,18 @@ func redraw_card() -> void:
 
 	for n in %SigilsContainer.get_children():
 		%SigilsContainer.remove_child(n)
-	for sigil in _sigils:
+		if n is TextureButton:
+			n.remove_child(n.get_child(0))
+			n.queue_free()
+	for sigil_idx in len(_sigils):
+		var sigil := _sigils[sigil_idx]
 		%SigilsContainer.add_child(sigil)
+		if sigil.is_active_sigil():
+			var btn := active_button.instantiate()
+			%SigilsContainer.add_child(btn)
+			sigil.reparent(btn)
+			btn.connect("pressed", func() -> void: active_pressed.emit(sigil_idx))
+
 	%Attack.text = str(attack)
 	%Health.text = str(health)
 	for n in %CostContainer.get_children():

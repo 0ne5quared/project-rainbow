@@ -83,7 +83,6 @@ class Temple:
 		var icon_path := "res://asset".path_join(temple_config.icon as String)
 		if temple_config.icon.is_empty():
 			icon_path = "res://asset/temples/%s.png" % temple_name
-			push_warning("res://asset/temples/%s.png" % temple_name)
 		if not FileAccess.file_exists(icon_path):
 			icon_path = "res://asset/temples/MISSING.png"
 		icon = load(icon_path)

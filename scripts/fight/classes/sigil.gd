@@ -28,6 +28,21 @@ func activate_in_hand() -> bool:
 	return false
 
 
+func is_active_sigil() -> bool:
+	return false
+
+
+## Disable the active sigil. This function get run every frame to see if a active should still be
+## enable.
+func is_disable() -> bool:
+	return false
+
+
+## Wherever the active sigil can be activate by anyone.
+func is_universal() -> bool:
+	return false
+
+
 # --- All the sigil event hook ---
 
 @warning_ignore_start("unused_parameter")  # keep the signature clean while avoiding warning
@@ -51,6 +66,12 @@ func on_card_moved(card: Card, from: BoardManager.Slot, to: BoardManager.Slot) -
 
 
 func on_card_transformed(card: Card, card_data: Ruleset.CardData) -> void:
+	return
+
+
+func on_sigil_activate(
+	card: Card, sigil: Sigil, source_id: String, source_type: Action.IDType
+) -> void:
 	return
 
 
@@ -220,6 +241,10 @@ func create_and_add_token(card_data: Ruleset.CardData, player_id := "", source_i
 
 func change_bone(amount: int, player_id: String, death_source_id := "") -> void:
 	add_action(ChangeBonesAction.new(amount, player_id, death_source_id))
+
+
+func sacrifice_card(card_id: String) -> void:
+	add_action(SacrificeCardAction.new(card_id))
 
 
 func oppose_pos(pos: Vector2i) -> Vector2i:

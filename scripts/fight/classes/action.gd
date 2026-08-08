@@ -36,6 +36,9 @@ enum Type {
 	MOVE_CARD,
 	## Action represrnting a card transforming into another.
 	TRANSFORM_CARD,
+	## Action representing activating the sigil on a card. This does not mean a sigil activating,
+	## this is for active sigil activation by someone or something
+	ACTIVATE_SIGILS,
 	## Action representing ringing the bell. This will put [CombatAction] and [EndTurnAction] onto
 	## the stack
 	RING_BELL,

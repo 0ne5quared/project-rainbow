@@ -315,6 +315,20 @@ func _on_end_pressed() -> void:
 	)
 
 
+func _on_active_pressed(card: Card, sigil_idx: int) -> void:
+	var sigil: Sigil = card._sigils.get(sigil_idx)
+	if sigil == null:
+		return
+	if state != State.IDLE or (not sigil.is_universal() and sigil.controller_id() != Global.uuid):
+		return
+	var a := ActivateSigilAction.new(card.id, sigil_idx, Global.uuid, Action.IDType.PLAYER)
+	_push_action(a)
+	ConnectionManager.send(
+		ConnectionManager.GameMessage.ACTIONS, {actions = [a.as_dict()], private = false}
+	)
+	await _resolve_stack()
+
+
 # --- STACK SHIT ---
 
 ## The top of the stack is at 0, this shouldn't be modify directly but instead through
@@ -488,6 +502,8 @@ func _activate_sigil_on_cards(cards: Array[Card], callback: Callable) -> Array[A
 		for sigil: Sigil in card._sigils:
 			if not sigil.activate_in_hand() and card.zone == Card.Zone.HAND:
 				continue
+			if sigil.is_active_sigil():
+				sigil.get_parent().disabled = sigil.is_disable()
 			seed(card.id.hash() + (0 if _stack.is_empty() else _stack[-1].id.hash()))
 			sigil._stack.clear()
 			await callback.call(sigil)

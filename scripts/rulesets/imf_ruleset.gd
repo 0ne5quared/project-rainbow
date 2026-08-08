@@ -24,6 +24,7 @@ func _init(ruleset: Dictionary) -> void:
 	for card: Dictionary in ruleset.cards:
 		var old_data := card
 
+		@warning_ignore("shadowed_variable_base_class")
 		var traits := []
 		if "nohammer" in old_data:
 			traits.append("unhammerable")
