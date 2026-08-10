@@ -214,7 +214,7 @@ class CardData:
 	var tribes: Array[String]
 	var costs: Card.Costs
 	var tokens: Array[String]
-	var sigils_config: Dictionary
+	var metadata: Dictionary
 
 	func as_dict() -> Dictionary:
 		return Global.as_dict_generator(
@@ -227,7 +227,6 @@ class CardData:
 
 	func _init(dict: Dictionary) -> void:
 		Global.validate_schema(dict, SCHEMA)
-		push_warning(dict)
 		for prop in SCHEMA:
 			if prop == "costs":
 				costs = Card.Costs.new()
