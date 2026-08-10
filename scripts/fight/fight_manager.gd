@@ -49,9 +49,7 @@ var sac_candidate: Array[Card] = []
 var opp_id: String
 
 var main_deck: Array[Ruleset.CardData] = [
-	Ruleset.CardData.new(
-		{name = "Squirrel", attack = 1, health = 1, sigils = ["Bifurcated Strike"]}
-	),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["True Scholar"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
@@ -511,6 +509,9 @@ func _activate_sigil_on_cards(cards: Array[Card], callback: Callable) -> Array[A
 	for card in cards:
 		for sigil: Sigil in card._sigils:
 			if not sigil.activate_in_hand() and card.zone == Card.Zone.HAND:
+				if sigil.is_active_sigil():
+					push_warning("here")
+					sigil.get_parent().disabled = true
 				continue
 			if sigil.is_active_sigil():
 				sigil.get_parent().disabled = sigil.is_disable()
