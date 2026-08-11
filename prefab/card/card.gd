@@ -80,10 +80,23 @@ var zone := Zone.LIMBO:
 		redraw_card()
 var id := Global.gen_id()
 
+## Buff for the attack value coming from non slot sources.
 var attack_buf: int = 0:
 	set(new):
 		attack_buf = new
-		attack = card_data.attack + attack_buf
+		_update_buf()
+## Buff for the attack value coming from the slot the card is on
+var slot_attack_buf: int = 0:
+	set(new):
+		slot_attack_buf = new
+		_update_buf()
+
+
+## Syncronize [member attack] by combining [member attack_buf], [member slot_attack_buf] and
+## [member card_data]
+func _update_buf() -> void:
+	attack = card_data.attack + slot_attack_buf + attack_buf
+
 
 # These are just extracted out of the card_data for type safety
 ## The attack of the card, if you want to temporarily buff the card use [member attack_mod]
@@ -236,9 +249,9 @@ func redraw_card() -> void:
 			btn.connect("pressed", func() -> void: active_pressed.emit(sigil_idx))
 
 	%Attack.text = str(attack)
-	if attack_buf > 0:
+	if attack > card_data.attack:
 		%Attack.add_theme_color_override(&"font_color", Color("007c00"))
-	elif attack_buf < 0:
+	elif attack < card_data.attack:
 		%Attack.add_theme_color_override(&"font_color", Color("680000"))
 	else:
 		%Attack.add_theme_color_override(&"font_color", Color("000000"))

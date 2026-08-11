@@ -81,8 +81,7 @@ func _process(_delta: float) -> void:
 		if slot == null:
 			continue
 		if slot.card != null:
-			slot.card.attack_buf = slot.attack_buf
-			push_warning(slot.card.attack_buf, slot.attack_buf)
+			slot.card.slot_attack_buf = slot.attack_buf
 
 
 func _update_cursor() -> void:
