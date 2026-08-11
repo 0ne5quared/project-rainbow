@@ -31,6 +31,8 @@ func resolve(fight_manager: FightManager) -> void:
 		)
 	)
 	await fight_manager._activate_sigils(func(sigil: Sigil) -> void: sigil.on_card_perished(card))
+	for sigil in card._sigils:
+		sigil.static_ability(true)
 	fight_manager.card_manager.move_card(card_id, Card.Zone.GRAVEYARD)
 	slot.card = null
 	card.visible = false
