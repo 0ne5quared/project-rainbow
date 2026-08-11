@@ -43,9 +43,20 @@ func is_universal() -> bool:
 	return false
 
 
-# --- All the sigil event hook ---
-
 @warning_ignore_start("unused_parameter")  # keep the signature clean while avoiding warning
+
+
+## Static ability that is ran when sigil suppose to activate usually after the event hook. It is
+## called for the first time with [param is_reset] set to [code]true[/code], meant for the sigil to
+## reset the state or whatever, then it is called a second time with [param is_reset] set to
+## [code]false[/code], to actually put the static ability in action again. Unlike normal event hook,
+## this function should not modify the stack as it does nothing but instead modify the game state
+## directly.
+func static_ability(is_reset: bool) -> void:
+	pass
+
+
+# --- All the sigil event hook ---
 
 
 ## Called after [AddCardAction] resolved. This mean that the card have already been added.
@@ -219,6 +230,11 @@ func draw_card(deck: DrawCardAction.Deck, player_id := "") -> void:
 	add_action(DrawCardAction.new(deck, player_id))
 
 
+func draw_cards(deck: DrawCardAction.Deck, amount: int, player_id := "") -> void:
+	for i in amount:
+		draw_card(deck, player_id)
+
+
 ## Add a new card to the [param player_id]'s hand with id [param card_id]
 func add_card(player_id: String, card_id: String) -> String:
 	add_action(AddCardAction.new(player_id, card_id))
@@ -259,16 +275,16 @@ func get_pos(card_id := "") -> Vector2i:
 
 
 ## Return the 2 neighbouring spot, The array will always be of length 2 with the first item being
-## left slot and second the right slot. If the slot didn't exist the item would be [code]null[/code]
-func get_neighbour_slot() -> Array[BoardManager.Slot]:
+## left slot and second the right slot. If the slot didn't exist the item would be
+## [code]null[/code], set [param include_null] to [code]false[/code] to avoid this.
+func get_neighbour_slot(include_null := true) -> Array[BoardManager.Slot]:
 	var pos := fight_manager.board_manager.get_card_pos(attached_card.id)
 	var out: Array[BoardManager.Slot]
-	out.assign(
-		[
-			fight_manager.board_manager.get_slot(pos + Vector2i.LEFT),
-			fight_manager.board_manager.get_slot(pos + Vector2i.RIGHT)
-		]
-	)
+	var t := [
+		fight_manager.board_manager.get_slot(pos + Vector2i.LEFT),
+		fight_manager.board_manager.get_slot(pos + Vector2i.RIGHT)
+	]
+	out.assign(t.filter(func(s: BoardManager.Slot) -> bool: if s == null and include_null: return true else: return s != null))
 	return out
 
 
@@ -279,7 +295,7 @@ func controller_id(pos := Vector2i.MIN) -> String:
 
 
 func get_config(config_name: String, default: Variant) -> Variant:
-	var config: Variant = attached_card.card_data.metadata[config_name]
+	var config: Variant = attached_card.card_data.metadata.get(config_name)
 	if typeof(config) != typeof(default):
 		return default
 	return config

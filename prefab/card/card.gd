@@ -80,7 +80,10 @@ var zone := Zone.LIMBO:
 		redraw_card()
 var id := Global.gen_id()
 
-var attack_buf: int = 0
+var attack_buf: int = 0:
+	set(new):
+		attack_buf = new
+		attack = card_data.attack + attack_buf
 
 # These are just extracted out of the card_data for type safety
 ## The attack of the card, if you want to temporarily buff the card use [member attack_mod]
@@ -232,8 +235,14 @@ func redraw_card() -> void:
 			sigil.reparent(btn)
 			btn.connect("pressed", func() -> void: active_pressed.emit(sigil_idx))
 
-	%Attack.text = str(attack + attack_buf)
-	%Attack.add_theme_color_override(&"font_color", Color("007c00"))
+	%Attack.text = str(attack)
+	if attack_buf > 0:
+		%Attack.add_theme_color_override(&"font_color", Color("007c00"))
+	elif attack_buf < 0:
+		%Attack.add_theme_color_override(&"font_color", Color("680000"))
+	else:
+		%Attack.add_theme_color_override(&"font_color", Color("000000"))
+
 	%Health.text = str(health)
 	for n in %CostContainer.get_children():
 		%CostContainer.remove_child(n)

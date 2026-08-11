@@ -49,7 +49,7 @@ var sac_candidate: Array[Card] = []
 var opp_id: String
 
 var main_deck: Array[Ruleset.CardData] = [
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["True Scholar"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Leader"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
@@ -82,6 +82,7 @@ func _process(_delta: float) -> void:
 			continue
 		if slot.card != null:
 			slot.card.attack_buf = slot.attack_buf
+			push_warning(slot.card.attack_buf, slot.attack_buf)
 
 
 func _update_cursor() -> void:
