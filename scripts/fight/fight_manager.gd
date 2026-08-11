@@ -49,8 +49,9 @@ var sac_candidate: Array[Card] = []
 var opp_id: String
 
 var main_deck: Array[Ruleset.CardData] = [
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Leader"]}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 6, sigils = ["Leader"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 6, sigils = ["Leader"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Sniper"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
 ]
@@ -405,6 +406,7 @@ func _resolve_stack() -> void:
 		var private_trigger: Array[Action]
 		private_trigger.assign(_opp_private.pop_back() as Array)
 		_push_actions(private_trigger)
+		handle_static()
 		#await get_tree().create_timer(0.5).timeout
 	stack_resolved.emit()
 	replacement_history.clear()
@@ -491,6 +493,16 @@ func _get_replacement(action: Action) -> Array[Action]:
 	return replacement
 
 
+func handle_static() -> void:
+	var sigils: Array[Sigil] = []
+	for card in _public_activation_order():
+		sigils.append_array(card._sigils)
+	for sigil in sigils:
+		sigil.static_ability(true)
+	for sigil in sigils:
+		sigil.static_ability(false)
+
+
 func _no_activation() -> void:
 	ConnectionManager.send(ConnectionManager.GameMessage.ACTIONS, {actions = [], private = true})
 
@@ -520,8 +532,6 @@ func _activate_sigil_on_cards(cards: Array[Card], callback: Callable) -> Array[A
 			await callback.call(sigil)
 			_push_actions(sigil._stack)
 			out.append_array(sigil._stack)
-			sigil.static_ability(true)
-			sigil.static_ability(false)
 	return out
 
 
