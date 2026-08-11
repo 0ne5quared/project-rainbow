@@ -49,8 +49,8 @@ var sac_candidate: Array[Card] = []
 var opp_id: String
 
 var main_deck: Array[Ruleset.CardData] = [
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 6, sigils = ["Leader"]}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 6, sigils = ["Leader"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Leader"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Leader"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Sniper"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
@@ -276,6 +276,8 @@ func _on_slot_selected(slot: BoardManager.Slot) -> void:
 
 
 func _on_card_selected(card: Card) -> void:
+	if state != State.IDLE:
+		return
 	sac_candidate.clear()
 	hand_manager.selected = null
 	if my_data.bones < card.costs.bone:
