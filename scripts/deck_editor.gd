@@ -26,6 +26,9 @@ func _ready() -> void:
 
 
 func _ruleset_changed(ruleset: Ruleset) -> void:
+	for child in %CardList.get_children():
+		%CardList.remove_child(child)
+		child.queue_free()
 	for card_data: Ruleset.CardData in Global.ruleset.cards.values():
 		var db_card: Card = deck_builder_card.instantiate()
 		db_card.card_data = card_data
