@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://d4kntw6wxj30n"]
 
 [ext_resource type="Script" uid="uid://blhcx78lnp2kf" path="res://prefab/card/card.gd" id="1_8nimt"]
+[ext_resource type="Texture2D" uid="uid://bu1rnyjfq51he" path="res://asset/rarities/underlay/rare.png" id="2_ow07e"]
 [ext_resource type="Script" uid="uid://d0y06b2xbgam2" path="res://scripts/utils/name_scroller.gd" id="2_pe5rd"]
 [ext_resource type="Texture2D" uid="uid://bie1qwdx23na7" path="res://asset/portraits/Squirrel.png" id="3_f2uqh"]
 [ext_resource type="Texture2D" uid="uid://dwqomvvflnhbv" path="res://asset/frame/common.png" id="4_ww8vi"]
@@ -30,6 +31,13 @@ offset_right = 73.0
 offset_bottom = 59.5
 mouse_filter = 2
 alignment = 2
+
+[node name="RarityOverlay" type="TextureRect" parent="." unique_id=1836075024]
+custom_minimum_size = Vector2(73, 93)
+layout_mode = 0
+offset_right = 73.0
+offset_bottom = 93.0
+texture = ExtResource("2_ow07e")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2110881630]
 layout_mode = 1
@@ -121,6 +129,28 @@ alignment = 1
 layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer/CenterContainer/SigilsContainer/ActiveButton" unique_id=1873195687]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 24.0
+offset_bottom = 12.0
+texture = ExtResource("10_lvdbq")
+
+[node name="ActiveButton2" parent="VBoxContainer/CenterContainer/SigilsContainer" unique_id=69872244 instance=ExtResource("6_dtxg0")]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/CenterContainer/SigilsContainer/ActiveButton2" unique_id=43624831]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 24.0
+offset_bottom = 12.0
+texture = ExtResource("10_lvdbq")
+
+[node name="ActiveButton3" parent="VBoxContainer/CenterContainer/SigilsContainer" unique_id=1891854717 instance=ExtResource("6_dtxg0")]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/CenterContainer/SigilsContainer/ActiveButton3" unique_id=955942079]
 layout_mode = 0
 offset_left = 2.0
 offset_top = 2.0

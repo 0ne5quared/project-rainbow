@@ -257,6 +257,9 @@ func redraw_card() -> void:
 		%Portrait.texture = load("res://asset/portraits/MISSING.png")
 
 	%Frame.texture = temple.frame[rarity.name]
+
+	$RarityOverlay.texture = rarity.underlay
+
 	%Temple.texture = temple.icon
 
 	for n in %SigilsContainer.get_children():

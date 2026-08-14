@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dw6wi324lth48"
-path="res://.godot/imported/MISSING.png-296177a3934f70973f48ef2aa9b233bc.ctex"
+uid="uid://bu1rnyjfq51he"
+path="res://.godot/imported/rare.png-3d79f57e1d3333c4a4c7bfbe90b7d876.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://asset/rarities/MISSING.png"
-dest_files=["res://.godot/imported/MISSING.png-296177a3934f70973f48ef2aa9b233bc.ctex"]
+source_file="res://asset/rarities/underlay/rare.png"
+dest_files=["res://.godot/imported/rare.png-3d79f57e1d3333c4a4c7bfbe90b7d876.ctex"]
 
 [params]
 
