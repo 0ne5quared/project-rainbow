@@ -6,7 +6,7 @@ func is_active_sigil() -> bool:
 
 
 func is_disable() -> bool:
-	return false if fight_manager.get_moxes().blue >= 1 else true
+	return fight_manager.get_moxes().blue <= 0
 
 
 func on_sigil_activate(
