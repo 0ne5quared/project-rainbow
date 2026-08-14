@@ -203,13 +203,7 @@ func parse_data(data: Ruleset.CardData, show_warning := false) -> void:
 		data.tribes.map(func(t: String) -> Ruleset.Tribe: return Global.ruleset.tribes[t])
 	)
 
-	var c := Costs.new()
-	c.bone = data.costs.bone
-	c.blood = data.costs.blood
-	c.energy = data.costs.energy
-	c.cell = data.costs.cell
-
-	costs = c
+	costs = data.costs
 	tokens = data.tokens
 	card_name = data.name
 	parsing_data = false
@@ -270,10 +264,10 @@ func redraw_card() -> void:
 		%CostContainer.add_child(num_cost_icon("res://asset/cost/cell.png", costs.cell as int))
 
 	if not costs.mox.is_empty():
-		%CostContainer.add_child(mox_cost_icon())
+		%CostContainer.add_child(mox_cost_icon(costs.mox))
 
 
-func num_cost_icon(cost_icon: String, amount: int) -> HBoxContainer:
+static func num_cost_icon(cost_icon: String, amount: int) -> HBoxContainer:
 	var cost := HBoxContainer.new()
 	cost.add_theme_constant_override("separation", -1)
 	@warning_ignore("shadowed_variable_base_class")
@@ -289,18 +283,18 @@ func num_cost_icon(cost_icon: String, amount: int) -> HBoxContainer:
 	return cost
 
 
-func mox_cost_icon() -> HBoxContainer:
+static func mox_cost_icon(mox: Costs.Mox) -> HBoxContainer:
 	var cost := HBoxContainer.new()
 	cost.add_theme_constant_override("separation", -5)
-	for i in range(costs.mox.green):
+	for i in range(mox.green):
 		var t := TextureRect.new()
 		t.texture = load("res://asset/cost/mox/green.png")
 		cost.add_child(t)
-	for i in range(costs.mox.orange):
+	for i in range(mox.orange):
 		var t := TextureRect.new()
 		t.texture = load("res://asset/cost/mox/orange.png")
 		cost.add_child(t)
-	for i in range(costs.mox.blue):
+	for i in range(mox.blue):
 		var t := TextureRect.new()
 		t.texture = load("res://asset/cost/mox/blue.png")
 		cost.add_child(t)
