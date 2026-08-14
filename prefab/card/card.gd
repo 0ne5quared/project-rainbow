@@ -63,6 +63,37 @@ class Costs:
 				return {}
 		)
 
+	func get_sort_key() -> Array:
+		var color_count := 0
+
+		if mox.green > 0:
+			color_count += 1
+		if mox.orange > 0:
+			color_count += 1
+		if mox.blue > 0:
+			color_count += 1
+
+		var t := [
+			blood,
+			bone,
+			energy,
+			cell,
+			[
+				color_count,
+				int(mox.green == 0),
+				int(mox.orange == 0),
+				int(mox.blue == 0),
+				mox.green,
+				mox.orange,
+				mox.blue
+			]
+		]
+		t.reverse()
+		return t
+
+	func is_less(other: Costs) -> bool:
+		return get_sort_key() < other.get_sort_key()
+
 
 var card_data: Ruleset.CardData:
 	set(new_data):
@@ -254,17 +285,26 @@ func redraw_card() -> void:
 	for n in %CostContainer.get_children():
 		%CostContainer.remove_child(n)
 		n.queue_free()
+
+	for n in cost_string(costs):
+		%CostContainer.add_child(n)
+
+
+@warning_ignore("shadowed_variable")
+static func cost_string(costs: Costs) -> Array[HBoxContainer]:
+	var out: Array[HBoxContainer] = []
 	if costs.bone != 0:
-		%CostContainer.add_child(num_cost_icon("res://asset/cost/bone.png", costs.bone as int))
+		out.append(num_cost_icon("res://asset/cost/bone.png", costs.bone as int))
 	if costs.blood != 0:
-		%CostContainer.add_child(num_cost_icon("res://asset/cost/blood.png", costs.blood as int))
+		out.append(num_cost_icon("res://asset/cost/blood.png", costs.blood as int))
 	if costs.energy != 0:
-		%CostContainer.add_child(num_cost_icon("res://asset/cost/energy.png", costs.energy as int))
+		out.append(num_cost_icon("res://asset/cost/energy.png", costs.energy as int))
 	if costs.cell != 0:
-		%CostContainer.add_child(num_cost_icon("res://asset/cost/cell.png", costs.cell as int))
+		out.append(num_cost_icon("res://asset/cost/cell.png", costs.cell as int))
 
 	if not costs.mox.is_empty():
-		%CostContainer.add_child(mox_cost_icon(costs.mox))
+		out.append(mox_cost_icon(costs.mox))
+	return out
 
 
 static func num_cost_icon(cost_icon: String, amount: int) -> HBoxContainer:

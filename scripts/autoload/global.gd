@@ -47,6 +47,17 @@ func quadratic_bezier(start: Vector2, end: Vector2, mid: Vector2) -> Callable:
 		return [q0.lerp(q1, t), (q1 - q0).angle()]
 
 
+func compare_card(a: Ruleset.CardData, b: Ruleset.CardData) -> bool:
+	push_warning(a, b)
+	if a.costs.is_less(b.costs):
+		return true
+
+	if b.costs.is_less(a.costs):
+		return false
+
+	return a.name < b.name
+
+
 func show_error(txt: String) -> void:
 	_show_popup.emit(txt, PopupType.ERR, true)
 

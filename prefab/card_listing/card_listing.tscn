@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://bsv8b5ndjwu7l"]
+
+[ext_resource type="Script" uid="uid://dwx52028dibn3" path="res://prefab/card_listing/card_listing.gd" id="1_yefh4"]
+[ext_resource type="Texture2D" uid="uid://dixwup53j1s1t" path="res://asset/portraits/49er.png" id="2_r0qea"]
+
+[node name="CardItem" type="Button" unique_id=1418028704]
+custom_minimum_size = Vector2(0, 28)
+offset_right = 4.0
+offset_bottom = 4.0
+script = ExtResource("1_yefh4")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=526314289]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=10949943]
+layout_mode = 2
+
+[node name="Amount" type="Label" parent="MarginContainer/HBoxContainer" unique_id=1776464585]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.03137255, 0.08627451, 1)
+theme_override_font_sizes/font_size = 16
+text = "4x"
+
+[node name="Portrait" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=1209043306]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("2_r0qea")
+stretch_mode = 2
+
+[node name="CardName" type="Label" parent="MarginContainer/HBoxContainer" unique_id=1253609053]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0.03137255, 0.08627451, 1)
+text = "49er"
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/HBoxContainer" unique_id=1810481308]
+layout_mode = 2
+
+[node name="CostContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/CenterContainer" unique_id=160897143]
+unique_name_in_owner = true
+layout_mode = 2

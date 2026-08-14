@@ -1,9 +1,19 @@
 [gd_scene format=3 uid="uid://dwhmym7riy2eo"]
 
-[node name="Separator" type="Label" unique_id=1989850296]
+[node name="MarginContainer" type="MarginContainer" unique_id=444231581]
+offset_top = -3.0
+offset_right = 40.0
+offset_bottom = 21.0
+size_flags_horizontal = 3
+theme_override_constants/margin_top = -10
+theme_override_constants/margin_bottom = -6
+
+[node name="Separator" type="Label" parent="." unique_id=1670445138]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
-text = "-----------------------------------------------------------------------------"
+text = "------------------------------------------------------------------------------------------------------------------"
 horizontal_alignment = 1
 clip_text = true
 text_overrun_behavior = 1

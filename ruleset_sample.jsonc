@@ -132,7 +132,7 @@
             "cards": [{"card": "Squirrel", "amount": 10}]
         },
         "vessels": {
-            "type": "cat",
+            "type": "category",
             "decks": {
                 "empty": {
                     "name": "10 Bloody",

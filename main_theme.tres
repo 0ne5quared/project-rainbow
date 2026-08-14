@@ -73,6 +73,35 @@ border_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0omi4"]
 bg_color = Color(0, 0.03137255, 0.08627451, 1)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gsqoc"]
+content_margin_top = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0kida"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.9490196, 0.9490196, 0.9490196, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2u8nx"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nxip8"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0, 0.03137255, 0.08627451, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_py0i1"]
 bg_color = Color(0.9372549, 0.9647059, 0.78039217, 1)
 
@@ -101,7 +130,7 @@ Button/colors/font_pressed_color = Color(0, 0.03137255, 0.08627451, 1)
 Button/styles/hover = SubResource("StyleBoxFlat_rt4o7")
 Button/styles/normal = SubResource("StyleBoxFlat_7hjjl")
 Button/styles/pressed = SubResource("StyleBoxFlat_wnmfn")
-Card/base_type = &"TitleButton"
+Card/base_type = &"Button"
 Card/styles/hover = SubResource("StyleBoxFlat_gsqoc")
 Card/styles/normal = SubResource("StyleBoxFlat_470mv")
 Card/styles/pressed = SubResource("StyleBoxFlat_a2l2q")
@@ -116,6 +145,12 @@ LineEdit/constants/caret_width = 2
 LineEdit/styles/focus = SubResource("StyleBoxFlat_yhfeq")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_yhfeq")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_0omi4")
+TabContainer/colors/font_hovered_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+TabContainer/constants/tab_separation = 4
+TabContainer/styles/panel = SubResource("StyleBoxEmpty_gsqoc")
+TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_0kida")
+TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_2u8nx")
+TabContainer/styles/tab_unselected = SubResource("StyleBoxFlat_nxip8")
 TitleButton/base_type = &"Button"
 TitleButton/colors/font_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
 TitleButton/colors/font_hover_color = Color(0, 0.03137255, 0.08627451, 1)
