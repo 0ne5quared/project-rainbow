@@ -1,13 +1,20 @@
 [gd_scene format=3 uid="uid://bsv8b5ndjwu7l"]
 
 [ext_resource type="Script" uid="uid://dwx52028dibn3" path="res://prefab/card_listing/card_listing.gd" id="1_yefh4"]
+[ext_resource type="Texture2D" uid="uid://bvvdolgkxa3re" path="res://asset/rarities/underlay/listing/rare.png" id="2_ck72r"]
 [ext_resource type="Texture2D" uid="uid://dixwup53j1s1t" path="res://asset/portraits/49er.png" id="2_r0qea"]
 
 [node name="CardItem" type="Button" unique_id=1418028704]
-custom_minimum_size = Vector2(0, 28)
+custom_minimum_size = Vector2(262, 28)
 offset_right = 4.0
 offset_bottom = 4.0
 script = ExtResource("1_yefh4")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=696800791]
+layout_mode = 0
+offset_right = 262.0
+offset_bottom = 28.0
+texture = ExtResource("2_ck72r")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=526314289]
 layout_mode = 1

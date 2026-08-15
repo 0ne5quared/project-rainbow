@@ -48,7 +48,6 @@ func quadratic_bezier(start: Vector2, end: Vector2, mid: Vector2) -> Callable:
 
 
 func compare_card(a: Ruleset.CardData, b: Ruleset.CardData) -> bool:
-	push_warning(a, b)
 	if a.costs.is_less(b.costs):
 		return true
 

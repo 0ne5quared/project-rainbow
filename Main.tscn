@@ -21,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://cur0he3dpdymn" path="res://asset/traits/boneless.png" id="11_hhcpw"]
 [ext_resource type="Texture2D" uid="uid://c11x1if5gvsae" path="res://asset/traits/unhammerable.png" id="12_mxvw5"]
 [ext_resource type="Texture2D" uid="uid://eufx35opg5nn" path="res://asset/ui/sliders.png" id="14_3b0ty"]
+[ext_resource type="PackedScene" uid="uid://d4kntw6wxj30n" path="res://prefab/card/card.tscn" id="15_bg4s2"]
 [ext_resource type="Texture2D" uid="uid://c5ce65fxh4esr" path="res://asset/portraits/Broken Obol 2.png" id="15_mxvw5"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_fos0i"]
@@ -462,7 +463,7 @@ icon_alignment = 1
 layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer" unique_id=939624879]
-custom_minimum_size = Vector2(550, 0)
+custom_minimum_size = Vector2(478, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 3
@@ -470,7 +471,55 @@ size_flags_vertical = 3
 [node name="CardList" type="GridContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer" unique_id=1932405109]
 unique_name_in_owner = true
 layout_mode = 2
-columns = 7
+columns = 6
+
+[node name="CardContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=2058315583 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer2" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=274574371 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer3" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=905198880 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer4" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1513279380 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer5" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=233809702 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer6" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1310010769 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer7" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=817259116 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer8" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=50551177 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer9" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1605726214 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer10" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1426830655 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer11" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1840495600 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer12" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1821032348 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer13" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=2065049879 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer14" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1372683235 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer15" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1184638576 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer16" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=2019255338 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
 
 [node name="VSeparator" type="VSeparator" parent="DeckEditor/MarginContainer/HBoxContainer" unique_id=915306194]
 layout_mode = 2
@@ -519,6 +568,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_constants/separation = 2
 
 [node name="Side Deck" type="ScrollContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/TabContainer" unique_id=1049377342]
 visible = false

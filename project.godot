@@ -27,7 +27,6 @@ ConnectionManager="*uid://ff071x27wtwy"
 
 [debug]
 
-gdscript/warnings/incompatible_ternary=2
 gdscript/warnings/untyped_declaration=2
 gdscript/warnings/unsafe_call_argument=2
 gdscript/warnings/missing_await=1

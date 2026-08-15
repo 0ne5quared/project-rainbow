@@ -13,6 +13,9 @@ var amount: int = 1:
 
 func redraw() -> void:
 	name = card_data.name
+
+	$TextureRect.texture = Global.ruleset.rarities[card_data.rarity].listing_underlay
+
 	%Amount.text = str(amount) + "x"
 
 	var portrait_path := "res://asset/portraits/%s.png" % card_data.name

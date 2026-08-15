@@ -40,13 +40,14 @@ class Rarity:
 	var max_side: int
 	## The icon to use for this rarity
 	var icon: Texture2D
-	var underlay: Texture2D
+	var card_underlay: Texture2D
+	var listing_underlay: Texture2D
 	## The display name override for this rarity. If not provided the display name will be
 	## [member name] capitalized.
 	var name_override: String
 
-	static var COMMON_RARITY: Rarity = _basic_config("common", 4, 10, false)
-	static var RARE_RARITY: Rarity = _basic_config("rare", 1, 1, true)
+	static var COMMON_RARITY: Rarity = _basic_config("common", 4, 10, false, false)
+	static var RARE_RARITY: Rarity = _basic_config("rare", 1, 1, true, true)
 
 	func _init(rarity_name: String, rarity_config: Dictionary) -> void:
 		name = rarity_name
@@ -60,22 +61,38 @@ class Rarity:
 			icon_path = "res://asset/rarities/icon/MISSING.png"
 		icon = load(icon_path)
 
-		if rarity_config.underlay == null:
-			underlay = null
+		if rarity_config.card_underlay == null:
+			card_underlay = null
 		else:
-			var underlay_path := "res://asset".path_join(rarity_config.underlay as String)
-			if rarity_config.underlay.is_empty():
-				underlay_path = "res://asset/rarities/underlay/%s.png" % rarity_name
+			var card_underlay_path := "res://asset".path_join(rarity_config.card_underlay as String)
+			if rarity_config.card_underlay.is_empty():
+				card_underlay_path = "res://asset/rarities/underlay/card/%s.png" % rarity_name
 			if not FileAccess.file_exists(icon_path):
-				underlay_path = "res://asset/rarities/underlay/MISSING.png"
-			underlay = load(underlay_path)
+				card_underlay_path = "res://asset/rarities/underlay/card/MISSING.png"
+			card_underlay = load(card_underlay_path)
+
+		if rarity_config.listing_underlay == null:
+			card_underlay = null
+		else:
+			var listing_underlay_path := "res://asset".path_join(
+				rarity_config.listing_underlay as String
+			)
+			if rarity_config.listing_underlay.is_empty():
+				listing_underlay_path = "res://asset/rarities/underlay/listing/%s.png" % rarity_name
+			if not FileAccess.file_exists(icon_path):
+				listing_underlay_path = "res://asset/rarities/underlay/listing/MISSING.png"
+			listing_underlay = load(listing_underlay_path)
 
 		name_override = rarity_config.name
 		if name_override.is_empty():
 			name_override = name.capitalize()
 
 	static func _basic_config(
-		rarity_name: String, main: int, side: int, have_underlay: bool
+		rarity_name: String,
+		main: int,
+		side: int,
+		have_card_underlay: bool,
+		have_listing_underlay: bool
 	) -> Rarity:
 		@warning_ignore("incompatible_ternary")
 		return Rarity.new(
@@ -83,7 +100,8 @@ class Rarity:
 			{
 				name = "",
 				icon = "",
-				underlay = "" if have_underlay else null,
+				card_underlay = "" if have_card_underlay else null,
+				listing_underlay = "" if have_listing_underlay else null,
 				max = {main = main, side = side}
 			}
 		)
@@ -330,7 +348,8 @@ static var RULESET_SCHEMA: Dictionary[String, Dictionary] = {
 				{main = {types = [TYPE_INT], default = 1}, side = {types = [TYPE_INT], default = 1}}
 			},
 			icon = {types = [TYPE_STRING], default = ""},
-			underlay = {types = [TYPE_STRING], default = null},
+			card_underlay = {types = [TYPE_STRING], default = null},
+			listing_underlay = {types = [TYPE_STRING], default = null},
 			name = {types = [TYPE_STRING], default = ""}
 		}
 	},
