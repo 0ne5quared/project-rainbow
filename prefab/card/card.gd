@@ -258,7 +258,7 @@ func redraw_card() -> void:
 
 	%Frame.texture = temple.frame[rarity.name]
 
-	$RarityOverlay.texture = rarity.card_underlay
+	%RarityDecoration.texture = rarity.decoration.card
 
 	%Temple.texture = temple.icon
 

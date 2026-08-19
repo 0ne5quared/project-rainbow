@@ -10,11 +10,17 @@ var amount: int = 1:
 		amount = new
 		redraw()
 
+var is_compact := true
+
 
 func redraw() -> void:
 	name = card_data.name
+	custom_minimum_size.y = 16 if is_compact else 28
+	%Portrait.visible = not is_compact
 
-	$TextureRect.texture = Global.ruleset.rarities[card_data.rarity].listing_underlay
+	%Decoration.texture = Global.ruleset.rarities[card_data.rarity].decoration[
+		"listing_compact" if is_compact else "listing_full"
+	]
 
 	%Amount.text = str(amount) + "x"
 

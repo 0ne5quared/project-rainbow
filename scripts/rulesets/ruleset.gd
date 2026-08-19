@@ -32,6 +32,11 @@ class RulesetSettings:
 
 ## Rarity config/data.
 class Rarity:
+	class Decoration:
+		var card: Texture2D
+		var listing_full: Texture2D
+		var listing_compact: Texture2D
+
 	## The name of the rarity
 	var name: String
 	## The max allowed copy of this card belonging to this rarity in the main deck
@@ -40,14 +45,13 @@ class Rarity:
 	var max_side: int
 	## The icon to use for this rarity
 	var icon: Texture2D
-	var card_underlay: Texture2D
-	var listing_underlay: Texture2D
+	var decoration: Decoration
 	## The display name override for this rarity. If not provided the display name will be
 	## [member name] capitalized.
 	var name_override: String
 
-	static var COMMON_RARITY: Rarity = _basic_config("common", 4, 10, false, false)
-	static var RARE_RARITY: Rarity = _basic_config("rare", 1, 1, true, true)
+	static var COMMON_RARITY: Rarity = _basic_config("common", 4, 10, false)
+	static var RARE_RARITY: Rarity = _basic_config("rare", 1, 1, true)
 
 	func _init(rarity_name: String, rarity_config: Dictionary) -> void:
 		name = rarity_name
@@ -61,47 +65,43 @@ class Rarity:
 			icon_path = "res://asset/rarities/icon/MISSING.png"
 		icon = load(icon_path)
 
-		if rarity_config.card_underlay == null:
-			card_underlay = null
-		else:
-			var card_underlay_path := "res://asset".path_join(rarity_config.card_underlay as String)
-			if rarity_config.card_underlay.is_empty():
-				card_underlay_path = "res://asset/rarities/underlay/card/%s.png" % rarity_name
-			if not FileAccess.file_exists(icon_path):
-				card_underlay_path = "res://asset/rarities/underlay/card/MISSING.png"
-			card_underlay = load(card_underlay_path)
-
-		if rarity_config.listing_underlay == null:
-			card_underlay = null
-		else:
-			var listing_underlay_path := "res://asset".path_join(
-				rarity_config.listing_underlay as String
-			)
-			if rarity_config.listing_underlay.is_empty():
-				listing_underlay_path = "res://asset/rarities/underlay/listing/%s.png" % rarity_name
-			if not FileAccess.file_exists(icon_path):
-				listing_underlay_path = "res://asset/rarities/underlay/listing/MISSING.png"
-			listing_underlay = load(listing_underlay_path)
+		decoration = Decoration.new()
+		var decor_type := {
+			card = "card/%s.png",
+			listing_full = "listing/%s_full.png",
+			listing_compact = "listing/%s_compact.png",
+		}
+		for key: String in decor_type.keys():
+			var val: Variant = rarity_config.decoration[key]
+			if val == null:
+				decoration.set(key, null)
+			else:
+				var path := "res://asset".path_join(val as String)
+				if val.is_empty():
+					path = "res://asset/rarities/decoration".path_join(
+						decor_type[key] as String % rarity_name
+					)
+				if not FileAccess.file_exists(path):
+					decoration.set(key, null)
+					continue
+				decoration.set(key, load(path))
 
 		name_override = rarity_config.name
 		if name_override.is_empty():
 			name_override = name.capitalize()
 
 	static func _basic_config(
-		rarity_name: String,
-		main: int,
-		side: int,
-		have_card_underlay: bool,
-		have_listing_underlay: bool
+		rarity_name: String, main: int, side: int, have_decoration := false
 	) -> Rarity:
 		@warning_ignore("incompatible_ternary")
+		var decor_val: Variant = "" if have_decoration else null
 		return Rarity.new(
 			rarity_name,
 			{
 				name = "",
 				icon = "",
-				card_underlay = "" if have_card_underlay else null,
-				listing_underlay = "" if have_listing_underlay else null,
+				decoration =
+				{card = decor_val, listing_full = decor_val, listing_compact = decor_val},
 				max = {main = main, side = side}
 			}
 		)
@@ -349,8 +349,16 @@ static var RULESET_SCHEMA: Dictionary[String, Dictionary] = {
 				{main = {types = [TYPE_INT], default = 1}, side = {types = [TYPE_INT], default = 1}}
 			},
 			icon = {types = [TYPE_STRING], default = ""},
-			card_underlay = {types = [TYPE_STRING], default = null},
-			listing_underlay = {types = [TYPE_STRING], default = null},
+			decoration =
+			{
+				types = [TYPE_DICTIONARY],
+				schema =
+				{
+					card = {types = [TYPE_STRING], default = null},
+					listing_full = {types = [TYPE_STRING], default = null},
+					listing_compact = {types = [TYPE_STRING], default = null},
+				}
+			},
 			name = {types = [TYPE_STRING], default = ""}
 		}
 	},
