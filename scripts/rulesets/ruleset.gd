@@ -273,6 +273,7 @@ class CardData:
 				costs.blood = dict.costs.blood
 				costs.bone = dict.costs.bone
 				costs.energy = dict.costs.energy
+				costs.cell = dict.costs.cell
 				if typeof(dict.costs.mox) == TYPE_ARRAY:
 					var mox_array: Array[String]
 					mox_array.assign(dict.costs.mox as Array)

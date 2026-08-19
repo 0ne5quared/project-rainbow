@@ -83,7 +83,7 @@ func _init(ruleset: Dictionary) -> void:
 					blood = (old_data.blood_cost as int) if "blood_cost" in old_data else 0,
 					bone = (old_data.bone_cost as int) if "bone_cost" in old_data else 0,
 					energy = (old_data.energy_cost as int) if "energy_cost" in old_data else 0,
-					cells = 2 if "sigils" in old_data and "Depleting" in old_data.sigils else 0,
+					cell = 2 if "sigils" in old_data and "Depleting" in old_data.sigils else 0,
 					mox =
 					(
 						old_data.mox_cost.map(func(m: String) -> String: return m.to_lower())
