@@ -19,6 +19,17 @@ var current_listings: Dictionary[String, CardListing] = listings
 var current_ordered_deck: Array[Ruleset.CardData] = ordered_deck
 @onready var current_container: Node = %MainDeckContainer
 
+var filters: Dictionary[String, Callable] = {
+	blood = func(c: Card) -> bool: return c.costs.blood > 0,
+	bone = func(c: Card) -> bool: return c.costs.bone > 0,
+	energy = func(c: Card) -> bool: return c.costs.energy > 0,
+	cell = func(c: Card) -> bool: return c.costs.cell > 0,
+	green = func(c: Card) -> bool: return c.costs.mox.green > 0,
+	orange = func(c: Card) -> bool: return c.costs.mox.orange > 0,
+	blue = func(c: Card) -> bool: return c.costs.mox.blue > 0,
+}
+var enabled_filters: Array[String] = []
+
 
 func _ready() -> void:
 	Global.ruleset_changed.connect(_ruleset_changed)
@@ -72,3 +83,16 @@ func _add_card(card_data: Ruleset.CardData) -> void:
 		current_ordered_deck.insert(index, card_data)
 		current_container.add_child(listing)
 		current_container.move_child(listing, index)
+
+
+func update_filters() -> void:
+	for card: Card in %CardList.get_children():
+		card.visible = true
+		if enabled_filters.is_empty():
+			continue
+		var keep := false
+		for filter_name in enabled_filters:
+			if filters[filter_name].call(card):
+				keep = true
+				break
+		card.visible = keep

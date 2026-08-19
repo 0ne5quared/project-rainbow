@@ -10,16 +10,15 @@
 [ext_resource type="Script" uid="uid://cf6i6u1gvdj0q" path="res://scripts/deck_editor.gd" id="4_devvj"]
 [ext_resource type="Script" uid="uid://b1j7bkidwk511" path="res://scripts/ruleset_selector.gd" id="5_20pc6"]
 [ext_resource type="Texture2D" uid="uid://bramr4aosbmut" path="res://asset/cost/icon/bone.png" id="5_c2ibq"]
+[ext_resource type="Script" uid="uid://b87716cfhc3wj" path="res://scripts/utils/filter_btn.gd" id="6_3b0ty"]
 [ext_resource type="Texture2D" uid="uid://bp6mredt04qp1" path="res://asset/cost/icon/energy.png" id="6_c2ibq"]
 [ext_resource type="PackedScene" uid="uid://c8sxetevgdvyk" path="res://prefab/ruleset_button/ruleset_btn.tscn" id="6_wkp8b"]
 [ext_resource type="Texture2D" uid="uid://c3atmqgvl5k6k" path="res://asset/cost/mox/green.png" id="7_2gh4u"]
 [ext_resource type="Texture2D" uid="uid://bgh3egaw8r84q" path="res://asset/ruleset_icon/link.png" id="7_03owx"]
+[ext_resource type="Texture2D" uid="uid://bar40lyb4enys" path="res://asset/cost/icon/cell.png" id="8_3b0ty"]
 [ext_resource type="Texture2D" uid="uid://cf6lsn138ggov" path="res://asset/cost/mox/orange.png" id="8_devvj"]
 [ext_resource type="Texture2D" uid="uid://du2ktv20mkxyp" path="res://asset/ruleset_icon/file.png" id="8_wkp8b"]
 [ext_resource type="Texture2D" uid="uid://0ytpdf5x5fqm" path="res://asset/cost/mox/blue.png" id="9_3b0ty"]
-[ext_resource type="Texture2D" uid="uid://c0sbrhw2yixew" path="res://asset/traits/bloodless.png" id="10_bg4s2"]
-[ext_resource type="Texture2D" uid="uid://cur0he3dpdymn" path="res://asset/traits/boneless.png" id="11_hhcpw"]
-[ext_resource type="Texture2D" uid="uid://c11x1if5gvsae" path="res://asset/traits/unhammerable.png" id="12_mxvw5"]
 [ext_resource type="Texture2D" uid="uid://eufx35opg5nn" path="res://asset/ui/sliders.png" id="14_3b0ty"]
 [ext_resource type="PackedScene" uid="uid://d4kntw6wxj30n" path="res://prefab/card/card.tscn" id="15_bg4s2"]
 [ext_resource type="Texture2D" uid="uid://c5ce65fxh4esr" path="res://asset/portraits/Broken Obol 2.png" id="15_mxvw5"]
@@ -134,15 +133,19 @@ text = "- JOIN GAME -"
 script = ExtResource("3_3dxm6")
 ui = NodePath("../../../JoinSetting")
 
-[node name="DeckBtn" type="Button" parent="TitleScreen/VBoxContainer" unique_id=1149911276]
+[node name="DeckBtn" type="Button" parent="TitleScreen/VBoxContainer" unique_id=1149911276 node_paths=PackedStringArray("ui")]
 layout_mode = 2
 theme_type_variation = &"TitleButton"
 text = "- DECK EDITOR -"
+script = ExtResource("3_3dxm6")
+ui = NodePath("../../../DeckEditor")
 
-[node name="RulesetBtn" type="Button" parent="TitleScreen/VBoxContainer" unique_id=1361696344]
+[node name="RulesetBtn" type="Button" parent="TitleScreen/VBoxContainer" unique_id=1361696344 node_paths=PackedStringArray("ui")]
 layout_mode = 2
 theme_type_variation = &"TitleButton"
 text = "- RULESET SELECTOR -"
+script = ExtResource("3_3dxm6")
+ui = NodePath("../../../RulesetSelector")
 
 [node name="CreditBtn" type="Button" parent="TitleScreen/VBoxContainer" unique_id=184630252]
 layout_mode = 2
@@ -394,66 +397,82 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 0.1
 theme_override_constants/separation = 8
 
-[node name="LineEdit" type="LineEdit" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=46375113]
+[node name="NameFilter" type="LineEdit" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=46375113]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 placeholder_text = "Card Name Search"
 
-[node name="Button" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=110324045]
+[node name="BloodFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=110324045 node_paths=PackedStringArray("deck_editor")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
+toggle_mode = true
 icon = ExtResource("4_c6i3y")
 icon_alignment = 1
+script = ExtResource("6_3b0ty")
+filter_name = "blood"
+deck_editor = NodePath("../../../../../..")
 
-[node name="Button2" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1493140811]
+[node name="BoneFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1493140811 node_paths=PackedStringArray("deck_editor")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
+toggle_mode = true
 icon = ExtResource("5_c2ibq")
 icon_alignment = 1
+script = ExtResource("6_3b0ty")
+filter_name = "bone"
+deck_editor = NodePath("../../../../../..")
 
-[node name="Button3" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=456793542]
+[node name="EnergyFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=456793542 node_paths=PackedStringArray("deck_editor")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
+toggle_mode = true
 icon = ExtResource("6_c2ibq")
 icon_alignment = 1
+script = ExtResource("6_3b0ty")
+filter_name = "energy"
+deck_editor = NodePath("../../../../../..")
 
-[node name="Button4" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1091672341]
+[node name="CellFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1939615499 node_paths=PackedStringArray("deck_editor")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
+toggle_mode = true
+icon = ExtResource("8_3b0ty")
+icon_alignment = 1
+script = ExtResource("6_3b0ty")
+filter_name = "cell"
+deck_editor = NodePath("../../../../../..")
+
+[node name="GreenFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1091672341 node_paths=PackedStringArray("deck_editor")]
+custom_minimum_size = Vector2(19, 0)
+layout_mode = 2
+toggle_mode = true
 icon = ExtResource("7_2gh4u")
 icon_alignment = 1
+script = ExtResource("6_3b0ty")
+filter_name = "green"
+deck_editor = NodePath("../../../../../..")
 
-[node name="Button5" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=277062931]
+[node name="OrangeFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=277062931 node_paths=PackedStringArray("deck_editor")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
+toggle_mode = true
 icon = ExtResource("8_devvj")
 icon_alignment = 1
+script = ExtResource("6_3b0ty")
+filter_name = "orange"
+deck_editor = NodePath("../../../../../..")
 
-[node name="Button6" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1931913275]
+[node name="BlueFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1931913275 node_paths=PackedStringArray("deck_editor")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
+toggle_mode = true
 icon = ExtResource("9_3b0ty")
 icon_alignment = 1
+script = ExtResource("6_3b0ty")
+filter_name = "blue"
+deck_editor = NodePath("../../../../../..")
 
-[node name="Button7" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1863577989]
-custom_minimum_size = Vector2(19, 0)
-layout_mode = 2
-icon = ExtResource("10_bg4s2")
-icon_alignment = 1
-
-[node name="Button8" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=898860080]
-custom_minimum_size = Vector2(19, 0)
-layout_mode = 2
-icon = ExtResource("11_hhcpw")
-icon_alignment = 1
-
-[node name="Button9" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=397865584]
-custom_minimum_size = Vector2(19, 0)
-layout_mode = 2
-icon = ExtResource("12_mxvw5")
-icon_alignment = 1
-
-[node name="Button10" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=2058799985]
+[node name="AdvanceFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=2058799985]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
 icon = ExtResource("14_3b0ty")
@@ -463,10 +482,12 @@ icon_alignment = 1
 layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer" unique_id=939624879]
-custom_minimum_size = Vector2(478, 0)
+custom_minimum_size = Vector2(458, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 4
 
 [node name="CardList" type="GridContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer" unique_id=1932405109]
 unique_name_in_owner = true
@@ -521,6 +542,54 @@ layout_mode = 2
 [node name="CardContainer16" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=2019255338 instance=ExtResource("15_bg4s2")]
 layout_mode = 2
 
+[node name="CardContainer17" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=179157630 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer18" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1130646157 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer19" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=473864505 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer20" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1679802708 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer21" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1640441374 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer22" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1060220639 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer23" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1791626743 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer24" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=2087127767 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer25" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=399150157 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer26" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=440188227 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer27" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=903909165 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer28" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1115584684 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer29" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1253770710 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer30" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=2018845611 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer31" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=1214658779 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
+[node name="CardContainer32" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CardList" unique_id=459454913 instance=ExtResource("15_bg4s2")]
+layout_mode = 2
+
 [node name="VSeparator" type="VSeparator" parent="DeckEditor/MarginContainer/HBoxContainer" unique_id=915306194]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_lgr22")
@@ -560,7 +629,10 @@ tab_alignment = 1
 current_tab = 0
 
 [node name="Main Deck" type="ScrollContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/TabContainer" unique_id=135823428]
+custom_minimum_size = Vector2(262, 0)
 layout_mode = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 4
 metadata/_tab_index = 0
 
 [node name="MainDeckContainer" type="VBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/TabContainer/Main Deck" unique_id=252128413]

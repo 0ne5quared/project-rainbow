@@ -145,6 +145,7 @@ LineEdit/constants/caret_width = 2
 LineEdit/styles/focus = SubResource("StyleBoxFlat_yhfeq")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_yhfeq")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_0omi4")
+ScrollContainer/constants/scrollbar_h_separation = 4
 TabContainer/colors/font_hovered_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
 TabContainer/constants/tab_separation = 4
 TabContainer/styles/panel = SubResource("StyleBoxEmpty_gsqoc")

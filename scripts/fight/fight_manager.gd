@@ -48,9 +48,16 @@ var sac_candidate: Array[Card] = []
 
 var opp_id: String
 
+
+class Deck:
+	var main: Array[Ruleset.CardData] = []
+	var side: Array[Ruleset.CardData] = []
+
+
+var deck: Deck
 var main_deck: Array[Ruleset.CardData] = [
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Leader"]}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Leader"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Brood Parasite"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Guardian"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Sniper"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
