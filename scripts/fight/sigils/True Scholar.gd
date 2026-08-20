@@ -10,7 +10,7 @@ func is_disable() -> bool:
 
 
 func on_sigil_activate(
-	card: Card, sigil: Sigil, source_id: String, source_type: Action.IDType
+	card: Card, sigil: Sigil, _source_id: String, _source_type: Action.IDType
 ) -> void:
 	if card != attached_card or sigil != self:
 		return
