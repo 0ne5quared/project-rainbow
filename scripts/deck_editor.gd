@@ -87,12 +87,17 @@ func _add_card(card_data: Ruleset.CardData) -> void:
 
 func update_filters() -> void:
 	for card: Card in %CardList.get_children():
-		card.visible = true
-		if enabled_filters.is_empty():
-			continue
-		var keep := false
-		for filter_name in enabled_filters:
-			if filters[filter_name].call(card):
-				keep = true
-				break
-		card.visible = keep
+		var name_keep: bool = (
+			%NameFilter.text.is_empty() or %NameFilter.text.to_lower() in card.card_name.to_lower()
+		)
+		var filter_keep: bool = enabled_filters.is_empty()
+		if not filter_keep:
+			for filter_name in enabled_filters:
+				if filters[filter_name].call(card):
+					filter_keep = true
+					break
+		card.visible = filter_keep and name_keep
+
+
+func _on_name_filter_text_changed(new_text: String) -> void:
+	update_filters()

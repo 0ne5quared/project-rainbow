@@ -364,6 +364,7 @@ ui = NodePath("../../../../..")
 make_visible = false
 
 [node name="DeckEditor" type="PanelContainer" parent="." unique_id=16940243]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -385,6 +386,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer" unique_id=1003158263]
+custom_minimum_size = Vector2(470, 0)
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -398,6 +400,7 @@ size_flags_stretch_ratio = 0.1
 theme_override_constants/separation = 8
 
 [node name="NameFilter" type="LineEdit" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=46375113]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 placeholder_text = "Card Name Search"
@@ -775,6 +778,7 @@ theme_override_font_sizes/font_size = 32
 text = "- EXIT LOBBY -"
 
 [node name="RulesetSelector" type="PanelContainer" parent="." unique_id=651548178]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -919,6 +923,7 @@ text = "Close"
 [connection signal="pressed" from="TitleScreen/VBoxContainer/QuitBtn" to="TitleScreen" method="_on_quit_btn_pressed"]
 [connection signal="pressed" from="HostSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HostBtn" to="TitleScreen" method="_on_host_btn_pressed"]
 [connection signal="pressed" from="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/JoinBtn" to="TitleScreen" method="_on_join_btn_pressed"]
+[connection signal="text_changed" from="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/NameFilter" to="DeckEditor" method="_on_name_filter_text_changed"]
 [connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/RoomCode" to="Lobby" method="_on_room_code_pressed"]
 [connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/CopyCodeBtn" to="Lobby" method="_on_copy_code_btn_pressed"]
 [connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/StartBtn" to="Lobby" method="_on_start_btn_pressed"]
