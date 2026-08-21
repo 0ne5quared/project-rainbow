@@ -130,7 +130,8 @@ func _update_buf() -> void:
 
 
 # These are just extracted out of the card_data for type safety
-## The attack of the card, if you want to temporarily buff the card use [member attack_mod]
+## The attack of the card, if you want to temporarily buff the card use [member attack_buf] or
+## [member slot_attack_buf]
 var attack: int:
 	set(new):
 		attack = new
@@ -266,7 +267,7 @@ func redraw_card() -> void:
 		%SigilsContainer.remove_child(n)
 		if n is TextureButton:
 			n.remove_child(n.get_child(0))
-			n.queue_free()
+			n.free()
 	for sigil_idx in len(_sigils):
 		var sigil := _sigils[sigil_idx]
 		%SigilsContainer.add_child(sigil)
