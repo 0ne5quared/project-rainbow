@@ -145,12 +145,13 @@ class Tribe:
 	var icon: Texture2D
 	var name_override: String
 
-	static var REPTILE := _basic_config("reptile")
-	static var INSECT := _basic_config("insect")
 	static var AVIAN := _basic_config("avian")
 	static var CANINE := _basic_config("canine")
 	static var HOOVED := _basic_config("hooved")
+	static var INSECT := _basic_config("insect")
+	static var REPTILE := _basic_config("reptile")
 	static var CRUSTACEAN := _basic_config("crustacean")
+	static var PISCINE := _basic_config("piscine")
 	static var GEMS := _basic_config("gems")
 
 	func _init(tribe_name: String, tribe_config: Dictionary) -> void:
@@ -423,12 +424,13 @@ var temples: Dictionary[String, Temple] = {
 	magick = Temple.MAGICK
 }
 var tribes: Dictionary[String, Tribe] = {
-	reptile = Tribe.REPTILE,
-	insect = Tribe.INSECT,
 	avian = Tribe.AVIAN,
 	canine = Tribe.CANINE,
 	hooved = Tribe.HOOVED,
+	insect = Tribe.INSECT,
+	reptile = Tribe.REPTILE,
 	crustacean = Tribe.CRUSTACEAN,
+	piscine = Tribe.PISCINE,
 	gems = Tribe.GEMS,
 }
 var cards: Dictionary[String, CardData]
