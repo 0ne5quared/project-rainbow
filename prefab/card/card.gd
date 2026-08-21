@@ -275,6 +275,7 @@ func redraw_card() -> void:
 			var btn := active_button.instantiate()
 			%SigilsContainer.add_child(btn)
 			sigil.reparent(btn)
+			btn.disabled = sigil.fight_manager != null and sigil.is_disable()
 			btn.connect("pressed", func() -> void: active_pressed.emit(sigil_idx))
 
 	%Attack.text = str(attack)
