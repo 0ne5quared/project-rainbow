@@ -10,6 +10,7 @@ extends Button
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	toggled.connect(_on_toggled)
+	toggle_mode = true
 
 
 func _on_toggled(toggle_on: bool) -> void:
