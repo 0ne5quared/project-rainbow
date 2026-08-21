@@ -20,13 +20,23 @@ func resolve(fight_manager: FightManager) -> void:
 	var data := fight_manager.get_data(player_id)
 	if player_id == Global.uuid:
 		if deck == Deck.MAIN:
+			if len(fight_manager.main_deck) <= 0:
+				push_warning("Can't draw card from an empty deck :(")
+				return
+				# TODO: trigger starvation
 			fight_manager.hand_manager.draw_card(
 				fight_manager.main_deck.pop_front() as Ruleset.CardData
 			)
 		else:
+			if len(fight_manager.side_deck) <= 0:
+				push_warning("Can't draw card from an empty deck :(")
+				return
+
+				# TODO: trigger starvation
 			fight_manager.hand_manager.draw_card(
 				fight_manager.side_deck.pop_front() as Ruleset.CardData
 			)
+	# TODO: only change this when deck can be drawn fr
 	data.hand_size += 1
 	fight_manager._no_activation()
 
