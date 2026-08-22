@@ -5,8 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://dixwup53j1s1t" path="res://asset/portraits/49er.png" id="2_r0qea"]
 
 [node name="CardItem" type="Button" unique_id=1418028704]
-custom_minimum_size = Vector2(258, 16)
-offset_right = 258.0
+custom_minimum_size = Vector2(234, 16)
+offset_right = 234.0
 offset_bottom = 16.0
 script = ExtResource("1_yefh4")
 

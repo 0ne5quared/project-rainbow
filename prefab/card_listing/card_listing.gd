@@ -10,7 +10,7 @@ var amount: int = 1:
 		amount = new
 		redraw()
 
-var is_compact := true
+var is_compact := false
 
 
 func redraw() -> void:
