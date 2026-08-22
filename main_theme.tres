@@ -20,10 +20,17 @@ content_margin_left = 2.0
 content_margin_top = 2.0
 content_margin_right = 2.0
 content_margin_bottom = 2.0
-bg_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+bg_color = Color(0.8745098, 0.8745098, 0.8745098, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wnmfn"]
-bg_color = Color(0.45064908, 0.4506479, 0.4506483, 1)
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_70bsv"]
+bg_color = Color(0.06666667, 0.25882354, 0.45490196, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gsqoc"]
 bg_color = Color(0.9372549, 0.9647059, 0.78039217, 1)
@@ -56,6 +63,44 @@ border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0.51044416, 0.020411218, 0.11796885, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hr40q"]
+bg_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.03137255, 0.08627451, 1)
+expand_margin_top = 6.0
+expand_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a24hu"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.03137255, 0.08627451, 1)
+expand_margin_top = 6.0
+expand_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dfltk"]
+bg_color = Color(0.06303824, 0.3545388, 0.65058583, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.03137255, 0.08627451, 1)
+expand_margin_top = 6.0
+expand_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xxa0j"]
+bg_color = Color(0, 0.03137255, 0.08627451, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_52mx2"]
 bg_color = Color(0.24198014, 0.5960722, 0.86719954, 1)
@@ -120,22 +165,58 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.8745098, 0.8745098, 0.8745098, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qu8em"]
+bg_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.03137255, 0.08627451, 1)
+expand_margin_left = 6.0
+expand_margin_right = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ffxfl"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.03137255, 0.08627451, 1)
+expand_margin_left = 6.0
+expand_margin_right = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tpkcg"]
+bg_color = Color(0.06303824, 0.3545388, 0.65058583, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.03137255, 0.08627451, 1)
+expand_margin_left = 6.0
+expand_margin_right = 6.0
+
 [resource]
-ActiveSigil/base_type = &"Button"
-ActiveSigil/styles/normal = null
 BasicPopup/base_type = &"PanelContainer"
 BasicPopup/styles/panel = SubResource("StyleBoxFlat_58jnp")
 Button/colors/font_hover_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+Button/colors/font_hover_pressed_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
 Button/colors/font_pressed_color = Color(0, 0.03137255, 0.08627451, 1)
 Button/styles/hover = SubResource("StyleBoxFlat_rt4o7")
-Button/styles/normal = SubResource("StyleBoxFlat_7hjjl")
-Button/styles/pressed = SubResource("StyleBoxFlat_wnmfn")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_7hjjl")
+Button/styles/normal = SubResource("StyleBoxFlat_wnmfn")
+Button/styles/pressed = SubResource("StyleBoxFlat_70bsv")
 Card/base_type = &"Button"
 Card/styles/hover = SubResource("StyleBoxFlat_gsqoc")
 Card/styles/normal = SubResource("StyleBoxFlat_470mv")
 Card/styles/pressed = SubResource("StyleBoxFlat_a2l2q")
 ErrorPopup/base_type = &"PanelContainer"
 ErrorPopup/styles/panel = SubResource("StyleBoxFlat_466ly")
+HScrollBar/constants/padding_bottom = 8
+HScrollBar/constants/padding_top = 8
+HScrollBar/styles/grabber = SubResource("StyleBoxFlat_hr40q")
+HScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_a24hu")
+HScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_dfltk")
+HScrollBar/styles/scroll = SubResource("StyleBoxFlat_xxa0j")
 InfoPopup/base_type = &"PanelContainer"
 InfoPopup/styles/panel = SubResource("StyleBoxFlat_52mx2")
 Label/colors/font_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
@@ -165,3 +246,9 @@ TitleButton/styles/normal = SubResource("StyleBoxFlat_sxwih")
 TitleButton/styles/pressed = SubResource("StyleBoxFlat_py0i1")
 TooltipLabel/colors/font_color = Color(0.875, 0.875, 0.875, 1)
 TooltipPanel/styles/panel = SubResource("StyleBoxFlat_1i34x")
+VScrollBar/constants/padding_left = 8
+VScrollBar/constants/padding_right = 8
+VScrollBar/styles/grabber = SubResource("StyleBoxFlat_qu8em")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_ffxfl")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_tpkcg")
+VScrollBar/styles/scroll = SubResource("StyleBoxFlat_xxa0j")
