@@ -29,7 +29,13 @@ var _cost_filters: Dictionary[String, Callable] = {
 	blue = func(c: Card) -> bool: return c.costs.mox.blue > 0,
 }
 var filters: Dictionary[String, Callable] = _cost_filters.duplicate()
-var enabled_filters: Array[String] = []
+var enabled_filters: Dictionary[FilterButton.FilterGroup, Array] = {
+	FilterButton.FilterGroup.COST: [],
+	FilterButton.FilterGroup.RARITY: [],
+	FilterButton.FilterGroup.TRAIT: [],
+	FilterButton.FilterGroup.TEMPLE: [],
+	FilterButton.FilterGroup.TRIBE: []
+}
 
 
 func _ready() -> void:
@@ -60,25 +66,33 @@ func _ruleset_changed(ruleset: Ruleset) -> void:
 	for rarity: Ruleset.Rarity in ruleset.rarities.values():
 		filters[rarity.name] = func(c: Card) -> bool: return c.rarity == rarity
 		%RarityFiltersContainer.add_child(
-			_new_filter_btn(rarity.icon, rarity.display_name, rarity.name)
+			_new_filter_btn(
+				rarity.icon, rarity.display_name, rarity.name, FilterButton.FilterGroup.RARITY
+			)
 		)
 	# trait is keyword so trait_ it is :(
 	for trait_: Ruleset.Trait in ruleset.traits.values():
 		filters[trait_.name] = func(c: Card) -> bool: return trait_ in c.traits
 		%TraitFiltersContainer.add_child(
-			_new_filter_btn(trait_.icon, trait_.display_name, trait_.name)
+			_new_filter_btn(
+				trait_.icon, trait_.display_name, trait_.name, FilterButton.FilterGroup.TRAIT
+			)
 		)
 
 	for temple: Ruleset.Temple in ruleset.temples.values():
 		filters[temple.name] = func(c: Card) -> bool: return c.temple == temple
 		%TempleFiltersContainer.add_child(
-			_new_filter_btn(temple.icon, temple.display_name, temple.name)
+			_new_filter_btn(
+				temple.icon, temple.display_name, temple.name, FilterButton.FilterGroup.TEMPLE
+			)
 		)
 
 	for tribe: Ruleset.Tribe in ruleset.tribes.values():
 		filters[tribe.name] = func(c: Card) -> bool: return tribe in c.tribes
 		%TribeFiltersContainer.add_child(
-			_new_filter_btn(tribe.icon, tribe.display_name, tribe.name)
+			_new_filter_btn(
+				tribe.icon, tribe.display_name, tribe.name, FilterButton.FilterGroup.TRIBE
+			)
 		)
 
 
@@ -125,24 +139,16 @@ func update_filters() -> void:
 		var name_keep: bool = (
 			%NameFilter.text.is_empty() or %NameFilter.text.to_lower() in card.card_name.to_lower()
 		)
-		var cost_filter: Array = enabled_filters.filter(
-			func(f: String) -> bool: return f in _cost_filters.keys()
-		)
-		var other_filter: Array = enabled_filters.filter(
-			func(f: String) -> bool: return f not in _cost_filters.keys()
-		)
 
 		var apply_filter := func(f: String) -> bool: return filters[f].call(card)
 		var identity := func(b: bool) -> bool: return b
 
-		var cost_keep := (
-			true if cost_filter.is_empty() else cost_filter.map(apply_filter).any(identity)
-		)
-		var other_keep := (
-			true if other_filter.is_empty() else other_filter.map(apply_filter).all(identity)
+		var filters_results := enabled_filters.values().map(
+			func(fs: Array) -> bool:
+				return true if fs.is_empty() else fs.map(apply_filter).any(identity)
 		)
 
-		card.visible = cost_keep and other_keep and name_keep
+		card.visible = filters_results.all(identity) and name_keep
 
 
 func _on_name_filter_text_changed(_new_text: String) -> void:
@@ -153,11 +159,13 @@ func _new_filter_btn(
 	icon: Texture2D,
 	display_name: String,
 	filter_name: String,
+	filter_group: FilterButton.FilterGroup
 ) -> FilterButton:
 	var btn := FilterButton.new()
 	btn.icon = icon
 	btn.text = display_name
 	btn.filter_name = filter_name
+	btn.filter_group = filter_group
 	btn.deck_editor = self
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	return btn

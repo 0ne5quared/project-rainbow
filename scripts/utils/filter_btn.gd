@@ -4,7 +4,10 @@ extends Button
 # This script don't actually have filtering fucntionality it just a string to refer to the deck
 # editor filters
 
+enum FilterGroup { COST, RARITY, TRAIT, TEMPLE, TRIBE }
+
 @export var filter_name: String
+@export var filter_group: FilterGroup
 @export var deck_editor: DeckEditor
 
 
@@ -16,8 +19,10 @@ func _ready() -> void:
 
 func _on_toggled(toggle_on: bool) -> void:
 	if toggle_on:
-		deck_editor.enabled_filters.append(filter_name)
+		deck_editor.enabled_filters[filter_group].append(filter_name)
 		deck_editor.update_filters()
 	else:
-		deck_editor.enabled_filters.remove_at(deck_editor.enabled_filters.find(filter_name))
+		deck_editor.enabled_filters[filter_group].remove_at(
+			deck_editor.enabled_filters[filter_group].find(filter_name)
+		)
 		deck_editor.update_filters()
