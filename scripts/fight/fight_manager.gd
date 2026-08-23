@@ -57,7 +57,7 @@ class Deck:
 var deck: Deck
 var main_deck: Array[Ruleset.CardData] = [
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["True Scholar"]}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Guardian"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Blue Mox"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Sniper"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),

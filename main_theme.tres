@@ -1,5 +1,10 @@
 [gd_resource type="Theme" format=3 uid="uid://cjdriog5nm6e2"]
 
+[ext_resource type="Texture2D" uid="uid://b7hualvk1tiqy" path="res://asset/ui/check_button_filled.png" id="1_a2l2q"]
+[ext_resource type="Texture2D" uid="uid://ckd2soxhhnqph" path="res://asset/ui/check_button.png" id="2_0omi4"]
+[ext_resource type="Texture2D" uid="uid://cvqlldkygtvjb" path="res://asset/ui/arrow.png" id="5_52mx2"]
+[ext_resource type="Texture2D" uid="uid://twxkesa1snkh" path="res://asset/ui/check_box_filled.png" id="5_466ly"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_58jnp"]
 bg_color = Color(0, 0.11815592, 0.22991306, 1)
 border_width_left = 2
@@ -122,6 +127,17 @@ border_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0omi4"]
 bg_color = Color(0, 0.03137255, 0.08627451, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kq6f5"]
+bg_color = Color(0.9490196, 0.9490196, 0.9490196, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4rll8"]
+bg_color = Color(0.06666667, 0.25882354, 0.45490196, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gsqoc"]
 content_margin_top = 4.0
 
@@ -213,6 +229,9 @@ Card/base_type = &"Button"
 Card/styles/hover = SubResource("StyleBoxFlat_gsqoc")
 Card/styles/normal = SubResource("StyleBoxFlat_470mv")
 Card/styles/pressed = SubResource("StyleBoxFlat_a2l2q")
+CheckBox/icons/checked = ExtResource("5_466ly")
+CheckBox/icons/radio_checked = ExtResource("1_a2l2q")
+CheckBox/icons/unchecked = ExtResource("2_0omi4")
 ErrorPopup/base_type = &"PanelContainer"
 ErrorPopup/styles/panel = SubResource("StyleBoxFlat_466ly")
 HScrollBar/constants/padding_bottom = 8
@@ -229,7 +248,15 @@ LineEdit/colors/selection_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
 LineEdit/constants/caret_width = 2
 LineEdit/styles/focus = SubResource("StyleBoxFlat_yhfeq")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_yhfeq")
+OptionButton/icons/arrow = ExtResource("5_52mx2")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_0omi4")
+PopupMenu/colors/font_hover_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+PopupMenu/icons/checked = ExtResource("5_466ly")
+PopupMenu/icons/radio_checked = ExtResource("1_a2l2q")
+PopupMenu/icons/radio_unchecked = ExtResource("2_0omi4")
+PopupMenu/icons/unchecked = ExtResource("2_0omi4")
+PopupMenu/styles/hover = SubResource("StyleBoxFlat_kq6f5")
+PopupMenu/styles/panel = SubResource("StyleBoxFlat_4rll8")
 ScrollContainer/constants/scrollbar_h_separation = 4
 TabContainer/colors/font_hovered_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
 TabContainer/constants/tab_separation = 4

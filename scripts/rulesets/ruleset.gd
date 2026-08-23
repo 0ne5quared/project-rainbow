@@ -337,6 +337,24 @@ class SideDeck:
 			display_name = name.capitalize()
 
 
+class SideDeckCategory:
+	var name: String
+	var display_name: String
+	var decks: Dictionary[String, SideDeck]
+
+	func _init(category_name: String, category_config: Dictionary) -> void:
+		name = category_name
+
+		for deck_name: String in (category_config.decks as Dictionary).keys():
+			decks[deck_name] = SideDeck.new(
+				deck_name, category_config.decks[deck_name] as Dictionary
+			)
+
+		display_name = category_config.name
+		if display_name == null or display_name.is_empty():
+			display_name = name.capitalize()
+
+
 static var RULESET_SCHEMA: Dictionary[String, Dictionary] = {
 	name = {types = [TYPE_STRING], default = "Placeholder ruleset name"},
 	description = {types = [TYPE_STRING], default = "Placeholder description"},
@@ -499,7 +517,7 @@ var tribes: Dictionary[String, Tribe] = {
 }
 var cards: Dictionary[String, CardData]
 # TODO: Implement side deck later
-# The [Variant] can be either a [code]Dictionary[String, Sidedeck][/code] for category side deck
+# The [Variant] can be either a [code]Dictionary[String, SideDeckCategory][/code] for category side deck
 # or just a [SideDeck] for normal deck
 var side_decks: Dictionary[String, Variant] = {
 	squirrels =
@@ -532,8 +550,6 @@ func _init(ruleset: Dictionary) -> void:
 	for side_deck_name: String in (ruleset.side_decks as Dictionary).keys():
 		var data := ruleset.side_decks[side_deck_name] as Dictionary
 		if data.type == "category":
-			var category: Dictionary[String, SideDeck] = {}
-			for deck_name: String in (data.decks as Dictionary).keys():
-				category[deck_name] = SideDeck.new(deck_name, data.decks[deck_name] as Dictionary)
+			side_decks[side_deck_name] = SideDeckCategory.new(side_deck_name, data)
 		else:
 			side_decks[side_deck_name] = SideDeck.new(side_deck_name, data)

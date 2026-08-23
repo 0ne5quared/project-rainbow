@@ -4,20 +4,25 @@ extends PanelContainer
 var deck_builder_card := preload("res://prefab/card/card.tscn")
 var card_listing := preload("res://prefab/card_listing/card_listing.tscn")
 
-var main: Dictionary[String, int]
-var side: Dictionary
-var draft_side: Dictionary[String, int]
 
-var listings: Dictionary[String, CardListing]
-var side_listings: Dictionary[String, CardListing]
+class Thing:
+	var deck: Dictionary[String, int] = {}
+	var listings: Dictionary[String, CardListing] = {}
+	var ordered_deck: Array[Ruleset.CardData] = []
+	var container: VBoxContainer
 
-var ordered_deck: Array[Ruleset.CardData]
-var side_ordered_deck: Array[Ruleset.CardData]
+	func _init(c: Node) -> void:
+		container = c
 
-var current_deck: Dictionary[String, int] = main
-var current_listings: Dictionary[String, CardListing] = listings
-var current_ordered_deck: Array[Ruleset.CardData] = ordered_deck
-@onready var current_container: Node = %MainDeckContainer
+
+@onready var main_thing := Thing.new(%MainDeckContainer)
+@onready var side_thing := Thing.new(%SideDeckContainer)
+@onready var side_board_thing := Thing.new(%SideBoardContainer)
+@onready var selected_thing := main_thing
+
+## the [Variant] can be either [SideDeck] or [SideDeckCategory]
+var side_deck_options: Array[Variant] = []
+var category_options: Array[Ruleset.SideDeck] = []
 
 var _cost_filters: Dictionary[String, Callable] = {
 	blood = func(c: Card) -> bool: return c.costs.blood > 0,
@@ -51,6 +56,18 @@ func _ruleset_changed(ruleset: Ruleset) -> void:
 		db_card.pressed.connect(_on_card_selected.bind(db_card))
 		%CardList.add_child(db_card)
 
+	_update_filters_ui(ruleset)
+
+	%SideOption.clear()
+	for side_deck: Variant in ruleset.side_decks.values():
+		%SideOption.add_item(side_deck.display_name)
+		side_deck_options.append(side_deck)
+	selected_thing = side_thing
+	_on_side_option_item_selected(0)
+	selected_thing = main_thing
+
+
+func _update_filters_ui(ruleset: Ruleset) -> void:
 	# generate the new filter list
 	filters.clear()
 	var containers: Array[GridContainer] = [
@@ -97,7 +114,7 @@ func _ruleset_changed(ruleset: Ruleset) -> void:
 
 
 func _on_card_selected(card: Card) -> void:
-	if main.get(card.card_name, 0) >= card.rarity.max_main:
+	if selected_thing.deck.get(card.card_name, 0) >= card.rarity.max_main:
 		return
 	_add_card(card.card_data)
 
@@ -105,36 +122,80 @@ func _on_card_selected(card: Card) -> void:
 func _remove_card(listing: CardListing) -> void:
 	var card_data := listing.card_data
 	listing.amount -= 1
-	current_deck[card_data.name] -= 1
+	selected_thing.deck[card_data.name] -= 1
 	if listing.amount <= 0:
 		# Clean up the ui
-		current_container.remove_child(listing)
+		selected_thing.container.remove_child(listing)
 		listing.queue_free()
 
 		# Clean up internal tracker
-		current_ordered_deck.remove_at(current_ordered_deck.find(card_data))
-		current_deck.erase(card_data.name)
+		selected_thing.ordered_deck.remove_at(selected_thing.ordered_deck.find(card_data))
+		selected_thing.deck.erase(card_data.name)
 	pass
 
 
 func _add_card(card_data: Ruleset.CardData) -> void:
 	var card_name := card_data.name
-	if card_name in current_deck:
-		current_listings[card_name].amount += 1
-		current_deck[card_name] += 1
+	if card_name in selected_thing.deck:
+		selected_thing.listings[card_name].amount += 1
+		selected_thing.deck[card_name] += 1
 	else:
 		var listing: CardListing = card_listing.instantiate()
 		listing.card_data = card_data
-		current_listings[card_name] = listing
-		listing.pressed.connect(_remove_card.bind(listing))
-		current_deck[card_name] = 1
-		var index := current_ordered_deck.rfind_custom(Global.compare_card.bind(card_data)) + 1
-		current_ordered_deck.insert(index, card_data)
-		current_container.add_child(listing)
-		current_container.move_child(listing, index)
+		if selected_thing != side_thing:
+			listing.pressed.connect(_remove_card.bind(listing))
+
+		selected_thing.listings[card_name] = listing
+		selected_thing.deck[card_name] = 1
+		var index := (
+			selected_thing.ordered_deck.rfind_custom(Global.compare_card.bind(card_data)) + 1
+		)
+		selected_thing.ordered_deck.insert(index, card_data)
+		selected_thing.container.add_child(listing)
+		selected_thing.container.move_child(listing, index)
 
 
-func update_filters() -> void:
+func _on_side_option_item_selected(index: int) -> void:
+	# cleanse everything no matter what
+	Global.clear_children(selected_thing.container)
+	selected_thing.listings.clear()
+	selected_thing.deck.clear()
+	selected_thing.ordered_deck.clear()
+	%CatOptContainer.visible = false
+	%CatOption.clear()
+
+	var option: Variant = side_deck_options[index]
+	if option is Ruleset.SideDeck:
+		_process_side_deck(option as Ruleset.SideDeck)
+		return
+
+	var category := option as Ruleset.SideDeckCategory
+	%CatOptContainer.visible = true
+	for deck: Ruleset.SideDeck in category.decks.values():
+		%CatOption.add_item(deck.display_name)
+		category_options.append(deck)
+	_on_cat_option_item_selected(0)
+
+
+func _on_cat_option_item_selected(index: int) -> void:
+	# cleanse everything no matter what
+	Global.clear_children(selected_thing.container)
+	selected_thing.listings.clear()
+	selected_thing.deck.clear()
+	selected_thing.ordered_deck.clear()
+	_process_side_deck(category_options[index])
+
+
+func _process_side_deck(side_deck: Ruleset.SideDeck) -> void:
+	match side_deck.type:
+		Ruleset.SideDeck.Type.CONSTRUCTED:
+			for card_name in side_deck.cards:
+				_add_card(Global.get_card_by_name(card_name))
+		Ruleset.SideDeck.Type.DRAFT:
+			pass
+
+
+func _update_filters() -> void:
 	for card: Card in %CardList.get_children():
 		var name_keep: bool = (
 			%NameFilter.text.is_empty() or %NameFilter.text.to_lower() in card.card_name.to_lower()
@@ -152,7 +213,7 @@ func update_filters() -> void:
 
 
 func _on_name_filter_text_changed(_new_text: String) -> void:
-	update_filters()
+	_update_filters()
 
 
 func _new_filter_btn(
@@ -169,3 +230,13 @@ func _new_filter_btn(
 	btn.deck_editor = self
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	return btn
+
+
+func _on_tab_container_tab_changed(tab: int) -> void:
+	match tab:
+		0:
+			selected_thing = main_thing
+		1:
+			selected_thing = side_thing
+		2:
+			selected_thing = side_board_thing

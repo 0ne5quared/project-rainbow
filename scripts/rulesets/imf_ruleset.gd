@@ -95,3 +95,27 @@ func _init(ruleset: Dictionary) -> void:
 				metadata = metadata
 			}
 		))
+	side_decks.clear()
+	for side_deck_name: String in (ruleset.side_decks as Dictionary).keys():
+		var data := ruleset.side_decks[side_deck_name] as Dictionary
+		if data.type == "single":
+			side_decks[side_deck_name] = SideDeck.new(
+				side_deck_name,
+				{
+					name = side_deck_name,
+					type = "constructed",
+					cards = [{card = data.card, amount = data.count}]
+				}
+			)
+		elif data.type == "single_cat":
+			var single_dict: Dictionary[String, Dictionary] = {}
+			for deck_name: String in (data.cards as Dictionary).keys():
+				var single_data := data.cards[deck_name] as Dictionary
+				single_dict[deck_name] = {
+					name = deck_name,
+					type = "constructed",
+					cards = [{card = single_data.card, amount = single_data.count}]
+				}
+			side_decks[side_deck_name] = SideDeckCategory.new(
+				side_deck_name, {name = side_deck_name, decks = single_dict}
+			)
