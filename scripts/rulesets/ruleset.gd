@@ -48,7 +48,7 @@ class Rarity:
 	var decoration: Decoration
 	## The display name override for this rarity. If not provided the display name will be
 	## [member name] capitalized.
-	var name_override: String
+	var display_name: String
 
 	static var COMMON_RARITY: Rarity = _basic_config("common", 4, 10, false)
 	static var RARE_RARITY: Rarity = _basic_config("rare", 1, 1, true)
@@ -86,9 +86,9 @@ class Rarity:
 					continue
 				decoration.set(key, load(path))
 
-		name_override = rarity_config.name
-		if name_override.is_empty():
-			name_override = name.capitalize()
+		display_name = rarity_config.name
+		if display_name.is_empty():
+			display_name = name.capitalize()
 
 	static func _basic_config(
 		rarity_name: String, main: int, side: int, have_decoration := false
@@ -111,7 +111,7 @@ class Temple:
 	var name: String
 	var icon: Texture2D
 	var frame: Dictionary[String, Texture2D]
-	var name_override: String
+	var display_name: String
 
 	static var BEAST := _basic_config("beast")
 	static var UNDEAD := _basic_config("undead")
@@ -129,6 +129,10 @@ class Temple:
 		for rarity: String in (temple_config.frame as Dictionary).keys():
 			frame[rarity] = load("res://asset".path_join(temple_config.frame[rarity] as String))
 
+		display_name = temple_config.name
+		if display_name.is_empty():
+			display_name = name.capitalize()
+
 	static func _basic_config(temple_name: String) -> Temple:
 		return Temple.new(
 			temple_name,
@@ -143,7 +147,7 @@ class Temple:
 class Tribe:
 	var name: String
 	var icon: Texture2D
-	var name_override: String
+	var display_name: String
 
 	static var AVIAN := _basic_config("avian")
 	static var CANINE := _basic_config("canine")
@@ -157,15 +161,15 @@ class Tribe:
 	func _init(tribe_name: String, tribe_config: Dictionary) -> void:
 		name = tribe_name
 		var icon_path := "res://asset".path_join(tribe_config.icon as String)
-		if icon_path == null or icon_path.is_empty():
+		if tribe_config.icon.is_empty():
 			icon_path = "res://asset/tribes/%s.png" % tribe_name
 		if not FileAccess.file_exists(icon_path):
 			icon_path = "res://asset/tribes/MISSING.png"
 		icon = load(icon_path)
 
-		name_override = tribe_config.name
-		if name_override == null or name_override.is_empty():
-			name_override = name.capitalize()
+		display_name = tribe_config.name
+		if display_name == null or display_name.is_empty():
+			display_name = name.capitalize()
 
 	static func _basic_config(tribe_name: String) -> Tribe:
 		return Tribe.new(tribe_name, {name = "", icon = ""})
@@ -179,7 +183,7 @@ class Trait:
 	var icon: Texture2D
 	## The display name override for this trait. If not provided the display name will be
 	## [member name] capitalized.
-	var name_override: String
+	var display_name: String
 	## Wherever this trait should be hidden
 	var is_hidden: bool
 
@@ -190,17 +194,17 @@ class Trait:
 	func _init(trait_name: String, trait_config: Dictionary) -> void:
 		name = trait_name
 		var icon_path := "res://asset".path_join(trait_config.icon as String)
-		if icon_path.is_empty():
-			icon_path = "res://asset/traits/%s.png" % trait_config
+		if trait_config.icon.is_empty():
+			icon_path = "res://asset/traits/%s.png" % trait_name
 		if not FileAccess.file_exists(icon_path):
 			icon_path = "res://asset/traits/MISSING.png"
 		icon = load(icon_path)
 
 		is_hidden = trait_config.hidden
 
-		name_override = trait_config.name
-		if name_override == null or name_override.is_empty():
-			name_override = name.capitalize()
+		display_name = trait_config.name
+		if display_name == null or display_name.is_empty():
+			display_name = name.capitalize()
 
 	static func _basic_config(trait_name: String) -> Trait:
 		return Trait.new(trait_name, {name = "", icon = "", hidden = false})
@@ -306,11 +310,31 @@ class SideDeck:
 
 	var type: Type
 	var name: String
-	var name_override: String
+	var display_name: String
 	## If the [member type] is [Type.CONSTRUCTED] then this will be the preset side deck to load in.
-	## If the [memver type] is [Type.DRAFT] then this will be the list of card available to be
+	## If the [member type] is [Type.DRAFT] then this will be the list of card available to be
 	## drafted.
 	var cards: Array[String]
+	## Only define if [member type] is [Type.DRAFT], the maximum size of the side deck.
+	var max_size: int
+
+	func _init(side_deck_name: String, side_deck_config: Dictionary) -> void:
+		name = side_deck_name
+
+		match side_deck_config.type:
+			"constructed":
+				type = Type.CONSTRUCTED
+				for dict: Dictionary in side_deck_config.cards as Array:
+					for i in dict.amount as int:
+						cards.append(dict.card)
+			"draft":
+				type = Type.DRAFT
+				cards = side_deck_config.draftable_cards
+				max_size = side_deck_config.max_size
+
+		display_name = side_deck_config.name
+		if display_name == null or display_name.is_empty():
+			display_name = name.capitalize()
 
 
 static var RULESET_SCHEMA: Dictionary[String, Dictionary] = {
@@ -402,8 +426,48 @@ static var RULESET_SCHEMA: Dictionary[String, Dictionary] = {
 		value_type = TYPE_DICTIONARY,
 		schema = CardData.SCHEMA,
 		default = {}
+	},
+	side_decks =
+	{
+		types = [TYPE_DICTIONARY],
+		key_type = TYPE_STRING,
+		value_type = TYPE_DICTIONARY,
+		schema =
+		{
+			# These exist for all side deck type
+			name = {types = [TYPE_STRING]},
+			type = {types = [TYPE_STRING]},
+			# only for constructed
+			cards =
+			{
+				types = [TYPE_ARRAY],
+				sub_type = TYPE_DICTIONARY,
+				schema = {card = {types = [TYPE_STRING]}, amount = {types = [TYPE_INT]}}
+			},
+			# only for draft
+			draftable_cards = {types = [TYPE_ARRAY], sub_type = TYPE_STRING},
+			# only for category
+			decks =
+			{
+				types = [TYPE_DICTIONARY],
+				key_type = TYPE_STRING,
+				value_type = TYPE_DICTIONARY,
+				schema =
+				{
+					name = {types = [TYPE_STRING]},
+					type = {types = [TYPE_STRING]},
+					cards =
+					{
+						types = [TYPE_ARRAY],
+						sub_type = TYPE_DICTIONARY,
+						schema = {card = {types = [TYPE_STRING]}, amount = {types = [TYPE_INT]}}
+					},
+					draftable_cards = {types = [TYPE_ARRAY], sub_type = TYPE_STRING},
+				}
+			}
+		}
 	}
-	# TODO: Implement side deck later
+	# TODO: Implement sigils description and custom sigils
 }
 
 var name: String
@@ -437,7 +501,13 @@ var cards: Dictionary[String, CardData]
 # TODO: Implement side deck later
 # The [Variant] can be either a [code]Dictionary[String, Sidedeck][/code] for category side deck
 # or just a [SideDeck] for normal deck
-var side_deck: Dictionary[String, Variant]
+var side_decks: Dictionary[String, Variant] = {
+	squirrels =
+	SideDeck.new(
+		"squirrels",
+		{name = "10 Squirrels", type = "constructed", cards = [{card = "Squirrel", amount = 10}]}
+	)
+}
 
 
 func _init(ruleset: Dictionary) -> void:
@@ -458,3 +528,12 @@ func _init(ruleset: Dictionary) -> void:
 
 	for card_name: String in (ruleset.cards as Dictionary).keys():
 		cards[card_name] = CardData.new(ruleset.cards[card_name] as Dictionary)
+
+	for side_deck_name: String in (ruleset.side_decks as Dictionary).keys():
+		var data := ruleset.side_decks[side_deck_name] as Dictionary
+		if data.type == "category":
+			var category: Dictionary[String, SideDeck] = {}
+			for deck_name: String in (data.decks as Dictionary).keys():
+				category[deck_name] = SideDeck.new(deck_name, data.decks[deck_name] as Dictionary)
+		else:
+			side_decks[side_deck_name] = SideDeck.new(side_deck_name, data)

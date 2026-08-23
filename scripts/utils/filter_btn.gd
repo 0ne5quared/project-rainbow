@@ -1,3 +1,4 @@
+class_name FilterButton
 extends Button
 
 # This script don't actually have filtering fucntionality it just a string to refer to the deck

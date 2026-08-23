@@ -263,11 +263,19 @@ func redraw_card() -> void:
 
 	%Temple.texture = temple.icon
 
+	for n in %TribesContainer.get_children():
+		%TribesContainer.remove_child(n)
+		n.queue_free()
+	for tribe in tribes:
+		var t := TextureRect.new()
+		t.texture = tribe.icon
+		%TribesContainer.add_child(t)
+
 	for n in %SigilsContainer.get_children():
 		%SigilsContainer.remove_child(n)
 		if n is TextureButton:
 			n.remove_child(n.get_child(0))
-			n.free()
+			n.queue_free()
 	for sigil_idx in len(_sigils):
 		var sigil := _sigils[sigil_idx]
 		%SigilsContainer.add_child(sigil)

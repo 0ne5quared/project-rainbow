@@ -19,7 +19,7 @@ var current_listings: Dictionary[String, CardListing] = listings
 var current_ordered_deck: Array[Ruleset.CardData] = ordered_deck
 @onready var current_container: Node = %MainDeckContainer
 
-var filters: Dictionary[String, Callable] = {
+var _cost_filters: Dictionary[String, Callable] = {
 	blood = func(c: Card) -> bool: return c.costs.blood > 0,
 	bone = func(c: Card) -> bool: return c.costs.bone > 0,
 	energy = func(c: Card) -> bool: return c.costs.energy > 0,
@@ -28,6 +28,7 @@ var filters: Dictionary[String, Callable] = {
 	orange = func(c: Card) -> bool: return c.costs.mox.orange > 0,
 	blue = func(c: Card) -> bool: return c.costs.mox.blue > 0,
 }
+var filters: Dictionary[String, Callable] = _cost_filters.duplicate()
 var enabled_filters: Array[String] = []
 
 
@@ -37,14 +38,48 @@ func _ready() -> void:
 
 
 func _ruleset_changed(ruleset: Ruleset) -> void:
-	for child in %CardList.get_children():
-		%CardList.remove_child(child)
-		child.queue_free()
-	for card_data: Ruleset.CardData in Global.ruleset.cards.values():
+	Global.clear_children(%CardList)
+	for card_data: Ruleset.CardData in ruleset.cards.values():
 		var db_card: Card = deck_builder_card.instantiate()
 		db_card.card_data = card_data
 		db_card.pressed.connect(_on_card_selected.bind(db_card))
 		%CardList.add_child(db_card)
+
+	# generate the new filter list
+	filters.clear()
+	var containers: Array[GridContainer] = [
+		%RarityFiltersContainer,
+		%TraitFiltersContainer,
+		%TempleFiltersContainer,
+		%TribeFiltersContainer
+	]
+	for container in containers:
+		Global.clear_children(container)
+	filters = _cost_filters.duplicate()
+
+	for rarity: Ruleset.Rarity in ruleset.rarities.values():
+		filters[rarity.name] = func(c: Card) -> bool: return c.rarity == rarity
+		%RarityFiltersContainer.add_child(
+			_new_filter_btn(rarity.icon, rarity.display_name, rarity.name)
+		)
+	# trait is keyword so trait_ it is :(
+	for trait_: Ruleset.Trait in ruleset.traits.values():
+		filters[trait_.name] = func(c: Card) -> bool: return trait_ in c.traits
+		%TraitFiltersContainer.add_child(
+			_new_filter_btn(trait_.icon, trait_.display_name, trait_.name)
+		)
+
+	for temple: Ruleset.Temple in ruleset.temples.values():
+		filters[temple.name] = func(c: Card) -> bool: return c.temple == temple
+		%TempleFiltersContainer.add_child(
+			_new_filter_btn(temple.icon, temple.display_name, temple.name)
+		)
+
+	for tribe: Ruleset.Tribe in ruleset.tribes.values():
+		filters[tribe.name] = func(c: Card) -> bool: return tribe in c.tribes
+		%TribeFiltersContainer.add_child(
+			_new_filter_btn(tribe.icon, tribe.display_name, tribe.name)
+		)
 
 
 func _on_card_selected(card: Card) -> void:
@@ -90,14 +125,39 @@ func update_filters() -> void:
 		var name_keep: bool = (
 			%NameFilter.text.is_empty() or %NameFilter.text.to_lower() in card.card_name.to_lower()
 		)
-		var filter_keep: bool = enabled_filters.is_empty()
-		if not filter_keep:
-			for filter_name in enabled_filters:
-				if filters[filter_name].call(card):
-					filter_keep = true
-					break
-		card.visible = filter_keep and name_keep
+		var cost_filter: Array = enabled_filters.filter(
+			func(f: String) -> bool: return f in _cost_filters.keys()
+		)
+		var other_filter: Array = enabled_filters.filter(
+			func(f: String) -> bool: return f not in _cost_filters.keys()
+		)
+
+		var apply_filter := func(f: String) -> bool: return filters[f].call(card)
+		var identity := func(b: bool) -> bool: return b
+
+		var cost_keep := (
+			true if cost_filter.is_empty() else cost_filter.map(apply_filter).any(identity)
+		)
+		var other_keep := (
+			true if other_filter.is_empty() else other_filter.map(apply_filter).all(identity)
+		)
+
+		card.visible = cost_keep and other_keep and name_keep
 
 
-func _on_name_filter_text_changed(new_text: String) -> void:
+func _on_name_filter_text_changed(_new_text: String) -> void:
 	update_filters()
+
+
+func _new_filter_btn(
+	icon: Texture2D,
+	display_name: String,
+	filter_name: String,
+) -> FilterButton:
+	var btn := FilterButton.new()
+	btn.icon = icon
+	btn.text = display_name
+	btn.filter_name = filter_name
+	btn.deck_editor = self
+	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	return btn

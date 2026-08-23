@@ -18,8 +18,8 @@
             // designate this as the default rarity for all card.
             // exactly 1 rarity need to be designated as the default.
             "default": true, 
-            "max": {
-                "main": 4, // default is 1
+            "max": { 
+                "main": 4, // default is 1 
                 "side": 10, // default is 1
             },
             // optional, if no icon is provided the game will just use the texture with the same name as the rarity in the `icon` folder
@@ -127,7 +127,7 @@
             // one of draft, constructed, category
             // draft is basically just yk draft
             // constructed is a preset list of card in this side deck.
-            // cat is just use to organize thing into 1 heading,
+            // cat is just use to organize thing into 1 heading, nested category is not implemented
             "type": "constructed",
             "cards": [{"card": "Squirrel", "amount": 10}]
         },
@@ -136,23 +136,21 @@
             "decks": {
                 "empty": {
                     "name": "10 Bloody",
-                    "type": "mono",
-                    "card": "Leaping Vessels",
-                    "amount": 10
+                    "type": "constructed",
+                    "cards": [{"card": "Squirrel", "amount": 10}]
                 },
                 "leaping": {
                     "name": "10 Bloody",
-                    "type": "mono",
-                    "card": "Bloody Vessels",
-                    "amount": 10
+                    "type": "constructed",
+                    "cards": [{"card": "Squirrel", "amount": 10}]
                 },
             }
         },
         "mox": {
             "type": "draft",
             // adding a filter capability to this field would be fun
-            "cards": [ "Green Mox", "Orange Mox", "Blue Mox" ],
-            "amount": 10
+            "draftable_cards": [ "Green Mox", "Orange Mox", "Blue Mox" ],
+            "max_size": 10
         },
         "Acid Squirrel": {
             "type": "constructed",

@@ -81,7 +81,7 @@ func _on_request_complete(
 	_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray
 ) -> void:
 	# TODO implement error handling
-	#return
+	return
 	var response: Dictionary = JSON.parse_string(body.get_string_from_utf8())
 	if first_time:
 		for ruleset: Dictionary in response.rulesets:

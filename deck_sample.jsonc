@@ -1,0 +1,23 @@
+{
+  "ruleset":"Shit fucker 9000",
+  "main": {
+    "49er": 4,
+    "Beehive": 4,
+    "Broken Obol 2": 2,
+    "Bee": 4
+  },
+  "side": {
+    // Possible schema for this include
+    // for constructed, nothing else
+    "name": "squirrels",
+    // for category, the selected deck, which depend on the type would need more, info
+    // ie, if the selected deck is constructed, no more info is need, if it is draft, the actual drafted deck
+    "name": "vessels",
+    "category": "empty",
+    // for draft,
+    "name": "mox",
+    "deck": {
+      // same schema as main deck
+    }
+  }
+}

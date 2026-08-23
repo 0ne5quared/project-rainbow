@@ -163,3 +163,11 @@ func validate_schema(
 						'A value inside of data\'s "%s" is of the wrong type, removing it'
 					)
 					array.erase(array[i])
+
+
+## Remove all children of a parent node.
+func clear_children(parent: Node, free_child := true) -> void:
+	for child in parent.get_children():
+		parent.remove_child(child)
+		if free_child:
+			child.queue_free()
