@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://d0pgud2366y2d" path="res://asset/temples/technology.png" id="5_dtxg0"]
 [ext_resource type="Texture2D" uid="uid://bw1deabnl56ig" path="res://asset/sacrifice_marker.png" id="6_cryra"]
 [ext_resource type="Texture2D" uid="uid://b531uel5u5ohf" path="res://asset/submerge_overlay.png" id="7_ww8vi"]
+[ext_resource type="Texture2D" uid="uid://dovhuh7aispmc" path="res://asset/banned_overlay.png" id="9_vg7gv"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_vp3qw"]
 grow_begin = -2.0
@@ -162,7 +163,6 @@ text = "100"
 horizontal_alignment = 2
 
 [node name="SacMarker" type="TextureRect" parent="." unique_id=848644792]
-unique_name_in_owner = true
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -173,7 +173,6 @@ grow_vertical = 2
 texture = ExtResource("6_cryra")
 
 [node name="SubmergeOverlay" type="TextureRect" parent="." unique_id=147527280]
-unique_name_in_owner = true
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -182,3 +181,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("7_ww8vi")
+
+[node name="BanOverlay" type="TextureRect" parent="." unique_id=309410691]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+texture = ExtResource("9_vg7gv")

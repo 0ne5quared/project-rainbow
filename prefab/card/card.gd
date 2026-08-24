@@ -95,13 +95,16 @@ class Costs:
 		return get_sort_key() < other.get_sort_key()
 
 
+var is_db_card := false:
+	set(new):
+		is_db_card = new
+		redraw_card()
+
 var card_data: Ruleset.CardData:
 	set(new_data):
 		parse_data(new_data)
 		card_data = new_data
 		redraw_card()
-	get:
-		return card_data
 
 var zone := Zone.LIMBO:
 	set(new):
@@ -174,8 +177,9 @@ var card_name: String:
 
 var parsing_data := false
 
-@onready var sac_marker: TextureRect = %SacMarker
-@onready var submerge_overlay: TextureRect = %SubmergeOverlay
+@onready var sac_marker: TextureRect = $SacMarker
+@onready var submerge_overlay: TextureRect = $SubmergeOverlay
+@onready var banned_overlay: TextureRect = $BanOverlay
 
 
 func blood_value() -> int:
@@ -246,6 +250,7 @@ func redraw_card() -> void:
 	if parsing_data:
 		return
 	$SacMarker.visible = false
+	$BanOverlay.visible = card_data.banned and is_db_card
 	%Name.text = card_name
 
 	var portrait_path := "res://asset/portraits/%s.png" % card_name
@@ -290,7 +295,7 @@ func redraw_card() -> void:
 	if attack > card_data.attack:
 		%Attack.add_theme_color_override(&"font_color", Color("007c00"))
 	elif attack < card_data.attack:
-		%Attack.add_theme_color_override(&"font_color", Color("680000"))
+		%Attack.add_theme_color_override(&"font_color", Color("82051e"))
 	else:
 		%Attack.add_theme_color_override(&"font_color", Color("000000"))
 

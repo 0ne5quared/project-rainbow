@@ -23,6 +23,7 @@ class Thing:
 ## the [Variant] can be either [SideDeck] or [SideDeckCategory]
 var side_deck_options: Array[Variant] = []
 var category_options: Array[Ruleset.SideDeck] = []
+var selected_side_deck: Ruleset.SideDeck
 
 var _cost_filters: Dictionary[String, Callable] = {
 	blood = func(c: Card) -> bool: return c.costs.blood > 0,
@@ -48,13 +49,28 @@ func _ready() -> void:
 	pass
 
 
+func _update_card_list() -> void:
+	%CardList.visible = false
+	for card: Card in %CardList.get_children():
+		if card.visible:
+			%CardList.visible = true
+			break
+	%CardListLabel.visible = not %CardList.visible
+	for card: Card in %CardList.get_children():
+		if card.banned_overlay != null and card.banned_overlay.visible:
+			%CardList.move_child(card, -1)
+
+
 func _ruleset_changed(ruleset: Ruleset) -> void:
 	Global.clear_children(%CardList)
 	for card_data: Ruleset.CardData in ruleset.cards.values():
 		var db_card: Card = deck_builder_card.instantiate()
 		db_card.card_data = card_data
+		db_card.is_db_card = true
 		db_card.pressed.connect(_on_card_selected.bind(db_card))
 		%CardList.add_child(db_card)
+
+	_update_card_list()
 
 	_update_filters_ui(ruleset)
 
@@ -114,8 +130,15 @@ func _update_filters_ui(ruleset: Ruleset) -> void:
 
 
 func _on_card_selected(card: Card) -> void:
-	if selected_thing.deck.get(card.card_name, 0) >= card.rarity.max_main:
-		return
+	if selected_thing == side_thing:
+		if (
+			selected_thing.deck.get(card.card_name, 0) >= card.rarity.max_side
+			or Global.sum(side_thing.deck.values()) >= selected_side_deck.max_size
+		):
+			return
+	else:
+		if selected_thing.deck.get(card.card_name, 0) >= card.rarity.max_main:
+			return
 	_add_card(card.card_data)
 
 
@@ -131,7 +154,7 @@ func _remove_card(listing: CardListing) -> void:
 		# Clean up internal tracker
 		selected_thing.ordered_deck.remove_at(selected_thing.ordered_deck.find(card_data))
 		selected_thing.deck.erase(card_data.name)
-	pass
+	_update_size()
 
 
 func _add_card(card_data: Ruleset.CardData) -> void:
@@ -142,7 +165,7 @@ func _add_card(card_data: Ruleset.CardData) -> void:
 	else:
 		var listing: CardListing = card_listing.instantiate()
 		listing.card_data = card_data
-		if selected_thing != side_thing:
+		if selected_thing != side_thing or selected_side_deck.type == Ruleset.SideDeck.Type.DRAFT:
 			listing.pressed.connect(_remove_card.bind(listing))
 
 		selected_thing.listings[card_name] = listing
@@ -153,6 +176,27 @@ func _add_card(card_data: Ruleset.CardData) -> void:
 		selected_thing.ordered_deck.insert(index, card_data)
 		selected_thing.container.add_child(listing)
 		selected_thing.container.move_child(listing, index)
+	_update_size()
+
+
+func _update_size() -> void:
+	var main_size := Global.sum(main_thing.deck.values())
+	var side_size := Global.sum(side_thing.deck.values())
+	var main_size_min := Global.ruleset.settings.deck_size_min
+	%MainSizeLabel.text = (
+		"Main: %s%s%s/%s+ Cards"
+		% [
+			"[color=#82051e]" if main_size < main_size_min else "",
+			main_size,
+			"[/color]" if main_size < main_size_min else "",
+			main_size_min
+		]
+	)
+	%SideSizeLabel.text = (
+		("Side: %s/%s Cards" % [side_size, selected_side_deck.max_size])
+		if selected_side_deck.type == Ruleset.SideDeck.Type.DRAFT
+		else ("Side: %s Cards" % side_size)
+	)
 
 
 func _on_side_option_item_selected(index: int) -> void:
@@ -166,7 +210,8 @@ func _on_side_option_item_selected(index: int) -> void:
 
 	var option: Variant = side_deck_options[index]
 	if option is Ruleset.SideDeck:
-		_process_side_deck(option as Ruleset.SideDeck)
+		selected_side_deck = option as Ruleset.SideDeck
+		_process_side_deck()
 		return
 
 	var category := option as Ruleset.SideDeckCategory
@@ -183,16 +228,21 @@ func _on_cat_option_item_selected(index: int) -> void:
 	selected_thing.listings.clear()
 	selected_thing.deck.clear()
 	selected_thing.ordered_deck.clear()
-	_process_side_deck(category_options[index])
+	selected_side_deck = category_options[index]
+	_process_side_deck()
 
 
-func _process_side_deck(side_deck: Ruleset.SideDeck) -> void:
-	match side_deck.type:
+func _process_side_deck() -> void:
+	match selected_side_deck.type:
 		Ruleset.SideDeck.Type.CONSTRUCTED:
-			for card_name in side_deck.cards:
+			for card_name in selected_side_deck.cards:
 				_add_card(Global.get_card_by_name(card_name))
 		Ruleset.SideDeck.Type.DRAFT:
-			pass
+			for card: Card in %CardList.get_children():
+				card.visible = true
+				card.banned_overlay.visible = card.card_name not in selected_side_deck.cards
+			_update_card_list()
+	_update_size()
 
 
 func _update_filters() -> void:
@@ -210,6 +260,7 @@ func _update_filters() -> void:
 		)
 
 		card.visible = filters_results.all(identity) and name_keep
+	_update_card_list()
 
 
 func _on_name_filter_text_changed(_new_text: String) -> void:
@@ -233,6 +284,17 @@ func _new_filter_btn(
 
 
 func _on_tab_container_tab_changed(tab: int) -> void:
+	for card: Card in %CardList.get_children():
+		if tab == 1:
+			if selected_side_deck.type == Ruleset.SideDeck.Type.CONSTRUCTED:
+				card.visible = false
+			else:
+				card.visible = true
+				card.banned_overlay.visible = card.card_name not in selected_side_deck.cards
+		else:
+			card.visible = true
+			card.banned_overlay.visible = card.card_data.banned
+	_update_card_list()
 	match tab:
 		0:
 			selected_thing = main_thing

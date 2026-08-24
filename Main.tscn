@@ -522,6 +522,17 @@ size_flags_vertical = 3
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
 
+[node name="CenterContainer" type="CenterContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer" unique_id=1145432951]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CardListLabel" type="Label" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer/CenterContainer" unique_id=445130567]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "No Card Available :("
+
 [node name="CardList" type="GridContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/ScrollContainer" unique_id=1932405109]
 unique_name_in_owner = true
 layout_mode = 2
@@ -657,15 +668,23 @@ text = "Test Deck"
 layout_mode = 2
 alignment = 2
 
-[node name="Label2" type="Label" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/PanelContainer/VBoxContainer/VBoxContainer" unique_id=2003046798]
+[node name="MainSizeLabel" type="RichTextLabel" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/PanelContainer/VBoxContainer/VBoxContainer" unique_id=1325680580]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.06666667, 0.25882354, 0.45490196, 1)
-text = "Main: 10/20 Cards"
+theme_override_colors/default_color = Color(0.06666667, 0.25882354, 0.45490196, 1)
+bbcode_enabled = true
+text = "Main: 112310/20+ Cards"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 2
 
-[node name="Label3" type="Label" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/PanelContainer/VBoxContainer/VBoxContainer" unique_id=1680060314]
+[node name="SideSizeLabel" type="Label" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/PanelContainer/VBoxContainer/VBoxContainer" unique_id=1680060314]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.06666667, 0.25882354, 0.45490196, 1)
-text = "Side: 10 Cards"
+text = "Side: 10/10 Cards"
+horizontal_alignment = 2
 
 [node name="Separator" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1677097896 instance=ExtResource("2_3dxm6")]
 layout_mode = 2
@@ -675,10 +694,9 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 tab_alignment = 1
-current_tab = 1
+current_tab = 0
 
 [node name="Main Deck" type="ScrollContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer" unique_id=135823428]
-visible = false
 layout_mode = 2
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
@@ -692,6 +710,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 2
 
 [node name="Side Deck" type="VBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer" unique_id=519805043]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

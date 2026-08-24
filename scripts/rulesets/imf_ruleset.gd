@@ -92,7 +92,8 @@ func _init(ruleset: Dictionary) -> void:
 					)
 				},
 				tokens = tokens,
-				metadata = metadata
+				metadata = metadata,
+				banned = "banned" in old_data
 			}
 		))
 	side_decks.clear()
@@ -118,4 +119,14 @@ func _init(ruleset: Dictionary) -> void:
 				}
 			side_decks[side_deck_name] = SideDeckCategory.new(
 				side_deck_name, {name = side_deck_name, decks = single_dict}
+			)
+		elif data.type == "draft":
+			side_decks[side_deck_name] = SideDeck.new(
+				side_deck_name,
+				{
+					name = side_deck_name,
+					type = "draft",
+					draftable_cards = data.cards,
+					max_size = data.count
+				}
 			)

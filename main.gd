@@ -7,4 +7,4 @@ func _ready() -> void:
 		child.visible = false
 	$TitleScreen.visible = true
 	$RulesetSelector.visible = true
-	%DeckTabContainer.current_tab = 0
+	#%DeckTabContainer.current_tab = 0

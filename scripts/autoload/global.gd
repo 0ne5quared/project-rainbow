@@ -47,6 +47,10 @@ func quadratic_bezier(start: Vector2, end: Vector2, mid: Vector2) -> Callable:
 		return [q0.lerp(q1, t), (q1 - q0).angle()]
 
 
+func sum(array: Array) -> int:
+	return array.reduce(func(acc: int, val: int) -> int: return acc + val, 0)
+
+
 func compare_card(a: Ruleset.CardData, b: Ruleset.CardData) -> bool:
 	if a.costs.is_less(b.costs):
 		return true

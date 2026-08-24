@@ -246,7 +246,8 @@ class CardData:
 		},
 		tokens = {types = [TYPE_ARRAY], sub_type = TYPE_STRING, default = []},
 		# TYPE_MAX is used for variant type
-		metadata = {types = [TYPE_DICTIONARY], key_type = TYPE_STRING, value_TYPE = TYPE_MAX}
+		metadata = {types = [TYPE_DICTIONARY], key_type = TYPE_STRING, value_TYPE = TYPE_MAX},
+		banned = {types = [TYPE_BOOL], default = false}
 	}
 	var name: String
 	var attack: int
@@ -260,6 +261,8 @@ class CardData:
 	var costs: Card.Costs
 	var tokens: Array[String]
 	var metadata: Dictionary
+
+	var banned: bool
 
 	func as_dict() -> Dictionary:
 		return Global.as_dict_generator(
@@ -329,7 +332,7 @@ class SideDeck:
 						cards.append(dict.card)
 			"draft":
 				type = Type.DRAFT
-				cards = side_deck_config.draftable_cards
+				cards.assign(side_deck_config.draftable_cards as Array)
 				max_size = side_deck_config.max_size
 
 		display_name = side_deck_config.name
