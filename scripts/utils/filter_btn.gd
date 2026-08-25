@@ -22,7 +22,8 @@ func _on_toggled(toggle_on: bool) -> void:
 		deck_editor.enabled_filters[filter_group].append(filter_name)
 		deck_editor._update_filters()
 	else:
-		deck_editor.enabled_filters[filter_group].remove_at(
-			deck_editor.enabled_filters[filter_group].find(filter_name)
-		)
+		var idx := deck_editor.enabled_filters[filter_group].find(filter_name)
+		if idx == -1:
+			return
+		deck_editor.enabled_filters[filter_group].remove_at(idx)
 		deck_editor._update_filters()

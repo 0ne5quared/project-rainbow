@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://bsv8b5ndjwu7l"]
 
 [ext_resource type="Script" uid="uid://dwx52028dibn3" path="res://prefab/card_listing/card_listing.gd" id="1_yefh4"]
-[ext_resource type="Texture2D" uid="uid://cui0411affang" path="res://asset/rarities/decoration/listing/rare_compact.png" id="2_ck72r"]
+[ext_resource type="Texture2D" uid="uid://bvvdolgkxa3re" path="res://asset/rarities/decoration/listing/rare_full.png" id="2_ck72r"]
 [ext_resource type="Texture2D" uid="uid://dixwup53j1s1t" path="res://asset/portraits/49er.png" id="2_r0qea"]
 
 [node name="CardItem" type="Button" unique_id=1418028704]
-custom_minimum_size = Vector2(234, 16)
+custom_minimum_size = Vector2(234, 28)
 offset_right = 234.0
 offset_bottom = 16.0
 script = ExtResource("1_yefh4")
@@ -32,14 +32,15 @@ layout_mode = 2
 
 [node name="Amount" type="Label" parent="MarginContainer/HBoxContainer" unique_id=1776464585]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.03137255, 0.08627451, 1)
 theme_override_font_sizes/font_size = 16
-text = "4x"
+text = "99x"
+horizontal_alignment = 2
 
 [node name="Portrait" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=1209043306]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 texture = ExtResource("2_r0qea")
 stretch_mode = 2

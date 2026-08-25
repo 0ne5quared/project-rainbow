@@ -111,6 +111,18 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j0ank"]
+bg_color = Color(0.7730738, 0.87086684, 0.99524695, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q6oxf"]
+bg_color = Color(0.7012604, 0.82991475, 0.99371964, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7upj7"]
+bg_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_upq38"]
+bg_color = Color(1, 1, 1, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_52mx2"]
 bg_color = Color(0.24198014, 0.5960722, 0.86719954, 1)
 border_width_left = 4
@@ -215,6 +227,11 @@ border_color = Color(0, 0.03137255, 0.08627451, 1)
 expand_margin_left = 6.0
 expand_margin_right = 6.0
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_lgr22"]
+color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+thickness = 2
+vertical = true
+
 [resource]
 BasicPopup/base_type = &"PanelContainer"
 BasicPopup/styles/panel = SubResource("StyleBoxFlat_58jnp")
@@ -240,6 +257,11 @@ HScrollBar/styles/grabber = SubResource("StyleBoxFlat_hr40q")
 HScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_a24hu")
 HScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_dfltk")
 HScrollBar/styles/scroll = SubResource("StyleBoxFlat_xxa0j")
+IconSelectButton/base_type = &"Button"
+IconSelectButton/styles/hover = SubResource("StyleBoxFlat_j0ank")
+IconSelectButton/styles/hover_pressed = SubResource("StyleBoxFlat_q6oxf")
+IconSelectButton/styles/normal = SubResource("StyleBoxFlat_7upj7")
+IconSelectButton/styles/pressed = SubResource("StyleBoxFlat_upq38")
 InfoPopup/base_type = &"PanelContainer"
 InfoPopup/styles/panel = SubResource("StyleBoxFlat_52mx2")
 Label/colors/font_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
@@ -283,3 +305,4 @@ VScrollBar/styles/grabber = SubResource("StyleBoxFlat_qu8em")
 VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_ffxfl")
 VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_tpkcg")
 VScrollBar/styles/scroll = SubResource("StyleBoxFlat_xxa0j")
+VSeparator/styles/separator = SubResource("StyleBoxLine_lgr22")

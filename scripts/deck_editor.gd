@@ -48,19 +48,21 @@ var filters_btn: Array[FilterButton] = []
 
 func _ready() -> void:
 	Global.ruleset_changed.connect(_ruleset_changed)
+	var btn_group := ButtonGroup.new()
+	for portrait in DirAccess.get_files_at("res://asset/portraits/"):
+		if not portrait.ends_with(".png"):
+			continue
+		var texture: Texture2D = load("res://asset/portraits/%s" % portrait)
+		if texture.get_size() != Vector2(41, 28):
+			continue
+		var btn := Button.new()
+		btn.icon = texture
+		btn.button_group = btn_group
+		btn.toggle_mode = true
+		btn.theme_type_variation = "IconSelectButton"
+		btn.pressed.connect(_on_icon_selected.bind(texture))
+		%DeckIconContainer.add_child(btn)
 	pass
-
-
-func _update_card_list() -> void:
-	%CardList.visible = false
-	for card: Card in %CardList.get_children():
-		if card.visible:
-			%CardList.visible = true
-			break
-	%CardListLabel.visible = not %CardList.visible
-	for card: Card in %CardList.get_children():
-		if card.banned_overlay != null and card.banned_overlay.visible:
-			%CardList.move_child(card, -1)
 
 
 func _ruleset_changed(ruleset: Ruleset) -> void:
@@ -83,6 +85,18 @@ func _ruleset_changed(ruleset: Ruleset) -> void:
 	selected_thing = side_thing
 	_on_side_option_item_selected(0)
 	selected_thing = main_thing
+
+
+func _update_card_list() -> void:
+	%CardList.visible = false
+	for card: Card in %CardList.get_children():
+		if card.visible:
+			%CardList.visible = true
+			break
+	%CardListLabel.visible = not %CardList.visible
+	for card: Card in %CardList.get_children():
+		if card.banned_overlay != null and card.banned_overlay.visible:
+			%CardList.move_child(card, -1)
 
 
 func _update_filters_ui(ruleset: Ruleset) -> void:
@@ -134,56 +148,6 @@ func _update_filters_ui(ruleset: Ruleset) -> void:
 		)
 
 
-func _on_card_selected(card: Card) -> void:
-	if selected_thing == side_thing:
-		if (
-			selected_thing.deck.get(card.card_name, 0) >= card.rarity.max_side
-			or Global.sum(side_thing.deck.values()) >= selected_side_deck.max_size
-		):
-			return
-	else:
-		if selected_thing.deck.get(card.card_name, 0) >= card.rarity.max_main:
-			return
-	_add_card(card.card_data)
-
-
-func _remove_card(listing: CardListing) -> void:
-	var card_data := listing.card_data
-	listing.amount -= 1
-	selected_thing.deck[card_data.name] -= 1
-	if listing.amount <= 0:
-		# Clean up the ui
-		selected_thing.container.remove_child(listing)
-		listing.queue_free()
-
-		# Clean up internal tracker
-		selected_thing.ordered_deck.remove_at(selected_thing.ordered_deck.find(card_data))
-		selected_thing.deck.erase(card_data.name)
-	_update_card_count()
-
-
-func _add_card(card_data: Ruleset.CardData) -> void:
-	var card_name := card_data.name
-	if card_name in selected_thing.deck:
-		selected_thing.listings[card_name].amount += 1
-		selected_thing.deck[card_name] += 1
-	else:
-		var listing: CardListing = card_listing.instantiate()
-		listing.card_data = card_data
-		if selected_thing != side_thing or selected_side_deck.type == Ruleset.SideDeck.Type.DRAFT:
-			listing.pressed.connect(_remove_card.bind(listing))
-
-		selected_thing.listings[card_name] = listing
-		selected_thing.deck[card_name] = 1
-		var index := (
-			selected_thing.ordered_deck.rfind_custom(Global.compare_card.bind(card_data)) + 1
-		)
-		selected_thing.ordered_deck.insert(index, card_data)
-		selected_thing.container.add_child(listing)
-		selected_thing.container.move_child(listing, index)
-	_update_card_count()
-
-
 func _update_card_count() -> void:
 	var main_size := Global.sum(main_thing.deck.values())
 	var side_size := Global.sum(side_thing.deck.values())
@@ -202,6 +166,102 @@ func _update_card_count() -> void:
 		if selected_side_deck.type == Ruleset.SideDeck.Type.DRAFT
 		else ("Side: %s Cards" % side_size)
 	)
+
+
+func _update_filters() -> void:
+	for card: Card in %CardList.get_children():
+		var name_keep: bool = (
+			%NameFilter.text.is_empty() or %NameFilter.text.to_lower() in card.card_name.to_lower()
+		)
+
+		var apply_filter := func(f: String) -> bool: return filters[f].call(card)
+		var identity := func(b: bool) -> bool: return b
+
+		var filters_results := enabled_filters.values().map(
+			func(fs: Array) -> bool:
+				return true if fs.is_empty() else fs.map(apply_filter).any(identity)
+		)
+
+		card.visible = filters_results.all(identity) and name_keep
+	_update_card_list()
+
+
+func _new_filter_btn(
+	icon: Texture2D,
+	display_name: String,
+	filter_name: String,
+	filter_group: FilterButton.FilterGroup
+) -> FilterButton:
+	var btn := FilterButton.new()
+	btn.icon = icon
+	btn.text = display_name
+	btn.filter_name = filter_name
+	btn.filter_group = filter_group
+	btn.deck_editor = self
+	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	filters_btn.append(btn)
+	return btn
+
+
+func _on_card_selected(card: Card) -> void:
+	if selected_thing == side_thing:
+		if (
+			selected_thing.deck.get(card.card_name, 0) >= card.rarity.max_side
+			or Global.sum(side_thing.deck.values()) >= selected_side_deck.max_size
+		):
+			return
+	else:
+		if selected_thing.deck.get(card.card_name, 0) >= card.rarity.max_main:
+			return
+	_add_card(card.card_data)
+
+
+func _remove_card(listing: CardListing) -> void:
+	var card_data := listing.card_data
+	listing.amount -= 1
+	selected_thing.deck[card_data.name] -= 1
+	if Input.is_key_pressed(KEY_SHIFT):
+		listing.amount = 0
+		selected_thing.deck[card_data.name] = 0
+	if listing.amount <= 0:
+		# Clean up the ui
+		selected_thing.container.remove_child(listing)
+		listing.queue_free()
+
+		# Clean up internal tracker
+		selected_thing.ordered_deck.remove_at(selected_thing.ordered_deck.find(card_data))
+		selected_thing.deck.erase(card_data.name)
+	_update_card_count()
+
+
+func _add_card(card_data: Ruleset.CardData) -> void:
+	var card_name := card_data.name
+	var rarity := Global.ruleset.rarities[card_data.rarity]
+	var amount := rarity.max_side if selected_thing == side_thing else rarity.max_main
+	if card_name in selected_thing.deck:
+		selected_thing.listings[card_name].amount += 1
+		selected_thing.deck[card_name] += 1
+		if Input.is_key_pressed(KEY_SHIFT):
+			selected_thing.listings[card_name].amount = amount
+			selected_thing.deck[card_data.name] = amount
+	else:
+		var listing: CardListing = card_listing.instantiate()
+		listing.card_data = card_data
+		if selected_thing != side_thing or selected_side_deck.type == Ruleset.SideDeck.Type.DRAFT:
+			listing.pressed.connect(_remove_card.bind(listing))
+
+		selected_thing.listings[card_name] = listing
+		selected_thing.deck[card_name] = 1
+		if Input.is_key_pressed(KEY_SHIFT):
+			listing.amount = amount
+			selected_thing.deck[card_data.name] = amount
+		var index := (
+			selected_thing.ordered_deck.rfind_custom(Global.compare_card.bind(card_data)) + 1
+		)
+		selected_thing.ordered_deck.insert(index, card_data)
+		selected_thing.container.add_child(listing)
+		selected_thing.container.move_child(listing, index)
+	_update_card_count()
 
 
 func _on_side_option_item_selected(index: int) -> void:
@@ -250,43 +310,8 @@ func _process_side_deck() -> void:
 	_update_card_count()
 
 
-func _update_filters() -> void:
-	for card: Card in %CardList.get_children():
-		var name_keep: bool = (
-			%NameFilter.text.is_empty() or %NameFilter.text.to_lower() in card.card_name.to_lower()
-		)
-
-		var apply_filter := func(f: String) -> bool: return filters[f].call(card)
-		var identity := func(b: bool) -> bool: return b
-
-		var filters_results := enabled_filters.values().map(
-			func(fs: Array) -> bool:
-				return true if fs.is_empty() else fs.map(apply_filter).any(identity)
-		)
-
-		card.visible = filters_results.all(identity) and name_keep
-	_update_card_list()
-
-
 func _on_name_filter_text_changed(_new_text: String) -> void:
 	_update_filters()
-
-
-func _new_filter_btn(
-	icon: Texture2D,
-	display_name: String,
-	filter_name: String,
-	filter_group: FilterButton.FilterGroup
-) -> FilterButton:
-	var btn := FilterButton.new()
-	btn.icon = icon
-	btn.text = display_name
-	btn.filter_name = filter_name
-	btn.filter_group = filter_group
-	btn.deck_editor = self
-	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	filters_btn.append(btn)
-	return btn
 
 
 func _on_tab_container_tab_changed(tab: int) -> void:
@@ -321,3 +346,11 @@ func _on_clear_filter_pressed() -> void:
 			continue
 		btn.button_pressed = false
 		btn._on_toggled(false)
+
+
+func _on_icon_selected(texture: Texture2D) -> void:
+	%DeckIcon.texture = texture
+
+
+func _on_deck_name_changed(new_text: String) -> void:
+	%DeckName.text = new_text
