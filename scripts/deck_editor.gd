@@ -20,9 +20,11 @@ class Thing:
 @onready var side_board_thing := Thing.new(%SideBoardContainer)
 @onready var selected_thing := main_thing
 
+var selected_icon := "Squirrel"
 ## the [Variant] can be either [SideDeck] or [SideDeckCategory]
 var side_deck_options: Array[Variant] = []
 var category_options: Array[Ruleset.SideDeck] = []
+var selected_category_name := ""
 var selected_side_deck: Ruleset.SideDeck
 
 var _cost_filters: Dictionary[String, Callable] = {
@@ -60,7 +62,7 @@ func _ready() -> void:
 		btn.button_group = btn_group
 		btn.toggle_mode = true
 		btn.theme_type_variation = "IconSelectButton"
-		btn.pressed.connect(_on_icon_selected.bind(texture))
+		btn.pressed.connect(_on_icon_selected.bind(texture, portrait))
 		%DeckIconContainer.add_child(btn)
 	pass
 
@@ -84,7 +86,7 @@ func _ruleset_changed(ruleset: Ruleset) -> void:
 		side_deck_options.append(side_deck)
 	selected_thing = side_thing
 	_on_side_option_item_selected(0)
-	selected_thing = main_thing
+	%DeckTabContainer.tab_changed.emit(0)
 
 
 func _update_card_list() -> void:
@@ -277,6 +279,9 @@ func _on_side_option_item_selected(index: int) -> void:
 	selected_thing.ordered_deck.clear()
 	%CatOptContainer.visible = false
 	%CatOption.clear()
+	selected_category_name = ""
+	for card: Card in %CardList.get_children():
+		card.visible = false
 
 	var option: Variant = side_deck_options[index]
 	if option is Ruleset.SideDeck:
@@ -289,6 +294,7 @@ func _on_side_option_item_selected(index: int) -> void:
 	for deck: Ruleset.SideDeck in category.decks.values():
 		%CatOption.add_item(deck.display_name)
 		category_options.append(deck)
+	selected_category_name = category.name
 	_on_cat_option_item_selected(0)
 
 
@@ -299,6 +305,8 @@ func _on_cat_option_item_selected(index: int) -> void:
 	selected_thing.deck.clear()
 	selected_thing.ordered_deck.clear()
 	selected_side_deck = category_options[index]
+	for card: Card in %CardList.get_children():
+		card.visible = false
 	_process_side_deck()
 
 
@@ -331,6 +339,7 @@ func _on_tab_container_tab_changed(tab: int) -> void:
 			card.visible = true
 			card.banned_overlay.visible = card.card_data.banned
 	_update_card_list()
+	_on_clear_filter_pressed()
 	match tab:
 		0:
 			selected_thing = main_thing
@@ -353,9 +362,36 @@ func _on_clear_filter_pressed() -> void:
 		btn._on_toggled(false)
 
 
-func _on_icon_selected(texture: Texture2D) -> void:
+func _on_icon_selected(texture: Texture2D, icon_name: String) -> void:
+	selected_icon = icon_name
 	%DeckIcon.texture = texture
 
 
 func _on_deck_name_changed(new_text: String) -> void:
 	%DeckName.text = new_text
+
+
+func _on_save_exit_btn_pressed() -> void:
+	var deck_json := {
+		ruleset = Global.ruleset.name,
+		name = %DeckName.text,
+		icon = selected_icon,
+		main = main_thing.deck,
+		side_board = side_board_thing.deck
+	}
+	var side := {name = selected_side_deck.name}
+	match selected_side_deck.type:
+		Ruleset.SideDeck.Type.CONSTRUCTED:
+			pass
+		Ruleset.SideDeck.Type.DRAFT:
+			side.deck = side_thing.deck
+		_:
+			push_warning("This side deck type does not support saving")
+	if not selected_category_name.is_empty():
+		side.name = selected_category_name
+		side.category = selected_side_deck.name
+	deck_json.side = side
+	var file := FileAccess.open(
+		Global.decks_path.path_join("%s.json" % %DeckName.text), FileAccess.WRITE
+	)
+	file.store_string(JSON.stringify(deck_json))

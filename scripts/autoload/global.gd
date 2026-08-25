@@ -29,14 +29,20 @@ var ruleset: Ruleset:
 
 var enable_backrow := false
 
+var rulesets_path := &"user://rulesets"
+var decks_path := &"user://decks"
+
 
 func _ready() -> void:
-	var user_dir := DirAccess.open("user://")
-	if not user_dir.dir_exists("rulesets"):
-		push_warning("Rulesets dir not found creating it...")
-		user_dir.make_dir("rulesets")
-	var t := {}
-	validate_schema(t, Ruleset.RULESET_SCHEMA)
+	_make_if_not_found(rulesets_path)
+	_make_if_not_found(decks_path)
+
+
+func _make_if_not_found(path: String) -> void:
+	if not DirAccess.dir_exists_absolute(path):
+		push_warning("%s not found creating it..." % path)
+		DirAccess.make_dir_absolute(path)
+	pass
 
 
 func quadratic_bezier(start: Vector2, end: Vector2, mid: Vector2) -> Callable:

@@ -89,7 +89,9 @@ func _on_request_complete(
 		first_time = false
 		_on_button_unhorvered()
 		return
-	var file := FileAccess.open("user://rulesets/%s.json" % response.ruleset, FileAccess.WRITE)
+	var file := FileAccess.open(
+		Global.rulesets_path.path_join("%s.json" % response.ruleset), FileAccess.WRITE
+	)
 	file.store_string(JSON.stringify(response))
 	selected_ruleset = response
 
