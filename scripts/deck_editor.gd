@@ -237,13 +237,18 @@ func _remove_card(listing: CardListing) -> void:
 func _add_card(card_data: Ruleset.CardData) -> void:
 	var card_name := card_data.name
 	var rarity := Global.ruleset.rarities[card_data.rarity]
-	var amount := rarity.max_side if selected_thing == side_thing else rarity.max_main
+	var max_amount: int
+	if selected_thing == side_thing:
+		var side_size := Global.sum(side_thing.deck.values())
+		max_amount = min(rarity.max_side, selected_side_deck.max_size - side_size)
+	else:
+		max_amount = rarity.max_main
 	if card_name in selected_thing.deck:
 		selected_thing.listings[card_name].amount += 1
 		selected_thing.deck[card_name] += 1
 		if Input.is_key_pressed(KEY_SHIFT):
-			selected_thing.listings[card_name].amount = amount
-			selected_thing.deck[card_data.name] = amount
+			selected_thing.listings[card_name].amount = max_amount
+			selected_thing.deck[card_data.name] = max_amount
 	else:
 		var listing: CardListing = card_listing.instantiate()
 		listing.card_data = card_data
@@ -253,8 +258,8 @@ func _add_card(card_data: Ruleset.CardData) -> void:
 		selected_thing.listings[card_name] = listing
 		selected_thing.deck[card_name] = 1
 		if Input.is_key_pressed(KEY_SHIFT):
-			listing.amount = amount
-			selected_thing.deck[card_data.name] = amount
+			listing.amount = max_amount
+			selected_thing.deck[card_data.name] = max_amount
 		var index := (
 			selected_thing.ordered_deck.rfind_custom(Global.compare_card.bind(card_data)) + 1
 		)
