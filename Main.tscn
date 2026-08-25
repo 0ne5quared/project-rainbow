@@ -21,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://du2ktv20mkxyp" path="res://asset/ruleset_icon/file.png" id="8_wkp8b"]
 [ext_resource type="Texture2D" uid="uid://0ytpdf5x5fqm" path="res://asset/cost/mox/blue.png" id="9_3b0ty"]
 [ext_resource type="Texture2D" uid="uid://eufx35opg5nn" path="res://asset/ui/sliders.png" id="14_3b0ty"]
+[ext_resource type="Texture2D" uid="uid://drctpsa3ysmww" path="res://asset/ui/trash.png" id="15_1w2xm"]
 [ext_resource type="PackedScene" uid="uid://d4kntw6wxj30n" path="res://prefab/card/card.tscn" id="15_bg4s2"]
 [ext_resource type="Texture2D" uid="uid://c5ce65fxh4esr" path="res://asset/portraits/Broken Obol 2.png" id="15_mxvw5"]
 [ext_resource type="Texture2D" uid="uid://c0sbrhw2yixew" path="res://asset/traits/bloodless.png" id="16_bg4s2"]
@@ -426,14 +427,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Sigils Search (Separated by comma)"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer" unique_id=523281501]
+[node name="CostsFiltersContainer" type="HBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer" unique_id=523281501]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.1
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="BloodFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=110324045 node_paths=PackedStringArray("deck_editor")]
+[node name="BloodFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/CostsFiltersContainer" unique_id=110324045 node_paths=PackedStringArray("deck_editor")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
 toggle_mode = true
@@ -443,7 +445,7 @@ script = ExtResource("6_3b0ty")
 filter_name = "blood"
 deck_editor = NodePath("../../../../../..")
 
-[node name="BoneFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1493140811 node_paths=PackedStringArray("deck_editor")]
+[node name="BoneFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/CostsFiltersContainer" unique_id=1493140811 node_paths=PackedStringArray("deck_editor")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
 toggle_mode = true
@@ -453,7 +455,7 @@ script = ExtResource("6_3b0ty")
 filter_name = "bone"
 deck_editor = NodePath("../../../../../..")
 
-[node name="EnergyFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=456793542 node_paths=PackedStringArray("deck_editor")]
+[node name="EnergyFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/CostsFiltersContainer" unique_id=456793542 node_paths=PackedStringArray("deck_editor")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
 toggle_mode = true
@@ -463,7 +465,7 @@ script = ExtResource("6_3b0ty")
 filter_name = "energy"
 deck_editor = NodePath("../../../../../..")
 
-[node name="CellFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1939615499 node_paths=PackedStringArray("deck_editor")]
+[node name="CellFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/CostsFiltersContainer" unique_id=1939615499 node_paths=PackedStringArray("deck_editor")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
 toggle_mode = true
@@ -473,7 +475,7 @@ script = ExtResource("6_3b0ty")
 filter_name = "cell"
 deck_editor = NodePath("../../../../../..")
 
-[node name="GreenFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1091672341 node_paths=PackedStringArray("deck_editor")]
+[node name="GreenFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/CostsFiltersContainer" unique_id=1091672341 node_paths=PackedStringArray("deck_editor")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
 toggle_mode = true
@@ -483,7 +485,7 @@ script = ExtResource("6_3b0ty")
 filter_name = "green"
 deck_editor = NodePath("../../../../../..")
 
-[node name="OrangeFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=277062931 node_paths=PackedStringArray("deck_editor")]
+[node name="OrangeFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/CostsFiltersContainer" unique_id=277062931 node_paths=PackedStringArray("deck_editor")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
 toggle_mode = true
@@ -493,7 +495,7 @@ script = ExtResource("6_3b0ty")
 filter_name = "orange"
 deck_editor = NodePath("../../../../../..")
 
-[node name="BlueFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1931913275 node_paths=PackedStringArray("deck_editor")]
+[node name="BlueFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/CostsFiltersContainer" unique_id=1931913275 node_paths=PackedStringArray("deck_editor")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
 toggle_mode = true
@@ -503,13 +505,17 @@ script = ExtResource("6_3b0ty")
 filter_name = "blue"
 deck_editor = NodePath("../../../../../..")
 
-[node name="AdvanceFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=2058799985 node_paths=PackedStringArray("ui")]
+[node name="AdvanceFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/CostsFiltersContainer" unique_id=2058799985 node_paths=PackedStringArray("ui")]
 custom_minimum_size = Vector2(19, 0)
 layout_mode = 2
 icon = ExtResource("14_3b0ty")
 icon_alignment = 1
 script = ExtResource("3_3dxm6")
 ui = NodePath("../../../../../../PopupBlocker")
+
+[node name="ClearFilter" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/CostsFiltersContainer" unique_id=521356830]
+layout_mode = 2
+icon = ExtResource("15_1w2xm")
 
 [node name="Separator2" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer" unique_id=166688610 instance=ExtResource("2_3dxm6")]
 layout_mode = 2
@@ -656,7 +662,7 @@ layout_mode = 2
 [node name="TextureRect" type="TextureRect" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/PanelContainer/VBoxContainer" unique_id=654568367]
 layout_mode = 2
 texture = ExtResource("15_mxvw5")
-stretch_mode = 4
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/PanelContainer/VBoxContainer" unique_id=1284942030]
 layout_mode = 2
@@ -666,7 +672,7 @@ text = "Test Deck"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/PanelContainer/VBoxContainer" unique_id=498397007]
 layout_mode = 2
-alignment = 2
+theme_override_constants/separation = 2
 
 [node name="MainSizeLabel" type="RichTextLabel" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/PanelContainer/VBoxContainer/VBoxContainer" unique_id=1325680580]
 unique_name_in_owner = true
@@ -696,34 +702,34 @@ size_flags_vertical = 3
 tab_alignment = 1
 current_tab = 0
 
-[node name="Main Deck" type="ScrollContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer" unique_id=135823428]
+[node name="Main" type="ScrollContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer" unique_id=135823428]
 layout_mode = 2
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
 metadata/_tab_index = 0
 
-[node name="MainDeckContainer" type="VBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Main Deck" unique_id=252128413]
+[node name="MainDeckContainer" type="VBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Main" unique_id=252128413]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 2
 
-[node name="Side Deck" type="VBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer" unique_id=519805043]
+[node name="Side" type="VBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer" unique_id=519805043]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 metadata/_tab_index = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side Deck" unique_id=198894971]
+[node name="HBoxContainer" type="HBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side" unique_id=198894971]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side Deck/HBoxContainer" unique_id=1371746325]
+[node name="Label" type="Label" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side/HBoxContainer" unique_id=1371746325]
 layout_mode = 2
 text = "Side Deck:"
 
-[node name="SideOption" type="OptionButton" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side Deck/HBoxContainer" unique_id=1567669184]
+[node name="SideOption" type="OptionButton" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side/HBoxContainer" unique_id=1567669184]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -733,28 +739,28 @@ popup/item_0/id = 0
 popup/item_1/text = "Your mom"
 popup/item_1/id = 1
 
-[node name="CatOptContainer" type="HBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side Deck" unique_id=1375520086]
+[node name="CatOptContainer" type="HBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side" unique_id=1375520086]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side Deck/CatOptContainer" unique_id=1617956518]
+[node name="Label" type="Label" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side/CatOptContainer" unique_id=1617956518]
 layout_mode = 2
 text = "Options:"
 
-[node name="CatOption" type="OptionButton" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side Deck/CatOptContainer" unique_id=295773674]
+[node name="CatOption" type="OptionButton" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side/CatOptContainer" unique_id=295773674]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side Deck" unique_id=237836420]
+[node name="ScrollContainer" type="ScrollContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side" unique_id=237836420]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
 metadata/_tab_index = 0
 
-[node name="SideDeckContainer" type="VBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side Deck/ScrollContainer" unique_id=664795260]
+[node name="SideDeckContainer" type="VBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side/ScrollContainer" unique_id=664795260]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1260,9 +1266,10 @@ text = "Close"
 [connection signal="pressed" from="HostSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HostBtn" to="TitleScreen" method="_on_host_btn_pressed"]
 [connection signal="pressed" from="JoinSetting/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/JoinBtn" to="TitleScreen" method="_on_join_btn_pressed"]
 [connection signal="text_changed" from="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/NameFilter" to="DeckEditor" method="_on_name_filter_text_changed"]
+[connection signal="pressed" from="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/CostsFiltersContainer/ClearFilter" to="DeckEditor" method="_on_clear_filter_pressed"]
 [connection signal="tab_changed" from="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer" to="DeckEditor" method="_on_tab_container_tab_changed"]
-[connection signal="item_selected" from="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side Deck/HBoxContainer/SideOption" to="DeckEditor" method="_on_side_option_item_selected"]
-[connection signal="item_selected" from="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side Deck/CatOptContainer/CatOption" to="DeckEditor" method="_on_cat_option_item_selected"]
+[connection signal="item_selected" from="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side/HBoxContainer/SideOption" to="DeckEditor" method="_on_side_option_item_selected"]
+[connection signal="item_selected" from="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side/CatOptContainer/CatOption" to="DeckEditor" method="_on_cat_option_item_selected"]
 [connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/RoomCode" to="Lobby" method="_on_room_code_pressed"]
 [connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/CopyCodeBtn" to="Lobby" method="_on_copy_code_btn_pressed"]
 [connection signal="pressed" from="Lobby/MarginContainer/VBoxContainer/StartBtn" to="Lobby" method="_on_start_btn_pressed"]

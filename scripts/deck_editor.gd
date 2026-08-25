@@ -43,6 +43,8 @@ var enabled_filters: Dictionary[FilterButton.FilterGroup, Array] = {
 	FilterButton.FilterGroup.TRIBE: []
 }
 
+var filters_btn: Array[FilterButton] = []
+
 
 func _ready() -> void:
 	Global.ruleset_changed.connect(_ruleset_changed)
@@ -86,6 +88,9 @@ func _ruleset_changed(ruleset: Ruleset) -> void:
 func _update_filters_ui(ruleset: Ruleset) -> void:
 	# generate the new filter list
 	filters.clear()
+	filters_btn.clear()
+	for group: Array in enabled_filters.values():
+		group.clear()
 	var containers: Array[GridContainer] = [
 		%RarityFiltersContainer,
 		%TraitFiltersContainer,
@@ -154,7 +159,7 @@ func _remove_card(listing: CardListing) -> void:
 		# Clean up internal tracker
 		selected_thing.ordered_deck.remove_at(selected_thing.ordered_deck.find(card_data))
 		selected_thing.deck.erase(card_data.name)
-	_update_size()
+	_update_card_count()
 
 
 func _add_card(card_data: Ruleset.CardData) -> void:
@@ -176,10 +181,10 @@ func _add_card(card_data: Ruleset.CardData) -> void:
 		selected_thing.ordered_deck.insert(index, card_data)
 		selected_thing.container.add_child(listing)
 		selected_thing.container.move_child(listing, index)
-	_update_size()
+	_update_card_count()
 
 
-func _update_size() -> void:
+func _update_card_count() -> void:
 	var main_size := Global.sum(main_thing.deck.values())
 	var side_size := Global.sum(side_thing.deck.values())
 	var main_size_min := Global.ruleset.settings.deck_size_min
@@ -242,7 +247,7 @@ func _process_side_deck() -> void:
 				card.visible = true
 				card.banned_overlay.visible = card.card_name not in selected_side_deck.cards
 			_update_card_list()
-	_update_size()
+	_update_card_count()
 
 
 func _update_filters() -> void:
@@ -280,6 +285,7 @@ func _new_filter_btn(
 	btn.filter_group = filter_group
 	btn.deck_editor = self
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	filters_btn.append(btn)
 	return btn
 
 
@@ -302,3 +308,16 @@ func _on_tab_container_tab_changed(tab: int) -> void:
 			selected_thing = side_thing
 		2:
 			selected_thing = side_board_thing
+
+
+func _on_clear_filter_pressed() -> void:
+	for group: Array in enabled_filters.values():
+		group.clear()
+	for btn in filters_btn:
+		btn.button_pressed = false
+		btn._on_toggled(false)
+	for btn in %CostsFiltersContainer.get_children():
+		if btn is not FilterButton:
+			continue
+		btn.button_pressed = false
+		btn._on_toggled(false)
