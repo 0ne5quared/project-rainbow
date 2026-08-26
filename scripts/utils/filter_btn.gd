@@ -20,10 +20,10 @@ func _ready() -> void:
 func _on_toggled(toggle_on: bool) -> void:
 	if toggle_on:
 		deck_editor.enabled_filters[filter_group].append(filter_name)
-		deck_editor._update_filters()
+		deck_editor.update_filters()
 	else:
 		var idx := deck_editor.enabled_filters[filter_group].find(filter_name)
 		if idx == -1:
 			return
 		deck_editor.enabled_filters[filter_group].remove_at(idx)
-		deck_editor._update_filters()
+		deck_editor.update_filters()

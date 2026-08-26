@@ -339,6 +339,16 @@ class SideDeck:
 		if display_name == null or display_name.is_empty():
 			display_name = name.capitalize()
 
+	## Return [member card] as a frequency list.
+	func get_frequency() -> Dictionary[String, int]:
+		var out: Dictionary[String, int] = {}
+		for card in cards:
+			if card in out:
+				out[card] += 1
+			else:
+				out[card] = 1
+		return out
+
 
 class SideDeckCategory:
 	var name: String

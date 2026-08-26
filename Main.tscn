@@ -1,23 +1,24 @@
 [gd_scene format=3 uid="uid://djps884gv560c"]
 
 [ext_resource type="PackedScene" uid="uid://b8wt6aen5tgkd" path="res://fight_scene.tscn" id="1_glv2v"]
-[ext_resource type="Script" uid="uid://u6ngq2em5dff" path="res://main.gd" id="1_x3yn0"]
 [ext_resource type="PackedScene" uid="uid://dwhmym7riy2eo" path="res://prefab/separator.tscn" id="2_3dxm6"]
 [ext_resource type="Script" uid="uid://btqyrkhyrycih" path="res://scripts/title.gd" id="2_uu6xs"]
 [ext_resource type="Script" uid="uid://ccuyd8bprftvj" path="res://scripts/utils/ui_control_btn.gd" id="3_3dxm6"]
-[ext_resource type="Script" uid="uid://cqunm02g4d8jj" path="res://lobby.gd" id="3_fos0i"]
+[ext_resource type="Script" uid="uid://cqunm02g4d8jj" path="res://scripts/lobby.gd" id="3_fos0i"]
 [ext_resource type="Script" uid="uid://srydxdh4voto" path="res://scripts/utils/global_popup.gd" id="3_r0du0"]
 [ext_resource type="Texture2D" uid="uid://dqfyam8efaq30" path="res://asset/cost/icon/blood.png" id="4_c6i3y"]
 [ext_resource type="Script" uid="uid://cf6i6u1gvdj0q" path="res://scripts/deck_editor.gd" id="4_devvj"]
 [ext_resource type="Script" uid="uid://b1j7bkidwk511" path="res://scripts/ruleset_selector.gd" id="5_20pc6"]
 [ext_resource type="Texture2D" uid="uid://bramr4aosbmut" path="res://asset/cost/icon/bone.png" id="5_c2ibq"]
-[ext_resource type="Texture2D" uid="uid://cyf7qa80fonjb" path="res://asset/portraits/Broken Obol 1.png" id="5_jt61w"]
+[ext_resource type="PackedScene" uid="uid://c62gfaug35kxa" path="res://prefab/deck_listing/deck_listing.tscn" id="5_jt61w"]
+[ext_resource type="Script" uid="uid://dk8xql1dsosn8" path="res://scripts/deck_library.gd" id="5_v8qla"]
 [ext_resource type="Script" uid="uid://b87716cfhc3wj" path="res://scripts/utils/filter_btn.gd" id="6_3b0ty"]
 [ext_resource type="Texture2D" uid="uid://bp6mredt04qp1" path="res://asset/cost/icon/energy.png" id="6_c2ibq"]
 [ext_resource type="PackedScene" uid="uid://bsv8b5ndjwu7l" path="res://prefab/card_listing/card_listing.tscn" id="6_v8qla"]
 [ext_resource type="PackedScene" uid="uid://c8sxetevgdvyk" path="res://prefab/ruleset_button/ruleset_btn.tscn" id="6_wkp8b"]
 [ext_resource type="Texture2D" uid="uid://c3atmqgvl5k6k" path="res://asset/cost/mox/green.png" id="7_2gh4u"]
 [ext_resource type="Texture2D" uid="uid://bgh3egaw8r84q" path="res://asset/ruleset_icon/link.png" id="7_03owx"]
+[ext_resource type="Script" uid="uid://b3mqoebomfdgf" path="res://scripts/utils/deck_list.gd" id="7_v8qla"]
 [ext_resource type="Texture2D" uid="uid://bar40lyb4enys" path="res://asset/cost/icon/cell.png" id="8_3b0ty"]
 [ext_resource type="Texture2D" uid="uid://cf6lsn138ggov" path="res://asset/cost/mox/orange.png" id="8_devvj"]
 [ext_resource type="Texture2D" uid="uid://du2ktv20mkxyp" path="res://asset/ruleset_icon/file.png" id="8_wkp8b"]
@@ -75,7 +76,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_x3yn0")
 
 [node name="TitleScreen" type="PanelContainer" parent="." unique_id=1662723476]
 layout_mode = 1
@@ -393,6 +393,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("5_v8qla")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DeckLibrary" unique_id=1217040144]
 layout_mode = 2
@@ -424,89 +425,20 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button" type="Button" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1122058931]
-custom_minimum_size = Vector2(0, 28)
+[node name="DeckListing" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1722791310 instance=ExtResource("5_jt61w")]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Button" unique_id=1088284230]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="TextureRect" type="TextureRect" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Button/HBoxContainer" unique_id=1700239494]
-layout_mode = 2
-texture = ExtResource("5_jt61w")
-
-[node name="Label" type="Label" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Button/HBoxContainer" unique_id=974496798]
-layout_mode = 2
-theme_override_colors/font_color = Color(0, 0.03137255, 0.08627451, 1)
-text = "Test Deck"
-
-[node name="Button2" type="Button" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1380401175]
-custom_minimum_size = Vector2(0, 28)
+[node name="DeckListing2" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=2142599843 instance=ExtResource("5_jt61w")]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Button2" unique_id=159448296]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="TextureRect" type="TextureRect" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Button2/HBoxContainer" unique_id=776261379]
-layout_mode = 2
-texture = ExtResource("5_jt61w")
-
-[node name="Label" type="Label" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Button2/HBoxContainer" unique_id=1461295583]
-layout_mode = 2
-theme_override_colors/font_color = Color(0, 0.03137255, 0.08627451, 1)
-text = "Test Deck"
-
-[node name="Button3" type="Button" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=215230720]
-custom_minimum_size = Vector2(0, 28)
+[node name="DeckListing3" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=575395800 instance=ExtResource("5_jt61w")]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Button3" unique_id=583584925]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="TextureRect" type="TextureRect" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Button3/HBoxContainer" unique_id=294875180]
-layout_mode = 2
-texture = ExtResource("5_jt61w")
-
-[node name="Label" type="Label" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Button3/HBoxContainer" unique_id=762800507]
-layout_mode = 2
-theme_override_colors/font_color = Color(0, 0.03137255, 0.08627451, 1)
-text = "Test Deck"
-
-[node name="Button4" type="Button" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=18473129]
-custom_minimum_size = Vector2(0, 28)
+[node name="DeckListing4" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1081605571 instance=ExtResource("5_jt61w")]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Button4" unique_id=1855533794]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="TextureRect" type="TextureRect" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Button4/HBoxContainer" unique_id=196388216]
+[node name="DeckListing5" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=975337322 instance=ExtResource("5_jt61w")]
 layout_mode = 2
-texture = ExtResource("5_jt61w")
-
-[node name="Label" type="Label" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Button4/HBoxContainer" unique_id=2127769748]
-layout_mode = 2
-theme_override_colors/font_color = Color(0, 0.03137255, 0.08627451, 1)
-text = "Test Deck"
 
 [node name="VSeparator" type="VSeparator" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1210353670]
 layout_mode = 2
@@ -523,23 +455,28 @@ layout_mode = 2
 layout_mode = 2
 text = "Main:"
 
-[node name="CardItem" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2" unique_id=1418028704 instance=ExtResource("6_v8qla")]
+[node name="MainDeckList" type="VBoxContainer" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2" unique_id=398075880]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="CardItem" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2/MainDeckList" unique_id=1418028704 instance=ExtResource("6_v8qla")]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="CardItem2" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2" unique_id=255094917 instance=ExtResource("6_v8qla")]
+[node name="CardItem2" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2/MainDeckList" unique_id=255094917 instance=ExtResource("6_v8qla")]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="CardItem3" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2" unique_id=2061068192 instance=ExtResource("6_v8qla")]
+[node name="CardItem3" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2/MainDeckList" unique_id=2061068192 instance=ExtResource("6_v8qla")]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="CardItem4" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2" unique_id=2126835003 instance=ExtResource("6_v8qla")]
+[node name="CardItem4" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2/MainDeckList" unique_id=2126835003 instance=ExtResource("6_v8qla")]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="CardItem5" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2" unique_id=1647461612 instance=ExtResource("6_v8qla")]
+[node name="CardItem5" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2/MainDeckList" unique_id=1647461612 instance=ExtResource("6_v8qla")]
 layout_mode = 2
 size_flags_horizontal = 0
 
@@ -547,19 +484,25 @@ size_flags_horizontal = 0
 layout_mode = 2
 text = "Side:"
 
-[node name="CardItem6" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2" unique_id=1995445737 instance=ExtResource("6_v8qla")]
+[node name="SideDeckList" type="VBoxContainer" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2" unique_id=125167965]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 2
+script = ExtResource("7_v8qla")
+
+[node name="CardItem6" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2/SideDeckList" unique_id=1995445737 instance=ExtResource("6_v8qla")]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="CardItem7" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2" unique_id=1449538480 instance=ExtResource("6_v8qla")]
+[node name="CardItem7" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2/SideDeckList" unique_id=1449538480 instance=ExtResource("6_v8qla")]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="CardItem8" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2" unique_id=883321025 instance=ExtResource("6_v8qla")]
+[node name="CardItem8" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2/SideDeckList" unique_id=883321025 instance=ExtResource("6_v8qla")]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="CardItem9" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2" unique_id=1785035969 instance=ExtResource("6_v8qla")]
+[node name="CardItem9" parent="DeckLibrary/VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/VBoxContainer2/SideDeckList" unique_id=1785035969 instance=ExtResource("6_v8qla")]
 layout_mode = 2
 size_flags_horizontal = 0
 
@@ -903,6 +846,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 2
+script = ExtResource("7_v8qla")
 
 [node name="Side" type="VBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer" unique_id=519805043]
 visible = false
@@ -955,6 +899,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 2
+script = ExtResource("7_v8qla")
 
 [node name="Sideboard" type="ScrollContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer" unique_id=2100673086]
 visible = false
@@ -969,6 +914,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 2
+script = ExtResource("7_v8qla")
 
 [node name="Separator2" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1684664343 instance=ExtResource("2_3dxm6")]
 layout_mode = 2
@@ -979,12 +925,15 @@ layout_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer" unique_id=959091814]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer/HBoxContainer" unique_id=1388207781]
+[node name="ExitBtn" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer/HBoxContainer" unique_id=1388207781 node_paths=PackedStringArray("ui")]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Exit"
+script = ExtResource("3_3dxm6")
+ui = NodePath("../../../../../..")
+make_visible = false
 
-[node name="Button2" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer/HBoxContainer" unique_id=941797829]
+[node name="SaveExitBtn" type="Button" parent="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer/HBoxContainer" unique_id=941797829]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Save & Exit"
@@ -1367,7 +1316,6 @@ theme_override_font_sizes/font_size = 32
 text = "- EXIT LOBBY -"
 
 [node name="RulesetSelector" type="PanelContainer" parent="." unique_id=651548178]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1518,6 +1466,7 @@ text = "Close"
 [connection signal="tab_changed" from="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer" to="DeckEditor" method="_on_tab_container_tab_changed"]
 [connection signal="item_selected" from="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side/HBoxContainer/SideOption" to="DeckEditor" method="_on_side_option_item_selected"]
 [connection signal="item_selected" from="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/DeckTabContainer/Side/CatOptContainer/CatOption" to="DeckEditor" method="_on_cat_option_item_selected"]
+[connection signal="pressed" from="DeckEditor/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer/HBoxContainer/SaveExitBtn" to="DeckEditor" method="_on_save_exit_btn_pressed"]
 [connection signal="text_changed" from="DeckEditor/DeckPopup/CenterContainer/Popup/Margin container/VBoxContainer/HBoxContainer/LineEdit" to="DeckEditor" method="_on_deck_name_changed"]
 [connection signal="pressed" from="Lobby/VBoxContainer/CenterContainer/HBoxContainer/RoomCode" to="Lobby" method="_on_room_code_pressed"]
 [connection signal="pressed" from="Lobby/VBoxContainer/CenterContainer/HBoxContainer/CopyCodeBtn" to="Lobby" method="_on_copy_code_btn_pressed"]
