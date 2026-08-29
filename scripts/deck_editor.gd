@@ -5,15 +5,33 @@ var deck_builder_card := preload("res://prefab/card/card.tscn")
 
 @onready var main_deck: DeckList = %MainDeckContainer
 @onready var side_deck: DeckList = %SideDeckContainer
-@onready var side_board_deck: DeckList = %SideBoardContainer
+@onready var sideboard_deck: DeckList = %SideboardContainer
 @onready var selected_deck: DeckList = main_deck
 
-var selected_icon := "Squirrel"
+var selected_icon := "Squirrel.png"
 ## the [Variant] can be either [SideDeck] or [SideDeckCategory]
 var side_deck_options: Array[Variant] = []
 var category_options: Array[Ruleset.SideDeck] = []
 var selected_category_name := ""
 var selected_side_deck: Ruleset.SideDeck
+
+const DECK_SCHEMA: Dictionary[String, Dictionary] = {
+	name = {types = [TYPE_STRING], default = "New Decl"},
+	ruleset = {types = [TYPE_STRING], default = "Missing Ruleset"},
+	icon = {types = [TYPE_STRING], default = "Squirrel.png"},
+	main = {types = [TYPE_DICTIONARY], key_type = TYPE_STRING, value_type = TYPE_INT},
+	sideboard = {types = [TYPE_DICTIONARY], key_type = TYPE_STRING, value_type = TYPE_INT},
+	side =
+	{
+		types = [TYPE_DICTIONARY],
+		schema =
+		{
+			name = {types = [TYPE_STRING], default = ""},
+			category = {types = [TYPE_STRING], default = ""},
+			deck = {types = [TYPE_DICTIONARY], key_type = TYPE_STRING, value_type = TYPE_INT}
+		}
+	}
+}
 
 var _cost_filters: Dictionary[String, Callable] = {
 	blood = func(c: Card) -> bool: return c.costs.blood > 0,
@@ -50,19 +68,51 @@ func _ready() -> void:
 		btn.button_group = btn_group
 		btn.toggle_mode = true
 		btn.theme_type_variation = "IconSelectButton"
+		btn.name = portrait.trim_suffix(".png")
 		btn.pressed.connect(_on_icon_selected.bind(texture, portrait))
 		%DeckIconContainer.add_child(btn)
 
 
 func load_deck(json: Dictionary) -> void:
-	main_deck.load_deck(json.main as Dictionary)
-	var raw_side: Variant = Global.ruleset.side_decks[json.side.name]
-	%SideOption.select(side_deck_options.find(raw_side))
+	Global.validate_schema(json, DECK_SCHEMA)
+	%DeckName.text = json.name
+	%DeckNameEdit.text = json.name
+	%DeckIcon.texture = load("res://asset/portraits".path_join(json.icon as String))
+	selected_icon = json.icon
+	for child: Button in %DeckIconContainer.get_children():
+		if child.name == json.icon.trim_suffix(".png"):
+			child.button_pressed = true
+			break
+	main_deck.clear()
+	side_deck.clear()
+	sideboard_deck.clear()
+	# HACK: This dict help with type conversion cus godot fucking hate it bro
+	var dict: Dictionary[String, int]
+	dict.assign(json.main as Dictionary)
+	main_deck.load_deck(dict)
+	var raw_side: Variant = Global.ruleset.side_decks.get(json.side.name, null)
+	var idx := side_deck_options.find(raw_side)
+	if idx == -1:
+		idx = 0
+	%SideOption.select(idx)
+	_on_side_option_item_selected(idx)
 	if raw_side is Ruleset.SideDeckCategory:
-		%CatOption.select(category_options.find(raw_side[json.side.category]))
+		idx = category_options.find(raw_side.decks[json.side.category])
+		if idx == -1:
+			idx = 0
+		%CatOption.select(idx)
+		_on_cat_option_item_selected(idx)
 	if selected_side_deck.type == Ruleset.SideDeck.Type.DRAFT:
-		side_deck.load_deck(json.side.deck as Dictionary)
-	side_board_deck.load_deck(json.side_board as Dictionary)
+		dict.assign(json.side.get("deck", {}) as Dictionary)
+		for card_name: String in dict.keys():
+			if card_name not in selected_side_deck.cards:
+				dict.erase(card_name)
+		side_deck.load_deck(dict)
+	dict.assign(json.sideboard as Dictionary)
+	sideboard_deck.load_deck(dict)
+	_on_tab_container_tab_changed(0)
+	_update_card_count()
+	_update_card_list()
 
 
 func _ruleset_changed(ruleset: Ruleset) -> void:
@@ -300,7 +350,7 @@ func _on_tab_container_tab_changed(tab: int) -> void:
 		1:
 			selected_deck = side_deck
 		2:
-			selected_deck = side_board_deck
+			selected_deck = sideboard_deck
 
 
 func _on_clear_filter_pressed() -> void:
@@ -331,7 +381,7 @@ func _on_save_exit_btn_pressed() -> void:
 		name = %DeckName.text,
 		icon = selected_icon,
 		main = main_deck.deck,
-		side_board = side_board_deck.deck
+		sideboard = sideboard_deck.deck
 	}
 	var side := {name = selected_side_deck.name}
 	match selected_side_deck.type:
@@ -349,3 +399,5 @@ func _on_save_exit_btn_pressed() -> void:
 		Global.decks_path.path_join("%s.json" % %DeckName.text), FileAccess.WRITE
 	)
 	file.store_string(JSON.stringify(deck_json))
+	file.close()
+	visible = false

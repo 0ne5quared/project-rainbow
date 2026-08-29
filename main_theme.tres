@@ -2,8 +2,19 @@
 
 [ext_resource type="Texture2D" uid="uid://b7hualvk1tiqy" path="res://asset/ui/check_button_filled.png" id="1_a2l2q"]
 [ext_resource type="Texture2D" uid="uid://ckd2soxhhnqph" path="res://asset/ui/check_button.png" id="2_0omi4"]
-[ext_resource type="Texture2D" uid="uid://cvqlldkygtvjb" path="res://asset/ui/arrow.png" id="5_52mx2"]
+[ext_resource type="Texture2D" uid="uid://khakt78mdva5" path="res://asset/ui/arrow_left.png" id="4_2u8nx"]
+[ext_resource type="Texture2D" uid="uid://c1n8bwannipui" path="res://asset/ui/list.png" id="4_sxwih"]
 [ext_resource type="Texture2D" uid="uid://twxkesa1snkh" path="res://asset/ui/check_box_filled.png" id="5_466ly"]
+[ext_resource type="Texture2D" uid="uid://c8uadexbo02nk" path="res://asset/ui/file.png" id="5_nxip8"]
+[ext_resource type="Texture2D" uid="uid://4h1slwpvqpsq" path="res://asset/ui/refresh.png" id="5_rt4o7"]
+[ext_resource type="Texture2D" uid="uid://m8v6oemg0yby" path="res://asset/ui/thumbnail.png" id="6_7hjjl"]
+[ext_resource type="Texture2D" uid="uid://bo8ll5t84bsxu" path="res://asset/ui/file_thumbnail.png" id="6_qu8em"]
+[ext_resource type="Texture2D" uid="uid://b0a760o1ri53v" path="res://asset/ui/folder.png" id="7_ffxfl"]
+[ext_resource type="Texture2D" uid="uid://dt2ih5a2v5s8f" path="res://asset/ui/eye.png" id="7_wnmfn"]
+[ext_resource type="Texture2D" uid="uid://v6r6dog4qle7" path="res://asset/ui/drop_down.png" id="8_1i34x"]
+[ext_resource type="Texture2D" uid="uid://km1w7wjqifbf" path="res://asset/ui/folder_thumbnail.png" id="8_tpkcg"]
+[ext_resource type="Texture2D" uid="uid://bvu570v8prskq" path="res://asset/ui/arrow_right.png" id="9_xxa0j"]
+[ext_resource type="Texture2D" uid="uid://beiu668xqmuoe" path="res://asset/ui/up_arrow_stem.png" id="11_70bsv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_58jnp"]
 bg_color = Color(0, 0.11815592, 0.22991306, 1)
@@ -73,6 +84,18 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0.51044416, 0.020411218, 0.11796885, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xamq7"]
+bg_color = Color(0.06666667, 0.25882354, 0.45490196, 1)
+expand_margin_top = 16.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4rll8"]
+bg_color = Color(0.06666667, 0.25882354, 0.45490196, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hr40q"]
 bg_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
 border_width_left = 2
@@ -141,14 +164,6 @@ bg_color = Color(0, 0.03137255, 0.08627451, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kq6f5"]
 bg_color = Color(0.9490196, 0.9490196, 0.9490196, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4rll8"]
-bg_color = Color(0.06666667, 0.25882354, 0.45490196, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gsqoc"]
 content_margin_top = 4.0
@@ -251,6 +266,23 @@ CheckBox/icons/radio_checked = ExtResource("1_a2l2q")
 CheckBox/icons/unchecked = ExtResource("2_0omi4")
 ErrorPopup/base_type = &"PanelContainer"
 ErrorPopup/styles/panel = SubResource("StyleBoxFlat_466ly")
+FileDialog/constants/close_h_offset = 16
+FileDialog/constants/close_v_offset = 16
+FileDialog/constants/title_height = 16
+FileDialog/constants/title_outline_size = 0
+FileDialog/icons/back_folder = ExtResource("4_2u8nx")
+FileDialog/icons/file = ExtResource("5_nxip8")
+FileDialog/icons/file_thumbnail = ExtResource("6_qu8em")
+FileDialog/icons/folder = ExtResource("7_ffxfl")
+FileDialog/icons/folder_thumbnail = ExtResource("8_tpkcg")
+FileDialog/icons/forward_folder = ExtResource("9_xxa0j")
+FileDialog/icons/list_mode = ExtResource("4_sxwih")
+FileDialog/icons/parent_folder = ExtResource("11_70bsv")
+FileDialog/icons/reload = ExtResource("5_rt4o7")
+FileDialog/icons/thumbnail_mode = ExtResource("6_7hjjl")
+FileDialog/icons/toggle_hidden = ExtResource("7_wnmfn")
+FileDialog/styles/embedded_border = SubResource("StyleBoxFlat_xamq7")
+FileDialog/styles/panel = SubResource("StyleBoxFlat_4rll8")
 HScrollBar/constants/padding_bottom = 8
 HScrollBar/constants/padding_top = 8
 HScrollBar/styles/grabber = SubResource("StyleBoxFlat_hr40q")
@@ -270,7 +302,7 @@ LineEdit/colors/selection_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
 LineEdit/constants/caret_width = 2
 LineEdit/styles/focus = SubResource("StyleBoxFlat_yhfeq")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_yhfeq")
-OptionButton/icons/arrow = ExtResource("5_52mx2")
+OptionButton/icons/arrow = ExtResource("8_1i34x")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_0omi4")
 PopupMenu/colors/font_hover_color = Color(0.12941177, 0.47843137, 0.84705883, 1)
 PopupMenu/icons/checked = ExtResource("5_466ly")

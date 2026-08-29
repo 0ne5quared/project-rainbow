@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://c62gfaug35kxa"]
+
+[ext_resource type="Script" uid="uid://bq2osbae0o5vc" path="res://prefab/deck_listing/deck_listing.gd" id="1_58vii"]
+[ext_resource type="Texture2D" uid="uid://cyf7qa80fonjb" path="res://asset/portraits/Broken Obol 1.png" id="1_petqv"]
+[ext_resource type="Texture2D" uid="uid://drctpsa3ysmww" path="res://asset/ui/trash.png" id="3_b7jo5"]
+[ext_resource type="Texture2D" uid="uid://cnygqfu0hut25" path="res://asset/ui/duplicate.png" id="3_dd3fs"]
+[ext_resource type="Texture2D" uid="uid://cn2r07v5muh3u" path="res://asset/ui/clipboard.png" id="4_130qe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5r7vh"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.46327507, 0.040649943, 0.041077673, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b7jo5"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.7019608, 0.08627451, 0.08627451, 1)
+
+[node name="DeckListing" type="Button" unique_id=1722791310]
+custom_minimum_size = Vector2(0, 28)
+offset_right = 260.0
+offset_bottom = 28.0
+script = ExtResource("1_58vii")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1821872553]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Icon" type="TextureRect" parent="HBoxContainer" unique_id=528428108]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("1_petqv")
+stretch_mode = 5
+
+[node name="Name" type="Label" parent="HBoxContainer" unique_id=1615815519]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0.03137255, 0.08627451, 1)
+text = "Test Deck"
+
+[node name="SizeContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=914036043]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="MainSizeLabel" type="RichTextLabel" parent="HBoxContainer/SizeContainer" unique_id=1658409364]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 1
+theme_override_colors/default_color = Color(0.06666667, 0.25882354, 0.45490196, 1)
+bbcode_enabled = true
+text = "Main:"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 2
+
+[node name="SideSizeLabel" type="Label" parent="HBoxContainer/SizeContainer" unique_id=588661895]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 1
+theme_override_colors/font_color = Color(0.06666667, 0.25882354, 0.45490196, 1)
+text = "Side:"
+horizontal_alignment = 2
+
+[node name="ErrLabel" type="Label" parent="HBoxContainer" unique_id=1570076482]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.50980395, 0.019607844, 0.11764706, 1)
+text = "Error!"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer" unique_id=2093725054]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="DupBtn" type="Button" parent="HBoxContainer/HBoxContainer" unique_id=1993068557]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("3_dd3fs")
+
+[node name="ClipBtn" type="Button" parent="HBoxContainer/HBoxContainer" unique_id=833349525]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("4_130qe")
+
+[node name="DeleteBtn" type="Button" parent="HBoxContainer/HBoxContainer" unique_id=1990873874]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/pressed = SubResource("StyleBoxFlat_5r7vh")
+theme_override_styles/hover = SubResource("StyleBoxFlat_b7jo5")
+icon = ExtResource("3_b7jo5")

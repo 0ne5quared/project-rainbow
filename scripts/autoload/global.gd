@@ -29,7 +29,7 @@ var ruleset: Ruleset:
 
 var enable_backrow := false
 
-var rulesets_path := &"user://rulesets"
+var rulesets_path := &"user://ruleset"
 var decks_path := &"user://decks"
 
 

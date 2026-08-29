@@ -41,8 +41,9 @@ func _ready() -> void:
 	)
 	var ruleset_path := "user://rulesets"
 	for file in DirAccess.open(ruleset_path).get_files():
-		var txt := FileAccess.open(ruleset_path.path_join(file), FileAccess.READ).get_as_text()
-		var ruleset := JSON.parse_string(txt) as Dictionary
+		var f := FileAccess.open(ruleset_path.path_join(file), FileAccess.READ)
+		var ruleset := JSON.parse_string(f.get_as_text()) as Dictionary
+		f.close()
 		if "schema" in ruleset:
 			Global.validate_schema(ruleset, Ruleset.RULESET_SCHEMA)
 			add_ruleset(
@@ -93,6 +94,7 @@ func _on_request_complete(
 		Global.rulesets_path.path_join("%s.json" % response.ruleset), FileAccess.WRITE
 	)
 	file.store_string(JSON.stringify(response))
+	file.close()
 	selected_ruleset = response
 
 
@@ -112,5 +114,6 @@ func _on_button_selected(ruleset: RulesetIcon) -> void:
 	else:
 		var file := FileAccess.open("user://rulesets/%s.json" % ruleset.name, FileAccess.READ)
 		selected_ruleset = JSON.parse_string(file.get_as_text())
+		file.close()
 	Global.ruleset = RulesetParser.parse_ruleset(selected_ruleset)
 	visible = false

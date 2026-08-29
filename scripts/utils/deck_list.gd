@@ -8,10 +8,15 @@ var listings: Dictionary[String, CardListing] = {}
 var ordered_deck: Array[Ruleset.CardData] = []
 @export var allow_remove: bool = true
 
+signal on_card_added
+signal on_card_removed
+
 
 func load_deck(deck_dict: Dictionary[String, int]) -> void:
 	for card_name: String in deck_dict.keys():
 		var card_data := Global.get_card_by_name(card_name)
+		if card_data == null:
+			continue
 		add_card(card_data, deck_dict[card_name])
 
 

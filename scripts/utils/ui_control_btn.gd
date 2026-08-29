@@ -1,6 +1,6 @@
 extends Button
 
-@export var ui: Control
+@export var ui: Node
 @export var make_visible: bool = true
 
 
