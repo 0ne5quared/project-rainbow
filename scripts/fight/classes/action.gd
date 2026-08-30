@@ -76,7 +76,9 @@ enum Type {
 	## amount, this does not use [ChangeEnergyAction]
 	REFRESH_ENERGY,
 	## Action representing sacrificing a card, this will just resolve into KILL_CARD
-	SACRIFICE_CARD
+	SACRIFICE_CARD,
+	## Action representing a change in the card's BASE stats. Do not use for temporary buffs, such as Leader.
+	CHANGE_STATS
 }
 
 enum IDType { CARD, PLAYER }
