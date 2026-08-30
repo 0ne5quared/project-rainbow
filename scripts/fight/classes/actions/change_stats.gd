@@ -38,7 +38,7 @@ func resolve(fight_manager: FightManager) -> void:
 	# in that case you can use fight_manager._no_activation() as the activation. If you don't
 	# include this your stack will stall indefinitely.
 	await fight_manager._activate_sigils(
-		func(sigil: Sigil) -> void: sigil.on_card_changed_stats(card)
+		func(sigil: Sigil) -> void: sigil.on_card_changed_stats(card, add_power, add_health)
 	)
 	if card.health <= 0:
 		fight_manager._push_action(KillCardAction.new(card_id))

@@ -9,7 +9,7 @@ func is_active_sigil() -> bool:
 
 
 func is_disable() -> bool:
-	return fight_manager.my_data.energy <= 0
+	return fight_manager.my_data.energy < power_cost()
 
 
 func on_sigil_activate(
@@ -17,5 +17,7 @@ func on_sigil_activate(
 ) -> void:
 	if card != attached_card or sigil != self:
 		return
-	attached_card.card_data.attack += 1;
+		
+	add_action(ChangeEnergyAction.new(-power_cost(), controller_id()))
+	change_stats(attached_card.id, 1, 0)
 	
