@@ -28,6 +28,10 @@ func _init(cid: String, p: int, h: int) -> void:
 
 func resolve(fight_manager: FightManager) -> void:
 	var card := fight_manager.card_manager.get_card_by_id(card_id)
+	if card == null:
+		await fight_manager._no_activation()
+		return
+		
 	card.attack_buf += attack
 	card.health += health
 
