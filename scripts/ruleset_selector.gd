@@ -39,9 +39,8 @@ func _ready() -> void:
 	$HTTPRequest.request(
 		"https://raw.githubusercontent.com/107zxz/inscr-onln-ruleset/refs/heads/main/featured.json"
 	)
-	var ruleset_path := "user://rulesets"
-	for file in DirAccess.open(ruleset_path).get_files():
-		var f := FileAccess.open(ruleset_path.path_join(file), FileAccess.READ)
+	for file in DirAccess.open(Global.rulesets_path).get_files():
+		var f := FileAccess.open(Global.rulesets_path.path_join(file), FileAccess.READ)
 		var ruleset := JSON.parse_string(f.get_as_text()) as Dictionary
 		f.close()
 		if "schema" in ruleset:
