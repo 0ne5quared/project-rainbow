@@ -29,6 +29,8 @@ func _init(cid: String, p: int, h: int) -> void:
 func resolve(fight_manager: FightManager) -> void:
 	var card := fight_manager.card_manager.get_card_by_id(card_id)
 	if card == null:
+		push_warning("They're dead. You can't change their stats if they're dead.")
+		@warning_ignore("redundant_await")
 		await fight_manager._no_activation()
 		return
 		
