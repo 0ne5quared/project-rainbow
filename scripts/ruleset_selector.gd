@@ -6,6 +6,7 @@ var ruleset_button := preload("res://prefab/ruleset_button/ruleset_btn.tscn")
 
 var first_time := true
 var selected_ruleset: Dictionary
+var installed_rulesets: PackedStringArray
 
 
 class RulesetIcon:
@@ -21,7 +22,7 @@ class RulesetIcon:
 		description = json.description
 		url = json.url
 		icon = json.portrait
-		installed = FileAccess.file_exists("user://rulesets/%s.json" % name)
+		installed = RulesetSelector.is_installed(name)
 		# TODO: unhardcode this
 		if name.begins_with("IMF Standard"):
 			icon = "res://asset/ruleset_icon/scales.png"
@@ -35,11 +36,12 @@ class RulesetIcon:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	installed_rulesets = DirAccess.open(Global.rulesets_path).get_files()
 	$HTTPRequest.request_completed.connect(_on_request_complete)
 	$HTTPRequest.request(
 		"https://raw.githubusercontent.com/107zxz/inscr-onln-ruleset/refs/heads/main/featured.json"
 	)
-	for file in DirAccess.open(Global.rulesets_path).get_files():
+	for file in installed_rulesets:
 		var f := FileAccess.open(Global.rulesets_path.path_join(file), FileAccess.READ)
 		var ruleset := JSON.parse_string(f.get_as_text()) as Dictionary
 		f.close()
@@ -81,10 +83,12 @@ func _on_request_complete(
 	_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray
 ) -> void:
 	# TODO implement error handling
-	return
+	# return
 	var response: Dictionary = JSON.parse_string(body.get_string_from_utf8())
 	if first_time:
 		for ruleset: Dictionary in response.rulesets:
+			if is_installed(ruleset.name):
+				continue
 			add_ruleset(RulesetIcon.new(ruleset))
 		first_time = false
 		_on_button_unhorvered()
@@ -116,3 +120,9 @@ func _on_button_selected(ruleset: RulesetIcon) -> void:
 		file.close()
 	Global.ruleset = RulesetParser.parse_ruleset(selected_ruleset)
 	visible = false
+
+
+static func is_installed(ruleset_name: Variant) -> bool:
+	if typeof(ruleset_name) != TYPE_STRING:
+		return false
+	return FileAccess.file_exists("user://rulesets/%s.json" % ruleset_name)
