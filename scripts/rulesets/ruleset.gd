@@ -566,3 +566,27 @@ func _init(ruleset: Dictionary) -> void:
 			side_decks[side_deck_name] = SideDeckCategory.new(side_deck_name, data)
 		else:
 			side_decks[side_deck_name] = SideDeck.new(side_deck_name, data)
+
+
+# Resolve a side deck dictionary to a list of card data
+func resolve_side_deck(side_dict: Dictionary) -> Array[CardData]:
+	var raw_side: Variant = side_decks[side_dict.name]
+	var side_deck: SideDeck
+	if raw_side is SideDeckCategory:
+		side_deck = raw_side[side_dict.category]
+	else:
+		side_deck = raw_side
+
+	var out: Array[CardData] = []
+	match side_deck.type:
+		SideDeck.Type.CONSTRUCTED:
+			out.assign(side_deck.cards.map(func(n: String) -> CardData: return cards[n]))
+		SideDeck.Type.DRAFT:
+			for card_name: String in (side_dict.deck as Dictionary).keys():
+				if card_name not in side_deck.cards:
+					push_warning("Illegal card found in drafted side deck skipping...")
+					continue
+				for i in side_dict.deck[card_name] as int:
+					out.append(cards[card_name])
+
+	return out

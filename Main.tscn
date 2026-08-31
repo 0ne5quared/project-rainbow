@@ -1413,6 +1413,19 @@ theme_override_font_sizes/font_size = 32
 text = "---- SETTINGS ----"
 horizontal_alignment = 1
 
+[node name="HBoxContainer" type="HBoxContainer" parent="Lobby/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=346309670]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Lobby/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=78746810]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Deck:"
+
+[node name="DeckOption" type="OptionButton" parent="Lobby/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=1830039268]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="Separator2" parent="Lobby/VBoxContainer" unique_id=1418192561 instance=ExtResource("2_3dxm6")]
 layout_mode = 2
 
@@ -1429,7 +1442,6 @@ theme_override_font_sizes/font_size = 32
 text = "- EXIT LOBBY -"
 
 [node name="RulesetSelector" type="PanelContainer" parent="." unique_id=651548178]
-visible = false
 z_index = 60
 layout_mode = 1
 anchors_preset = 15
