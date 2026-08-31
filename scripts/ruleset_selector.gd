@@ -22,7 +22,7 @@ class RulesetIcon:
 		description = json.description
 		url = json.url
 		icon = json.portrait
-		installed = RulesetSelector.is_installed(name)
+		installed = json.installed
 		# TODO: unhardcode this
 		if name.begins_with("IMF Standard"):
 			icon = "res://asset/ruleset_icon/scales.png"
@@ -53,7 +53,8 @@ func _ready() -> void:
 						name = ruleset.name,
 						description = ruleset.description,
 						portrait = "res://asset".path_join(ruleset.icon as String),
-						url = ""
+						url = "",
+						installed = _is_installed(ruleset.name)
 					}
 				)
 			)
@@ -64,7 +65,8 @@ func _ready() -> void:
 						name = ruleset.ruleset,
 						description = ruleset.description,
 						portrait = "res://asset/ruleset_icon/simple.png",
-						url = ""
+						url = "",
+						installed = _is_installed(ruleset.ruleset)
 					}
 				)
 			)
@@ -87,8 +89,9 @@ func _on_request_complete(
 	var response: Dictionary = JSON.parse_string(body.get_string_from_utf8())
 	if first_time:
 		for ruleset: Dictionary in response.rulesets:
-			if is_installed(ruleset.name):
+			if _is_installed(ruleset.name):
 				continue
+			ruleset.installed = false
 			add_ruleset(RulesetIcon.new(ruleset))
 		first_time = false
 		_on_button_unhorvered()
@@ -122,7 +125,7 @@ func _on_button_selected(ruleset: RulesetIcon) -> void:
 	visible = false
 
 
-static func is_installed(ruleset_name: Variant) -> bool:
+static func _is_installed(ruleset_name: Variant) -> bool:
 	if typeof(ruleset_name) != TYPE_STRING:
 		return false
 	return FileAccess.file_exists("user://rulesets/%s.json" % ruleset_name)
