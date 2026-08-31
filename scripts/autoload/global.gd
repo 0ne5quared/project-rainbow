@@ -29,8 +29,8 @@ var ruleset: Ruleset:
 
 var enable_backrow := false
 
-var rulesets_path := &"user://rulesets"
-var decks_path := &"user://decks"
+var rulesets_path := "user://rulesets"
+var decks_path := "user://decks"
 
 
 func _ready() -> void:
