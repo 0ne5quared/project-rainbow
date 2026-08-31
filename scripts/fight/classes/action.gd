@@ -36,6 +36,8 @@ enum Type {
 	MOVE_CARD,
 	## Action represrnting a card transforming into another.
 	TRANSFORM_CARD,
+	## Action representing a change in the card's BASE stats. Do not use for temporary buffs, such as Leader.
+	CHANGE_STATS,
 	## Action representing activating the sigil on a card. This does not mean a sigil activating,
 	## this is for active sigil activation by someone or something
 	ACTIVATE_SIGILS,
