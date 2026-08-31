@@ -45,31 +45,26 @@ func _ready() -> void:
 		var f := FileAccess.open(Global.rulesets_path.path_join(file), FileAccess.READ)
 		var ruleset := JSON.parse_string(f.get_as_text()) as Dictionary
 		f.close()
+		var ruleset_name: String
+		var ruleset_portrait: String
 		if "schema" in ruleset:
 			Global.validate_schema(ruleset, Ruleset.RULESET_SCHEMA)
-			add_ruleset(
-				RulesetIcon.new(
-					{
-						name = ruleset.name,
-						description = ruleset.description,
-						portrait = "res://asset".path_join(ruleset.icon as String),
-						url = "",
-						installed = _is_installed(ruleset.name)
-					}
-				)
-			)
+			ruleset_name = ruleset.name
+			ruleset_portrait = "res://asset".path_join(ruleset.icon as String)
 		else:
-			add_ruleset(
-				RulesetIcon.new(
-					{
-						name = ruleset.ruleset,
-						description = ruleset.description,
-						portrait = "res://asset/ruleset_icon/simple.png",
-						url = "",
-						installed = _is_installed(ruleset.ruleset)
-					}
-				)
+			ruleset_name = ruleset.ruleset
+			ruleset_portrait = "res://asset/ruleset_icon/simple.png"
+		add_ruleset(
+			RulesetIcon.new(
+				{
+					name = ruleset_name,
+					description = ruleset.description,
+					portrait = ruleset_portrait,
+					url = "",
+					installed = _is_installed(ruleset_name)
+				}
 			)
+		)
 
 
 func add_ruleset(ruleset: RulesetIcon) -> void:
