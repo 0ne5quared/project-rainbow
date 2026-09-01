@@ -114,7 +114,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/DeckList" unique_id=714047754]
+[node name="MainDeckTitle" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/DeckList" unique_id=714047754]
 layout_mode = 2
 text = "Main:"
 
@@ -124,7 +124,8 @@ layout_mode = 2
 theme_override_constants/separation = 2
 script = ExtResource("9_4l0cs")
 
-[node name="Label2" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/DeckList" unique_id=725301444]
+[node name="SideDeckTitle" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer/ScrollContainer/DeckList" unique_id=725301444]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Side:"
 
