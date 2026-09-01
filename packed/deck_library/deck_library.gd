@@ -1,5 +1,7 @@
 extends PanelContainer
 
+@export var DECK_EDITOR: Control
+
 var deck_listing := preload("res://prefab/deck_listing/deck_listing.tscn")
 var selected_listing: DeckListing
 
@@ -109,8 +111,8 @@ func _on_listing_pressed(listing: DeckListing) -> void:
 		selected_listing = listing
 		return
 
-	%DeckEditor.visible = true
-	%DeckEditor.load_deck(listing.deck_dict)
+	DECK_EDITOR.visible = true
+	DECK_EDITOR.load_deck(listing.deck_dict)
 
 
 func _on_bk_btn_pressed() -> void:
@@ -131,8 +133,8 @@ func _on_bk_btn_pressed() -> void:
 
 
 func _on_load_btn_pressed() -> void:
-	%DeckEditor.visible = true
-	%DeckEditor.load_deck(selected_listing.deck_dict)
+	DECK_EDITOR.visible = true
+	DECK_EDITOR.load_deck(selected_listing.deck_dict)
 	$PopupBlocker.visible = false
 
 
@@ -153,7 +155,7 @@ func _on_add_deck_btn_pressed() -> void:
 	if side_deck.type == Ruleset.SideDeck.Type.DRAFT:
 		side_dict.deck = {}
 
-	%DeckEditor.load_deck(
+	DECK_EDITOR.load_deck(
 		{
 			name = "New Deck",
 			icon = "Squirrel.png",
@@ -163,7 +165,7 @@ func _on_add_deck_btn_pressed() -> void:
 			sideboard = {}
 		}
 	)
-	%DeckEditor.visible = true
+	DECK_EDITOR.visible = true
 
 
 func _on_file_selected(path: String) -> void:
