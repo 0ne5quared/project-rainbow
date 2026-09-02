@@ -1,7 +1,7 @@
 @abstract class_name DrawFriendSigil
 extends Sigil
 
-## Return the data that is used to spawn the friend.
+## Return the data that is used to draw the friend.
 @abstract func friend_data() -> Ruleset.CardData
 
 
