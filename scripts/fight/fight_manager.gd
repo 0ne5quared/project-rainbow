@@ -59,8 +59,8 @@ var main_deck: Array[Ruleset.CardData] = [
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["True Scholar"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Blue Mox"]}),
 	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Sniper"]}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King, Ruby Heart"]}),
-	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Frozen Away"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
+	Ruleset.CardData.new({name = "Squirrel", attack = 1, health = 1, sigils = ["Bone King"]}),
 ]
 var side_deck: Array[Ruleset.CardData] = [
 	Ruleset.CardData.new({name = "Greater Smoke", attack = 1, health = 1, sigils = ["Bone King"]}),
