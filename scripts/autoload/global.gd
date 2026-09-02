@@ -29,8 +29,8 @@ var ruleset: Ruleset:
 
 var enable_backrow := false
 
-var rulesets_path := &"user://rulesets"
-var decks_path := &"user://decks"
+var rulesets_path := "user://rulesets"
+var decks_path := "user://decks"
 
 
 func _ready() -> void:
@@ -54,6 +54,8 @@ func quadratic_bezier(start: Vector2, end: Vector2, mid: Vector2) -> Callable:
 
 
 func sum(array: Array) -> int:
+	if array.is_empty():
+		return 0
 	return array.reduce(func(acc: int, val: int) -> int: return acc + val, 0)
 
 

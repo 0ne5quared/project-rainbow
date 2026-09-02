@@ -97,6 +97,7 @@ func _init(ruleset: Dictionary) -> void:
 			}
 		))
 	side_decks.clear()
+
 	for side_deck_name: String in (ruleset.side_decks as Dictionary).keys():
 		var data := ruleset.side_decks[side_deck_name] as Dictionary
 		if data.type == "single":

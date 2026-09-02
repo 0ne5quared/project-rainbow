@@ -78,6 +78,9 @@ func on_card_moved(card: Card, from: BoardManager.Slot, to: BoardManager.Slot) -
 
 func on_card_transformed(card: Card, card_data: Ruleset.CardData) -> void:
 	return
+	
+func on_card_stats_changed(card: Card, attack: int, health: int) -> void:
+	return
 
 
 func on_sigil_activate(
@@ -212,6 +215,10 @@ func move_card(card_id: String, to_pos: Vector2i) -> void:
 
 func transform_card(card_id: String, card_data: Ruleset.CardData) -> void:
 	add_action(TransformCardAction.new(card_id, card_data))
+
+
+func change_stats(card_id: String, add_power: int, add_health: int) -> void:
+	add_action(ChangeStatsAction.new(card_id, add_power, add_health))
 
 
 func kill_card(card_id: String) -> void:

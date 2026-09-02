@@ -143,6 +143,7 @@ script = ExtResource("4_tmx0f")
 
 [node name="Blocker" type="PanelContainer" parent="." unique_id=1328792040]
 unique_name_in_owner = true
+visible = false
 z_index = 100
 layout_mode = 1
 anchors_preset = 15
